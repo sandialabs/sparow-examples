@@ -23,7 +23,8 @@ for scen in scenarios:
     shutil.copytree("model", dirname)
 
 
-module_root = string.Template("""
+module_root = string.Template(
+    """
 # sparow_examples.gtep_9bus.load_scenarios
 
 from sparow.sp import stochastic_program
@@ -33,8 +34,8 @@ import importlib
 app_data = {
     "stages": 3,
     "num_reps": 2,
-    "len_reps": 24,
-    "num_commit": 24,
+    "len_reps": 1,
+    "num_commit": 1,
     "num_dispatch": 1,
 }
 model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90}]}
@@ -84,7 +85,8 @@ def create_sp():
         name="model", model_data=model_data, model_builder=model_builder
     )
     return sp
-""").substitute(name=name)
+"""
+).substitute(name=name)
 
 with open(os.path.join(name, "__init__.py"), "w") as OUTPUT:
     OUTPUT.write(module_root)

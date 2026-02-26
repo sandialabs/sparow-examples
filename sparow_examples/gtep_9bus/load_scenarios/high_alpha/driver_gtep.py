@@ -12,7 +12,7 @@ current_file_dir = Path(__file__).resolve().parent
 def create_gtep_model(
     *, num_stages, num_rep_days, len_rep_days, num_commit_p, num_disp, alpha=1.0
 ):
-    data_path = current_file_dir / "data"
+    data_path =str( current_file_dir / "data")
     data_object = ExpansionPlanningData()
     data_object.load_prescient(data_path)
     # data_object.load_storage_csv(data_path)

@@ -12,7 +12,7 @@ app_data = {
     "num_commit": 1,
     "num_dispatch": 1,
 }
-model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90}]}
+model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0,"PF":"CP"},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90,"PF":"CP"}]}
 
 
 def model_builder(data, args):
@@ -22,15 +22,17 @@ def model_builder(data, args):
     num_commit_p = data["num_commit"]
     num_disp = data["num_dispatch"]
     alpha = data["alpha"]
+    PF = data["PF"]
                               
-    scenario = importlib.import_module("sparow_examples.gtep_9bus.load_scenarios."+data['ID'])
+    scenario = importlib.import_module("sparow_examples.gtep_9bus.load_scenarios_w_Power_fidelity."+data['ID'])
     return scenario.create_gtep_model(
         num_stages=num_stages,
         num_rep_days=num_rep_days,
         len_rep_days=len_rep_days,
         num_commit_p=num_commit_p,
         num_disp=num_disp,
-        alpha= alpha
+        alpha= alpha,
+        flow_model = PF
     )
 
 

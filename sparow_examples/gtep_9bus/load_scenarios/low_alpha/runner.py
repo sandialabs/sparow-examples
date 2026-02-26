@@ -10,6 +10,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import plotly
 
+
 start_time = time.time()
 
 data_path = "./"  # 9 BUS
