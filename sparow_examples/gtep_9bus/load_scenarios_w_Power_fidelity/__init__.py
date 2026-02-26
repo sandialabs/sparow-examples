@@ -12,7 +12,7 @@ app_data = {
     "num_commit": 1,
     "num_dispatch": 1,
 }
-model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0,"PF":"CP"},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90,"PF":"CP"}]}
+model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0,"PF":"CP"},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90,"PF":"DC"}]}
 
 
 def model_builder(data, args):
