@@ -9,7 +9,7 @@ from pyomo.common import unittest
 solvers = set(pyomo.opt.check_available_solvers("gurobi"))
 
 try:
-    from sparow_examples.gtep_9bus.load_scenarios import create_sp
+    from sparow_examples.gtep_9bus.load_scenarios_w_Power_fidelity import create_sp
 
     dummy_available = True
 except:
