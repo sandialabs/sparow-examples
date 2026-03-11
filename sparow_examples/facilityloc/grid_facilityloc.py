@@ -56,34 +56,60 @@ for scenario in all_scenarios:
         ),
     }
 
-random.seed(58564564871312356)
-HF_scenarios = random.choices(
-    list(sdict.keys()), k=app_data.get("num_scenarios", 8)
-)  # randomly select HF scenarios from sdict
 
-HFscens_list = []  # list of HF scenarios
-customer_demand_vals = list(customer_demand.values())
-for hscen in HF_scenarios:
-    HFscens_list.append(
-        {
-            "ID": f"{hscen}",
-            "Demand": [
-                customer_demand_vals[customer][demand_value_mapping[hscen[customer]]]
-                for customer in range(len(hscen))
-            ],
-            "Probability": sdict[scenario]["Probability"],
-        }
+def scenarios_to_scens_list(scenario_dict, demand_dict, value_mapping_dict, seed, app_data=None):
+    random.seed(seed)
+    scenarios = random.choices(
+        list(scenario_dict.keys()), k=app_data.get("num_scenarios", 8)
+    )  # randomly select scenarios from scenario_dict
+    scens_list = []  # list of scenarios
+    customer_demand_vals = list(demand_dict.values())
+    for scen in scenarios:
+        scens_list.append(
+            {
+                "ID": f"{scen}",
+                "Demand": [
+                    customer_demand_vals[customer][value_mapping_dict[scen[customer]]]
+                    for customer in range(len(scen))
+                ],
+                "Probability": scenario_dict[scenario]["Probability"],
+            }
+        )
+
+    # normalize HF scenario probabilities
+    norm_term = sum(
+        scens_list[s_idx]["Probability"] for s_idx in range(len(scens_list))
     )
+    for s_idx in range(len(scens_list)):
+        scens_list[s_idx]["Probability"] /= norm_term
 
-# normalize HF scenario probabilities
-HF_norm_term = sum(
-    HFscens_list[s_idx]["Probability"] for s_idx in range(len(HFscens_list))
+    return scens_list
+
+
+LF1_scens_list = scenarios_to_scens_list(
+    scenario_dict=sdict,
+    demand_dict=customer_demand,
+    value_mapping_dict=demand_value_mapping,
+    seed=98765432123456789,
 )
-for s_idx in range(len(HFscens_list)):
-    HFscens_list[s_idx]["Probability"] /= HF_norm_term
+LF2_scens_list = scenarios_to_scens_list(
+    scenario_dict=sdict,
+    demand_dict=customer_demand,
+    value_mapping_dict=demand_value_mapping,
+    seed=12345678987654321,
+)
+HF_scens_list = scenarios_to_scens_list(
+    scenario_dict=sdict,
+    demand_dict=customer_demand,
+    value_mapping_dict=demand_value_mapping,
+    seed=58564564871312356,
+)
 
-
-model_data = {"LF": {"scenarios": LFscens_list}, "HF": {"scenarios": HFscens_list}}
+model_data = {
+    "LF1": {"scenarios": LF1_scens_list},
+    "LF2": {"scenarios": LF2_scens_list},
+    "HF": {"scenarios": HF_scens_list},
+}
 
 
 def LF1_builder(data, args):
