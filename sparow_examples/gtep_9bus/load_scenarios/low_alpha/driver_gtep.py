@@ -10,7 +10,7 @@ current_file_dir = Path(__file__).resolve().parent
 
 
 def create_gtep_model(
-    *, num_stages, num_rep_days, len_rep_days, num_commit_p, num_disp, alpha=1.0
+    *, num_stages, num_rep_days, len_rep_days, num_commit_p, num_disp, alpha=1.0,flow_model="CP"
 ):
     data_path =str( current_file_dir / "data")
     data_object = ExpansionPlanningData()
@@ -28,7 +28,7 @@ def create_gtep_model(
 
     mod_object.config["include_commitment"] = True
     mod_object.config["alpha_scaler"] = alpha
-    mod_object.config["flow_model"] = "CP"  # change this to "DC" to run DCOPF!
+    mod_object.config["flow_model"] = flow_model  # change this to "DC" to run DCOPF!
     mod_object.config["storage"] = True
     mod_object.config["transmission"] = True  # TRANSMISSION INVESTMENT FLAG
     mod_object.config["thermal_generation"] = True  # THERMAL GENERATION INVESTMENT FLAG

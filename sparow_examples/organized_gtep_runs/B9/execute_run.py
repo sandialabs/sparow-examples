@@ -28,5 +28,5 @@ soln = next(iter(results_dict["solutions"].values()))
 
 obj_val = soln["objectives"][0]["value"]
 print(obj_val)
-
+print(sp._timing)
 

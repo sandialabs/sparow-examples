@@ -1,0 +1,466 @@
+{
+    "null": {
+        "metadata": {
+            "context_name": null,
+            "end_time": "2025-06-18 07:44:50.220910",
+            "start_time": "2025-06-18 07:44:49.752478",
+            "status": "ok",
+            "termination_condition": "optimal",
+            "time_elapsed": "0:00:00.468432"
+        },
+        "pool_config": {
+            "abs_tolerance": 0.0,
+            "max_pool_size": null,
+            "objective": null,
+            "policy": "keep_best",
+            "rel_tolerance": null
+        },
+        "solutions": {
+            "0": {
+                "id": 0,
+                "objectives": [
+                    {
+                        "name": null,
+                        "suffix": {},
+                        "value": 93132.67928780663
+                    }
+                ],
+                "suffix": {},
+                "variables": [
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 0,
+                        "name": "pg['1']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 1,
+                        "name": "pg['2']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 2,
+                        "name": "pg['3']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 3,
+                        "name": "pg['4']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 4,
+                        "name": "pg['5']",
+                        "suffix": {},
+                        "value": 5.05
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 5,
+                        "name": "pg['6']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 6,
+                        "name": "pg['7']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 7,
+                        "name": "pg['8']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 8,
+                        "name": "pg['9']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 9,
+                        "name": "pg['10']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 10,
+                        "name": "pg['11']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 11,
+                        "name": "pg['12']",
+                        "suffix": {},
+                        "value": 4.85
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 12,
+                        "name": "pg['13']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 13,
+                        "name": "pg['14']",
+                        "suffix": {},
+                        "value": 0.17
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 14,
+                        "name": "pg['15']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 15,
+                        "name": "pg['16']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 16,
+                        "name": "pg['17']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 17,
+                        "name": "pg['18']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 18,
+                        "name": "pg['19']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 19,
+                        "name": "pg['20']",
+                        "suffix": {},
+                        "value": 0.2
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 20,
+                        "name": "pg['21']",
+                        "suffix": {},
+                        "value": 2.23
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 21,
+                        "name": "pg['22']",
+                        "suffix": {},
+                        "value": 0.2541906426407194
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 22,
+                        "name": "pg['23']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 23,
+                        "name": "pg['24']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 24,
+                        "name": "pg['25']",
+                        "suffix": {},
+                        "value": 3.08
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 25,
+                        "name": "pg['26']",
+                        "suffix": {},
+                        "value": 1.95
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 26,
+                        "name": "pg['27']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 27,
+                        "name": "pg['28']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 28,
+                        "name": "pg['29']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 29,
+                        "name": "pg['30']",
+                        "suffix": {},
+                        "value": 6.426729854258899
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 30,
+                        "name": "pg['31']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 31,
+                        "name": "pg['32']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 32,
+                        "name": "pg['33']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 33,
+                        "name": "pg['34']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 34,
+                        "name": "pg['35']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 35,
+                        "name": "pg['36']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 36,
+                        "name": "pg['37']",
+                        "suffix": {},
+                        "value": 5.09
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 37,
+                        "name": "pg['38']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 38,
+                        "name": "pg['39']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 39,
+                        "name": "pg['40']",
+                        "suffix": {},
+                        "value": 6.37
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 40,
+                        "name": "pg['41']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 41,
+                        "name": "pg['42']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 42,
+                        "name": "pg['43']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 43,
+                        "name": "pg['44']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 44,
+                        "name": "pg['45']",
+                        "suffix": {},
+                        "value": 6.53
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 45,
+                        "name": "pg['46']",
+                        "suffix": {},
+                        "value": 0.21907950310037227
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 46,
+                        "name": "pg['47']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 47,
+                        "name": "pg['48']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 48,
+                        "name": "pg['49']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 49,
+                        "name": "pg['50']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 50,
+                        "name": "pg['51']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 51,
+                        "name": "pg['52']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 52,
+                        "name": "pg['53']",
+                        "suffix": {},
+                        "value": 0.0
+                    },
+                    {
+                        "discrete": false,
+                        "fixed": false,
+                        "index": 53,
+                        "name": "pg['54']",
+                        "suffix": {},
+                        "value": 0.0
+                    }
+                ]
+            }
+        }
+    }
+}

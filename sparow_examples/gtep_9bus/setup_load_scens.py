@@ -33,9 +33,9 @@ import importlib
 
 app_data = {
     "stages": 3,
-    "num_reps": 2,
-    "len_reps": 1,
-    "num_commit": 1,
+    "num_reps": 4,
+    "len_reps": 24,
+    "num_commit": 24,
     "num_dispatch": 1,
 }
 model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90}]}

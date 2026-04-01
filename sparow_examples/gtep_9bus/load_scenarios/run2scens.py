@@ -27,4 +27,4 @@ obj_val = soln["objectives"][0]["value"]
 print(obj_val)
 print(dummy_available)
 
-assert obj_val == pytest.approx(285632.11, 0.01)
+assert obj_val == pytest.approx(77450369.99037874, 0.01)

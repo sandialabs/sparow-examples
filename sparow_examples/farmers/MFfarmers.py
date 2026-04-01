@@ -685,3 +685,17 @@ def MF_farmers():
         seed=1234567890,
     )
     return sp
+
+
+sp= MF_farmers()
+
+solver = ExtensiveFormSolver()
+solver.set_options(solver="gurobi", loglevel="INFO")
+
+results = solver.solve(sp)
+results_dict = results.to_dict()
+
+soln = next(iter(results_dict["solutions"].values()))
+
+obj_val = soln["objectives"][0]["value"]
+print(obj_val)
