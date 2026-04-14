@@ -57,7 +57,7 @@ for scenario in all_scenarios:
     }
 
 
-def scenarios_to_scens_list(scenario_dict, demand_dict, value_mapping_dict, seed, app_data=None):
+def scenarios_to_scens_list(scenario_dict, demand_dict, value_mapping_dict, seed, app_data):
     random.seed(seed)
     scenarios = random.choices(
         list(scenario_dict.keys()), k=app_data.get("num_scenarios", 8)
@@ -91,18 +91,21 @@ LF1_scens_list = scenarios_to_scens_list(
     demand_dict=customer_demand,
     value_mapping_dict=demand_value_mapping,
     seed=98765432123456789,
+    app_data=app_data
 )
 LF2_scens_list = scenarios_to_scens_list(
     scenario_dict=sdict,
     demand_dict=customer_demand,
     value_mapping_dict=demand_value_mapping,
     seed=12345678987654321,
+    app_data=app_data
 )
 HF_scens_list = scenarios_to_scens_list(
     scenario_dict=sdict,
     demand_dict=customer_demand,
     value_mapping_dict=demand_value_mapping,
     seed=58564564871312356,
+    app_data=app_data
 )
 
 model_data = {
@@ -392,6 +395,7 @@ def similar_HF_LF1_grid_facilityloc():
         scheme="mf_kmeans_similar",
         LF=2,
         seed=1234567890,
+        data_key="Demand",
     )
     return sp
 
