@@ -1,7 +1,3 @@
-#BUS-9_ALPHA-1~1.2_GROWTH-1.0_REP-4_FIDELITY-CP~DC_RELAX-None_COMMITMENT-4
-# INPUTS: BUS FILE, ALPHA, GROWTH RATE, NUM REP DAYS, POWER FLOW FIDELITY, RELAXATION, NUM of COMMITMENT
-
-
 from pathlib import Path
 import json
 import shutil
@@ -46,9 +42,6 @@ def create_experimental_setups(
     experiment_path = Path(base_dir) / experimental_name
     experiment_path.mkdir(parents=True, exist_ok=True)
 
-    # Add __init__.py to experiment directory
-    (experiment_path / "__init__.py").touch(exist_ok=True)
-
     # Save master config
     master_config = {
         "experimental_name": experimental_name,
@@ -77,8 +70,8 @@ try:
 except:
     dummy_available = False
 
-
-rd = {{'low_alpha':True,'high_alpha':True}}
+relaxations = {repr(relaxations)}
+rd = {{k: v["relax_second_stage"] for k, v in relaxations.items()}}
 sp = create_sp()
 sp.add_transformation(relax_second_stage, relax_dict=rd)
 solver = ExtensiveFormSolver()
@@ -110,9 +103,9 @@ current_file_dir = Path(__file__).resolve().parent
 
 
 def create_gtep_model(
-    *, num_stages, num_rep_days, len_rep_days, num_commit_p, num_disp, alpha=1.0,flow_model="CP"
+    *, num_stages, num_rep_days, len_rep_days, num_commit_p, num_disp, alpha=1.0, flow_model="CP"
 ):
-    data_path =str( current_file_dir / "data")
+    data_path = str(current_file_dir / "data")
     data_object = ExpansionPlanningData()
     data_object.load_prescient(data_path)
     # data_object.load_storage_csv(data_path)
@@ -120,39 +113,119 @@ def create_gtep_model(
     mod_object = ExpansionPlanningModel(
         stages=num_stages,
         data=data_object,
-        num_reps=num_rep_days,  # num rep days
-        len_reps=len_rep_days,  # len rep days
-        num_commit=num_commit_p,  # num commitment periods
-        num_dispatch=num_disp,  # num dispatch per commitment period
+        num_reps=num_rep_days,
+        len_reps=len_rep_days,
+        num_commit=num_commit_p,
+        num_dispatch=num_disp,
     )
 
     mod_object.config["include_commitment"] = True
     mod_object.config["alpha_scaler"] = alpha
-    mod_object.config["flow_model"] = flow_model  # change this to "DC" to run DCOPF!
+    mod_object.config["flow_model"] = flow_model
     mod_object.config["storage"] = True
-    mod_object.config["transmission"] = True  # TRANSMISSION INVESTMENT FLAG
-    mod_object.config["thermal_generation"] = True  # THERMAL GENERATION INVESTMENT FLAG
-    mod_object.config["renewable_generation"] = (
-        True  # RENEWABLE GENERATION INVESTMENT FLAG
-    )
-    mod_object.config["scale_loads"] = False  # LEAVE AS FALSE
-    mod_object.config["scale_texas_loads"] = False  # LEAVE AS FALSE
+    mod_object.config["transmission"] = True
+    mod_object.config["thermal_generation"] = True
+    mod_object.config["renewable_generation"] = True
+    mod_object.config["scale_loads"] = False
+    mod_object.config["scale_texas_loads"] = False
 
     mod_object.create_model()
     TransformationFactory("gdp.bound_pretransformation").apply_to(mod_object.model)
     TransformationFactory("gdp.bigm").apply_to(mod_object.model)
 
     return mod_object.model
-
 '''
+
+    # Build model_data["scenarios"] dynamically
+    model_scenarios = []
+    probability = 1.0 / len(scenarios) if scenarios else 0.0
+
+    for scenario in scenarios:
+        model_scenarios.append(
+            {
+                "ID": scenario,
+                "Demand": growth_rate,
+                "Probability": probability,
+                "alpha": alpha[scenario],
+                "PF": power_flow_fidelity[scenario],
+            }
+        )
+
+    # Build experiment-level __init__.py
+    app_data = {
+        "stages": 3,
+        "num_reps": num_representative_days,
+        "len_reps": 1,
+        "num_commit": next(iter(number_of_commitment.values())),
+        "num_dispatch": 1,
+    }
+
+    experiment_init_content = f'''# sparow_examples.organized_gtep_runs.{experimental_name}
+
+from sparow.sp import stochastic_program
+import importlib
+
+
+app_data = {repr(app_data)}
+model_data = {repr({"scenarios": model_scenarios})}
+
+
+def model_builder(data, args):
+    num_stages = data["stages"]
+    num_rep_days = data["num_reps"]
+    len_rep_days = data["len_reps"]
+    num_commit_p = data["num_commit"]
+    num_disp = data["num_dispatch"]
+    alpha = data["alpha"]
+    PF = data["PF"]
+
+    scenario = importlib.import_module(
+        "sparow_examples.organized_gtep_runs.{experimental_name}." + data["ID"]
+    )
+    return scenario.create_gtep_model(
+        num_stages=num_stages,
+        num_rep_days=num_rep_days,
+        len_rep_days=len_rep_days,
+        num_commit_p=num_commit_p,
+        num_disp=num_disp,
+        alpha=alpha,
+        flow_model=PF,
+    )
+
+
+def create_sp():
+    sp = stochastic_program(
+        first_stage_variables=[
+            "investmentStage[*].renewableOperational[*]",
+            "investmentStage[*].renewableInstalled[*]",
+            "investmentStage[*].renewableRetired[*]",
+            "investmentStage[*].renewableExtended[*]",
+            "investmentStage[*].renewableDisabled[*]",
+            "investmentStage[*].genOperational[*].binary_indicator_var",
+            "investmentStage[*].genInstalled[*].binary_indicator_var",
+            "investmentStage[*].genRetired[*].binary_indicator_var",
+            "investmentStage[*].genDisabled[*].binary_indicator_var",
+            "investmentStage[*].genExtended[*].binary_indicator_var",
+            "investmentStage[*].branchOperational[*].binary_indicator_var",
+            "investmentStage[*].branchInstalled[*].binary_indicator_var",
+            "investmentStage[*].branchRetired[*].binary_indicator_var",
+            "investmentStage[*].branchDisabled[*].binary_indicator_var",
+            "investmentStage[*].branchExtended[*].binary_indicator_var",
+        ]
+    )
+    sp.initialize_application(app_data=app_data)
+    sp.initialize_model(
+        name="model", model_data=model_data, model_builder=model_builder
+    )
+    return sp
+'''
+    with open(experiment_path / "__init__.py", "w") as f:
+        f.write(experiment_init_content)
 
     # Create per-scenario directories and config files
     for scenario in scenarios:
         scenario_path = experiment_path / scenario
         scenario_path.mkdir(parents=True, exist_ok=True)
-
-        # Add __init__.py
-        (scenario_path / "__init__.py").touch(exist_ok=True)
 
         scenario_config = {
             "experimental_name": experimental_name,
@@ -169,6 +242,10 @@ def create_gtep_model(
         with open(scenario_path / "scenario_config.json", "w") as f:
             json.dump(scenario_config, f, indent=4)
 
+        # Create scenario __init__.py
+        with open(scenario_path / "__init__.py", "w") as f:
+            f.write("from .driver_gtep import create_gtep_model\n")
+
         # Create driver_gtep.py
         with open(scenario_path / "driver_gtep.py", "w") as f:
             f.write(driver_template)
@@ -181,8 +258,9 @@ def create_gtep_model(
 
     print(f"Experimental setup created at: {experiment_path.resolve()}")
 
+
 if __name__ == "__main__":
-    experimental_name = "exp_A9"
+    experimental_name = "exp_Z9"
     case_study = "9-bus"
 
     scenarios = ["scenario_A", "scenario_B"]
