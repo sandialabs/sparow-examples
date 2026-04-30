@@ -87,54 +87,11 @@ print(obj_val)
     with open(experiment_path / "execute_run.py", "w") as f:
         f.write(execute_run_template)
 
-    source_data_dir = Path.cwd() / "data"
-    if not source_data_dir.exists() or not source_data_dir.is_dir():
+    source_model_dir = Path.cwd() / "model"
+    if not source_model_dir.exists() or not source_model_dir.is_dir():
         raise FileNotFoundError(
-            f"Could not find source data directory at: {source_data_dir}"
+            f"Could not find source data directory at: {source_model_dir}"
         )
-
-    # Template driver file contents
-    driver_template = '''from pathlib import Path
-from pyomo.core import TransformationFactory
-from gtep.gtep_model import ExpansionPlanningModel
-from gtep.gtep_data import ExpansionPlanningData
-
-current_file_dir = Path(__file__).resolve().parent
-
-
-def create_gtep_model(
-    *, num_stages, num_rep_days, len_rep_days, num_commit_p, num_disp, alpha=1.0, flow_model="CP"
-):
-    data_path = str(current_file_dir / "data")
-    data_object = ExpansionPlanningData()
-    data_object.load_prescient(data_path)
-    # data_object.load_storage_csv(data_path)
-
-    mod_object = ExpansionPlanningModel(
-        stages=num_stages,
-        data=data_object,
-        num_reps=num_rep_days,
-        len_reps=len_rep_days,
-        num_commit=num_commit_p,
-        num_dispatch=num_disp,
-    )
-
-    mod_object.config["include_commitment"] = True
-    mod_object.config["alpha_scaler"] = alpha
-    mod_object.config["flow_model"] = flow_model
-    mod_object.config["storage"] = True
-    mod_object.config["transmission"] = True
-    mod_object.config["thermal_generation"] = True
-    mod_object.config["renewable_generation"] = True
-    mod_object.config["scale_loads"] = False
-    mod_object.config["scale_texas_loads"] = False
-
-    mod_object.create_model()
-    TransformationFactory("gdp.bound_pretransformation").apply_to(mod_object.model)
-    TransformationFactory("gdp.bigm").apply_to(mod_object.model)
-
-    return mod_object.model
-'''
 
     # Build model_data["scenarios"] dynamically
     model_scenarios = []
@@ -239,22 +196,14 @@ def create_sp():
             "number_of_commitment": number_of_commitment[scenario],
         }
 
+        # Copy data directory into scenario directory
+        destination_model_dir = scenario_path
+        if destination_model_dir.exists():
+            shutil.rmtree(destination_model_dir)
+        shutil.copytree(source_model_dir, destination_model_dir)
+
         with open(scenario_path / "scenario_config.json", "w") as f:
             json.dump(scenario_config, f, indent=4)
-
-        # Create scenario __init__.py
-        with open(scenario_path / "__init__.py", "w") as f:
-            f.write("from .driver_gtep import create_gtep_model\n")
-
-        # Create driver_gtep.py
-        with open(scenario_path / "driver_gtep.py", "w") as f:
-            f.write(driver_template)
-
-        # Copy data directory into scenario directory
-        destination_data_dir = scenario_path / "data"
-        if destination_data_dir.exists():
-            shutil.rmtree(destination_data_dir)
-        shutil.copytree(source_data_dir, destination_data_dir)
 
     print(f"Experimental setup created at: {experiment_path.resolve()}")
 
