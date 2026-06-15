@@ -28,7 +28,7 @@ all_values = np.concatenate(
     list(ampl_data.values())
 )  # concatenate values into a single array for KDE
 kde = gaussian_kde(all_values)
-tails_of_distr = 0.05 * (max(all_values) - min(all_values))  # using 5%
+tails_of_distr = 0.02 * (max(all_values) - min(all_values))  # using 2% (more likely to be feasible)
 x_range = np.linspace(
     min(all_values) - tails_of_distr, max(all_values) + tails_of_distr, 1000
 )
@@ -104,7 +104,7 @@ sampe_probs = sample_probs.reshape(n, 4)
 scens_list = []  # list of scenarios to populate
 for idx, scen in enumerate(samples):
     scens_list.append(
-        {"ID": f"{idx}", "Demand": scen, "Probability": np.prod(sample_probs[idx])}
+        {"ID": f"{idx}", "Demand": scen.tolist(), "Probability": np.prod(sample_probs[idx])}
     )
 # normalize HF scenario probabilities
 norm_term = sum(scens_list[s_idx]["Probability"] for s_idx in range(len(scens_list)))
