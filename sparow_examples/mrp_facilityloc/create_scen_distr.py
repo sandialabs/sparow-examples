@@ -36,6 +36,7 @@ kde_values = kde(x_range)
 
 # plot gaussian KDE
 plt.plot(x_range, kde_values, label="Gaussian KDE")
+# plot histogram of ampl_data values to visualize how well the KDE fits the data
 plt.hist(
     all_values, bins=20, density=True, label="Histogram"
 )  # density=True to represent PDF
@@ -47,10 +48,12 @@ plt.savefig("histogram.png")
 
 # sample from gaussian KDE
 samples = kde.resample(4 * n)  # sample n times (each scenario has dim 4)
+
 samples = np.clip(
     samples, a_min=0, a_max=None
 )  # replace negatives with 0... TODO: is this statistically sound???
 
+# We now want to assign approximate probabilities to each sampled value.
 # gaussian KDE gives us a continuous distribution so we have to estimate the probabilities associated with each sample by integrating the PDF
 num_bins = 8    # number of bins in the histogram; if any larger than 8, some bins will be empty
 bin_edges = np.linspace(samples.min(), samples.max(), num_bins + 1)
@@ -59,7 +62,7 @@ bin_edges = np.linspace(samples.min(), samples.max(), num_bins + 1)
 with open("bigM.txt", "w") as file:
     file.write(str(samples.max()))
 
-# function that estimates probability of a demand value as the density of the bin it falls into
+# function that estimates probability of a demand value as the probability mass of the bin it falls into
 def probability_by_bin(bin_edges, bin_probs, value):
     ### THIS FUNCTION IS FROM SANDIA AI -RMA
 
@@ -80,17 +83,20 @@ def probability_by_bin(bin_edges, bin_probs, value):
 
     return bin_probs[bin_index]
 
-# calculate the density associated with each bin
+# calculate the probability mass associated with each bin
 bin_probs = []
 for i in range(num_bins):
     low, high = bin_edges[i], bin_edges[i + 1]
     prob, _ = quad(kde, low, high)  # this step does the integration
     bin_probs.append(prob)
+
+# Normalize the bin probabilities so that they sum to 1
 norm_factor = sum(bin_probs)
+bin_probs = [p / norm_factor for p in bin_probs] if norm_factor > 0 else bin_probs
 
 # estimate the probability associated with each demand value
 sample_probs = []
-for sample in samples:
+for sample in samples: # samples is 2d, where each row is a scenario and each column is the demand for a city
     for dem_in_one_city in sample:
         sample_probs.append(probability_by_bin(bin_edges, bin_probs, dem_in_one_city))
 
@@ -98,17 +104,24 @@ for sample in samples:
 samples = samples.reshape(n, 4)  # reshape array so each row corresponds to a scenario
 # turn sample_probs into a numpy array so that it can similarly be reshaped
 sample_probs = np.array(sample_probs)
-sampe_probs = sample_probs.reshape(n, 4)
+sample_probs = sample_probs.reshape(n, 4)
 
 # create scenario list in the format model_data expects
 scens_list = []  # list of scenarios to populate
 for idx, scen in enumerate(samples):
     scens_list.append(
-        {"ID": f"{idx}", "Demand": scen.tolist(), "Probability": np.prod(sample_probs[idx])}
+        {"ID": f"{idx}", "Demand": scen.tolist(), "Probability": float(np.prod(sample_probs[idx]))}
     )
+
 # normalize HF scenario probabilities
 norm_term = sum(scens_list[s_idx]["Probability"] for s_idx in range(len(scens_list)))
 for s_idx in range(len(scens_list)):
     scens_list[s_idx]["Probability"] /= norm_term
 
 np.save("scens_list.npy", scens_list)
+
+if __name__ == "__main__":
+    
+    print("Sampled scenarios with probabilities:")
+    for scen in scens_list:
+        print(f"Scenario ID: {scen['ID']}, Demand: {scen['Demand']}, Probability: {scen['Probability']}")

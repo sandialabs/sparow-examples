@@ -3,6 +3,7 @@ import itertools
 import math
 import random
 import numpy as np
+from pathlib import Path
 from sparow.sp import stochastic_program
 
 """
@@ -27,12 +28,19 @@ app_data["c"] = [
 app_data["k"] = [1550, 650, 1750]  # facility capacity
 app_data["num_HF"] = 10
 
-with open("bigM.txt", "r") as file: # read in big-M value from bigM.txt
+BASE_DIR = Path(__file__).resolve().parent # path to directory that contains this file
+
+bigM_path = BASE_DIR / "bigM.txt"
+with open(bigM_path, "r") as file: # read in big-M value from bigM.txt
     bigM_str = file.read()
 app_data["bigM"] = float(bigM_str)
 
-# read in model_data from .npy file
-model_data = {"scenarios": np.load("scens_list.npy", allow_pickle=True)}
+scens_path = BASE_DIR / "scens_list.npy"
+scenarios = np.load(scens_path, allow_pickle=True).tolist()
+model_data = {
+    "data": {}, # deterministic, model-specific parameters not already in app_data 
+    "scenarios": scenarios, # list of scenario dictionaries, each containing at least an "ID" plus the scenario-specific data
+}
 
 def LF1_builder(data, args):
     n = data["n"]
@@ -191,28 +199,44 @@ def HF_builder(data, args):
 #
 
 
-def HF_grid_facilityloc():
+def HF_mrp_grid_facilityloc():
+    print("\n Initializing HF MRP grid facilityloc model...")
     sp = stochastic_program(first_stage_variables=["x"])
+
+    print(f"Application data: {app_data}")
     sp.initialize_application(app_data=app_data)
+
+    print(f"Model data: {model_data}")
     sp.initialize_model(
         name="HF", model_data=model_data, model_builder=HF_builder
     )
     return sp
 
 
-def LF1_grid_facilityloc():
+def LF1_mrp_grid_facilityloc():
+    print("\n Initializing LF1 MRP grid facilityloc model...")
     sp = stochastic_program(first_stage_variables=["x"])
+
+    print(f"Application data: {app_data}")
     sp.initialize_application(app_data=app_data)
+
+    print(f"Model data: {model_data}")
     sp.initialize_model(
-        name="LF1", model_data=model_data, model_builder=LF1_builder
+        name="LF1", model_data=model_data, model_builder=LF1_builder # ERROR HERE
     )
     return sp
 
 
-def LF2_grid_facilityloc():
+def LF2_mrp_grid_facilityloc():
+    print("\n Initializing LF2 MRP grid facilityloc model...")
     sp = stochastic_program(first_stage_variables=["x"])
+
+    print(f"Application data: {app_data}")
     sp.initialize_application(app_data=app_data)
+
+    print(f"Model data {model_data}")
     sp.initialize_model(
         name="LF2", model_data=model_data, model_builder=LF2_builder
     )
+
     return sp
