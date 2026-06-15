@@ -27,12 +27,12 @@ app_data["c"] = [
 app_data["k"] = [1550, 650, 1750]  # facility capacity
 app_data["num_HF"] = 10
 
-with open("bigM.txt", "r") as file: # read in big-M value from bibM.txt
+with open("bigM.txt", "r") as file: # read in big-M value from bigM.txt
     bigM_str = file.read()
 app_data["bigM"] = float(bigM_str)
 
 # read in model_data from .npy file
-model_data = {"single_fidelity": {"scenarios": np.load("scens_list.npy", allow_pickle=True)}}
+model_data = {"scenarios": np.load("scens_list.npy", allow_pickle=True)}
 
 def LF1_builder(data, args):
     n = data["n"]
