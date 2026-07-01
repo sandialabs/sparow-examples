@@ -363,7 +363,24 @@ class FarmerCIAdapter(CIProblemAdapter):
         """
         return ["Yield"]
     
+# =================================================================
+# Core CI code expects exactly one standard factory name
+# =================================================================
 
+def get_ci_problem_adapter(model_name="Advanced", use_integer=False):
+    """
+    Module-level factory function expected by the generic sparow.ci core code.
+
+    This function dispatches to the appropriate farmer-specific CI adapter
+    (Basic or Advanced) based on `model_name`, while exposing one standard
+    factory name that the core CI logic expects to call.
+    """
+    if model_name == "Basic":
+        return get_basic_ci_problem_adapter(use_integer=use_integer)
+    if model_name == "Advanced":
+        return get_advanced_ci_problem_adapter(use_integer=use_integer)
+    raise ValueError(f"Unknown farmer model_name: {model_name}")
+    
 
 def get_basic_ci_problem_adapter(use_integer=False):
     return FarmerCIAdapter(
@@ -374,7 +391,6 @@ def get_basic_ci_problem_adapter(use_integer=False):
         first_stage_variables=["DevotedAcreage[*]"],
         use_integer=use_integer,
     )
-
 
 def get_advanced_ci_problem_adapter(use_integer=False):
     return FarmerCIAdapter(
