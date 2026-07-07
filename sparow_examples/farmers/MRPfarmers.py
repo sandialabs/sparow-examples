@@ -8,6 +8,8 @@
 #                    with equal probability. The full scenario distribution is a 
 #                    discrete uniform over all resulting scenario vectors.
 #
+# You can run this file as a script to write the full Advanced Farmers scenario population to file.
+#
 # NOTE: Advanced farmers intentionally has a finite set of possible scenarios,
 # so that the Extensive Form can be solved over all possible scenarios to get the 
 # exact optimal value for computing the true optimality gap of any given 
@@ -18,6 +20,10 @@ import numpy as np
 from sparow.sp import stochastic_program
 from sparow.ef import ExtensiveFormSolver
 from sparow.ci import CIProblemAdapter
+
+import argparse
+import json
+import os
 
 # ==== GLOBAL DATA =============================================================
 
@@ -401,3 +407,37 @@ def get_advanced_ci_problem_adapter(use_integer=False):
         first_stage_variables=["DevotedAcreage[*]"],
         use_integer=use_integer,
     )
+
+# =================================================================
+# Write the scenario data to file for use in the CI tests
+# =================================================================
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Write the full Advanced Farmers scenario population to a file "
+                    "that sparow.ci.cli --scenario-file can read."
+    )
+    parser.add_argument("--output", required=True, help="Output file path ending in .json or .npy",)
+    args = parser.parse_args()
+
+    adapter = get_advanced_ci_problem_adapter()
+    scenarios = adapter.get_scenario_population()
+    adapter.validate_scenario_population(scenarios)
+
+    outpath = os.path.abspath(args.output)
+    os.makedirs(os.path.dirname(outpath), exist_ok=True) if os.path.dirname(outpath) else None
+
+    if outpath.endswith(".json"):
+        with open(outpath, "w") as f:
+            json.dump({"scenarios": scenarios}, f, indent=2)
+    elif outpath.endswith(".npy"):
+        np.save(outpath, {"scenarios": scenarios}, allow_pickle=True)
+    else:
+        raise ValueError("Output file must end with .json or .npy")
+
+    print(f"Wrote {len(scenarios)} scenarios to: {outpath}")
+    print(f"Use this with: --scenario-file {outpath}")
+
+
+if __name__ == "__main__":
+    main()
