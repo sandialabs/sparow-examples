@@ -296,6 +296,8 @@ class FarmerCIAdapter(CIProblemAdapter):
         2. build_model_data(scenarios)
         3. build_stochastic_program(model_data)
         4. first_stage_variable_order()
+
+    It also implements a required_scenario_keys() method that is specific to this problem's data.
     """
 
     def __init__(

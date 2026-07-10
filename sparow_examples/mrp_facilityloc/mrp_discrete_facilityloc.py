@@ -5,6 +5,7 @@ import random
 import numpy as np
 from pathlib import Path
 from sparow.sp import stochastic_program
+from sparow.ci import CIProblemAdapter
 
 """
 FACILITY LOCATION
@@ -216,3 +217,154 @@ def LF_mrp_discrete_facilityloc():
         name="LF", model_data=model_data, model_builder=LF_builder
     )
     return sp
+
+
+# ==== CI ADAPTER ==============================================================
+
+class FacilityLocCIAdapter(CIProblemAdapter):
+    """
+    Adapter that makes HF and LF facility location models compatible with
+    generic sparow.ci ACVMRP / true-gap evaluation code for estimating confidence intervals.
+
+    This class implements the 4 abstract methods required by the
+    core sparow.ci CIProblemAdapter base class:
+        1. get_scenario_population()
+        2. build_model_data(scenarios)
+        3. build_stochastic_program(model_data) [THIS IS THE HF MODEL]
+        4. first_stage_variable_order()
+
+    It also implements a required_scenario_keys() method that is specific to this problem's data.
+
+    Moreover, it overrides the following methods in order to support low-fidelity models for ACV-MRP:
+        - build_low_fidelity_stochastic_program(model_data)
+        - get_fidelity_levels()  # returns ["high", "low"]
+        - supports_acv()  # returns True
+    """
+
+    def __init__(
+        self,
+        model_name,
+        scenario_data,
+        model_builder,
+        app_data=None,
+        first_stage_variables=None,
+    ):
+        self.model_name = model_name
+        self.scenario_data = scenario_data
+        self.model_builder = model_builder
+        self.app_data = {} if app_data is None else dict(app_data)
+        self.first_stage_variables = (
+            ["x"]
+            if first_stage_variables is None
+            else first_stage_variables
+        )
+
+    def get_scenario_population(self):
+        """
+        Return the full finite / historical scenario population as a list
+        of scenario dictionaries.
+        """
+        return self.scenario_data["scenarios"]
+
+    def build_model_data(self, scenarios):
+        """
+        Build the model_data dictionary expected by Sparow.
+        """
+        return {"data": {}, "scenarios": scenarios}
+
+    def build_stochastic_program(self, model_data):
+        """
+        Build and return the Sparow stochastic_program object for this
+        facility location model instance. THIS IS THE HF MODEL.
+        """
+        sp = stochastic_program(first_stage_variables=self.first_stage_variables)
+        sp.initialize_application(app_data=self.app_data)
+        sp.initialize_model(
+            name="HF",
+            model_data=model_data,
+            model_builder=HF_builder,
+        )
+        return sp
+
+    def first_stage_variable_order(self):
+        """
+        Return the ordered list of first-stage variable names.
+
+        This order is used by the generic CI code to:
+            - extract xhat from solved EF results,
+            - convert xhat dicts into vectors for sp.evaluate(...).
+        """
+        # Return the first-stage variables in order: x[0], x[1], x[2], ...
+        n = self.app_data.get("n", 3)
+        return [f"x[{i}]" for i in range(n)]
+
+    def required_scenario_keys(self):
+        """
+        Facility location scenarios dictionaries must contain a Demand field in addition to the
+        always-required "ID" and "Probability" keys.
+        """
+        return ["Demand"]
+
+    def build_low_fidelity_stochastic_program(self, model_data):
+        """
+        Build and return the low-fidelity stochastic program for ACV-MRP.
+        This is the LF (relaxed) model where second-stage binary variables are continuous.
+        """
+        sp = stochastic_program(first_stage_variables=self.first_stage_variables)
+        sp.initialize_application(app_data=self.app_data)
+        sp.initialize_model(
+            name="LF",
+            model_data=model_data,
+            model_builder=LF_builder,
+        )
+        return sp
+
+    def get_fidelity_levels(self):
+        """Return list of supported fidelity levels."""
+        return ['high', 'low']
+
+    def supports_acv(self):
+        """
+        Whether this adapter supports ACV-MRP.
+        Returns True since we have both HF and LF models implemented.
+        """
+        return True
+
+
+# =================================================================
+# Core CI code expects exactly one standard factory name
+# =================================================================
+
+def get_ci_problem_adapter(model_name="HF", use_integer=False):
+    """
+    Module-level factory function expected by the generic sparow.ci core code.
+
+    This function dispatches to the appropriate facility location-specific CI adapter
+    (HF or LF) based on `model_name`, while exposing one standard
+    factory name that the core CI logic expects to call.
+    """
+    if model_name == "HF":
+        return get_hf_ci_problem_adapter()
+    if model_name == "LF":
+        return get_lf_ci_problem_adapter()
+    raise ValueError(f"Unknown facility location model_name: {model_name}")
+
+
+def get_hf_ci_problem_adapter():
+    return FacilityLocCIAdapter(
+        model_name="HF",
+        scenario_data=model_data,
+        model_builder=HF_builder,
+        app_data=app_data,
+        first_stage_variables=["x"],
+    )
+
+
+def get_lf_ci_problem_adapter():
+    return FacilityLocCIAdapter(
+        model_name="LF",
+        scenario_data=model_data,
+        model_builder=LF_builder,
+        app_data=app_data,
+        first_stage_variables=["x"],
+    )
