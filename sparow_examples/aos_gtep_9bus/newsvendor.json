@@ -1,0 +1,630 @@
+{
+    "metadata": {
+        "context_name": "enumerate_linear_solutions",
+        "policy": "keep_all",
+        "as_solution_source": "or_topas.solnpool.solnpool._as_pyomo_solution"
+    },
+    "solutions": {
+        "0": {
+            "id": 0,
+            "variables": [
+                {
+                    "value": 64.5,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 78.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 87.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 93.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 59.99999999999999,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 76.5,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "1": {
+            "id": 1,
+            "variables": [
+                {
+                    "value": 77.70000000000005,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 73.20000000000005,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 72.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 81.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 87.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 72.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 78.18000000000002,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "2": {
+            "id": 2,
+            "variables": [
+                {
+                    "value": 84.29999999999995,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 79.79999999999995,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 78.59999999999991,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 78.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 84.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 78.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 80.93999999999997,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "3": {
+            "id": 3,
+            "variables": [
+                {
+                    "value": 88.70000000000005,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 84.20000000000005,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 83.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 82.40000000000009,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 82.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 82.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 84.06000000000004,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "4": {
+            "id": 4,
+            "variables": [
+                {
+                    "value": 15.0,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 82.5,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 100.5,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 109.5,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 115.5,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 15.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 84.60000000000001,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "5": {
+            "id": 5,
+            "variables": [
+                {
+                    "value": 22.5,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 90.0,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 108.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 117.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 123.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 0.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 92.10000000000001,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "6": {
+            "id": 6,
+            "variables": [
+                {
+                    "value": 64.5,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 78.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 87.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 1000.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 257.9,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "7": {
+            "id": 7,
+            "variables": [
+                {
+                    "value": 64.5,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 78.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 1000.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 93.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 259.1,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "8": {
+            "id": 8,
+            "variables": [
+                {
+                    "value": 77.70000000000005,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 73.20000000000005,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 72.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 81.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 1000.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 72.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 260.78000000000003,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        },
+        "9": {
+            "id": 9,
+            "variables": [
+                {
+                    "value": 64.5,
+                    "fixed": false,
+                    "name": "s[None,1].y",
+                    "index": 0,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,2].y",
+                    "index": 1,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 1000.0,
+                    "fixed": false,
+                    "name": "s[None,3].y",
+                    "index": 2,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 87.0,
+                    "fixed": false,
+                    "name": "s[None,4].y",
+                    "index": 3,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 93.0,
+                    "fixed": false,
+                    "name": "s[None,5].y",
+                    "index": 4,
+                    "discrete": false,
+                    "suffix": {}
+                },
+                {
+                    "value": 60.0,
+                    "fixed": false,
+                    "name": "s[None,1].x",
+                    "index": 5,
+                    "discrete": false,
+                    "suffix": {}
+                }
+            ],
+            "objectives": [
+                {
+                    "value": 260.9,
+                    "name": "obj",
+                    "index": 0,
+                    "suffix": {}
+                }
+            ],
+            "suffix": {}
+        }
+    },
+    "pool_config": {}
+}
