@@ -9,9 +9,10 @@ def create_experimental_setups(
     scenarios: list[str],
     alpha: dict,
     growth_rate: float,
-    num_representative_days: int,
+    num_representative_days: dict[str, int],
     power_flow_fidelity: dict,
     relaxations: dict,
+    include_commitment: dict,
     number_of_commitment: dict,
     base_dir: str = ".",
 ) -> None:
@@ -27,8 +28,10 @@ def create_experimental_setups(
 
     scenario_dicts = {
         "alpha": alpha,
+        "num_representative_days": num_representative_days,
         "power_flow_fidelity": power_flow_fidelity,
         "relaxations": relaxations,
+        "include_commitment": include_commitment,
         "number_of_commitment": number_of_commitment,
     }
 
@@ -60,6 +63,10 @@ from sparow.ph import ProgressiveHedgingSolver
 import pyomo.opt
 from pyomo.common import unittest
 from sparow.sp.util import relax_second_stage
+import time
+import sys, os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+from post_process_gtep_solution import post_process
 
 solvers = set(pyomo.opt.check_available_solvers("gurobi"))
 
@@ -72,17 +79,30 @@ except:
 
 relaxations = {repr(relaxations)}
 rd = {{k: v["relax_second_stage"] for k, v in relaxations.items()}}
+
+script_start = time.perf_counter()
 sp = create_sp()
 sp.add_transformation(relax_second_stage, relax_dict=rd)
 solver = ExtensiveFormSolver()
 solver.set_options(solver="gurobi", loglevel="INFO")
-results = solver.solve(sp)
+
+solve_start = time.perf_counter()
+res_munch = solver.solve_and_return_EF(sp)
+results = res_munch.solutions
+solve_end = time.perf_counter()
+
 results_dict = results.to_dict()
 
 soln = next(iter(results_dict["solutions"].values()))
 
 obj_val = soln["objectives"][0]["value"]
-print(obj_val)
+total_end = time.perf_counter()
+print(f"Objective value: {{obj_val}}")
+print(f"Solve time (seconds): {{solve_end - solve_start:.4f}}")
+print(f"Total runtime (seconds): {{total_end - script_start:.4f}}")
+
+mod_object=res_munch.model.s['model','scenario_A']
+post_process(mod_object)
 '''
     with open(experiment_path / "execute_run.py", "w") as f:
         f.write(execute_run_template)
@@ -105,15 +125,18 @@ print(obj_val)
                 "Probability": probability,
                 "alpha": alpha[scenario],
                 "PF": power_flow_fidelity[scenario],
+                "num_reps": num_representative_days[scenario],
+                "num_commit": number_of_commitment[scenario],
+                "include_commitment": include_commitment[scenario],
             }
         )
 
     # Build experiment-level __init__.py
     app_data = {
         "stages": 3,
-        "num_reps": num_representative_days,
-        "len_reps": 1,
-        "num_commit": next(iter(number_of_commitment.values())),
+        #"num_reps": num_representative_days,
+        "len_reps": 24,
+       # "num_commit": next(iter(number_of_commitment.values())),
         "num_dispatch": 1,
     }
 
@@ -135,6 +158,7 @@ def model_builder(data, args):
     num_disp = data["num_dispatch"]
     alpha = data["alpha"]
     PF = data["PF"]
+    include_commitment = data["include_commitment"]
 
     scenario = importlib.import_module(
         "sparow_examples.organized_gtep_runs.{experimental_name}." + data["ID"]
@@ -147,6 +171,7 @@ def model_builder(data, args):
         num_disp=num_disp,
         alpha=alpha,
         flow_model=PF,
+        include_commitment=include_commitment,
     )
 
 
@@ -190,10 +215,11 @@ def create_sp():
             "scenario": scenario,
             "alpha": alpha[scenario],
             "growth_rate": growth_rate,
-            "num_representative_days": num_representative_days,
+            "num_representative_days": num_representative_days[scenario],
             "power_flow_fidelity": power_flow_fidelity[scenario],
             "relaxations": relaxations[scenario],
             "number_of_commitment": number_of_commitment[scenario],
+            "include_commitment": include_commitment[scenario],
         }
 
         # Copy data directory into scenario directory
@@ -209,32 +235,36 @@ def create_sp():
 
 
 if __name__ == "__main__":
-    experimental_name = "exp_Z9"
+
+    experimental_name = "new_NORSS_UC_DC"
     case_study = "9-bus"
 
-    scenarios = ["scenario_A", "scenario_B"]
+    scenarios = ["scenario_A"]
 
     alpha = {
         "scenario_A": 1.0,
-        "scenario_B": 0.8
     }
 
     growth_rate = 1.00
-    num_representative_days = 2
+
+    num_representative_days = {
+        "scenario_A": 6,
+    }
 
     power_flow_fidelity = {
-        "scenario_A": "CP",
-        "scenario_B": "DC"
+        "scenario_A": "DC",
     }
 
     relaxations = {
-        "scenario_A": {"relax_second_stage": True, "unit_commitment": False},
-        "scenario_B": {"relax_second_stage": False, "unit_commitment": True}
+        "scenario_A": {"relax_second_stage": False, "unit_commitment": True},
+    }
+
+    include_commitment = {
+        "scenario_A": True
     }
 
     number_of_commitment = {
-        "scenario_A": 12,
-        "scenario_B": 12
+        "scenario_A": 24,
     }
 
     create_experimental_setups(
@@ -247,5 +277,6 @@ if __name__ == "__main__":
         power_flow_fidelity=power_flow_fidelity,
         relaxations=relaxations,
         number_of_commitment=number_of_commitment,
+        include_commitment=include_commitment,
         base_dir="."
     )
