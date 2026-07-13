@@ -2150,7 +2150,7 @@ def model_data_references(m):
         for thermalGen in m.thermalGenerators
     }
 
-    print(sum(m.thermalCapacity.values()))
+    # print(sum(m.thermalCapacity.values()))
 
     # Lifetime of each generator; needs units
     m.lifetimes = {
@@ -2175,7 +2175,7 @@ def model_data_references(m):
         for renewableGen in m.renewableGenerators
     }
 
-    print(sum(m.renewableCapacity.values()))
+    # print(sum(m.renewableCapacity.values()))
 
     # A fraction of renewableCapacity representing fraction of capacity
     # that can be reliably counted toward planning reserve requirement
