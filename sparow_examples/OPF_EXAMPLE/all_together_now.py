@@ -23,7 +23,7 @@ from parameterized import parameterized
 from egret.parsers.matpower_parser import create_ModelData
 import time
 
-
+random.seed(55)
 dr=1e7
 max_its=20
 scenarios = ["1", "2", "3", "4", "5", "6", "7", "8"]
@@ -202,7 +202,7 @@ solver.set_options(solver="ipopt", loglevel="INFO")
 start = time.time()
 results = solver.solve(sp)
 end = time.time()
-embed()
+
 # Save CPU time and objective for HF_EF
 results_summary_EF["HF_EF"]["cpu_time"] = end - start
 results_summary_EF["HF_EF"]["objective"] = results.to_dict()['solutions'][0]['objectives'][0]['value']

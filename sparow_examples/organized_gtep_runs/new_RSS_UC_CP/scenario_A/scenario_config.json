@@ -1,0 +1,15 @@
+{
+    "experimental_name": "new_RSS_UC_CP",
+    "case_study": "9-bus",
+    "scenario": "scenario_A",
+    "alpha": 1.0,
+    "growth_rate": 1.0,
+    "num_representative_days": 6,
+    "power_flow_fidelity": "CP",
+    "relaxations": {
+        "relax_second_stage": true,
+        "unit_commitment": true
+    },
+    "number_of_commitment": 24,
+    "include_commitment": true
+}
