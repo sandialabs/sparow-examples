@@ -18,7 +18,7 @@
 import pyomo.environ as pyo
 import numpy as np
 from sparow.sp import stochastic_program
-from sparow.ef import ExtensiveFormSolver
+# from sparow.ef import ExtensiveFormSolver
 from sparow.ci import CIProblemAdapter
 
 import argparse

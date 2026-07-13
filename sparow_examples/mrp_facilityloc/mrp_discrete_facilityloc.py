@@ -7,15 +7,21 @@ from pathlib import Path
 from sparow.sp import stochastic_program
 from sparow.ci import CIProblemAdapter
 
+import argparse
+import json
+import os
+
 """
 FACILITY LOCATION
     - HF model is a MIP (first-stage binary variables, second-stage BINARY AND CONTINUOUS variables)
-        - HF scenarios can be Low, Medium, and High for each customer (e.g., ['Low', 'High', 'Low', 'Medium'])
         - Each facility can support a fixed number of customers (binary vars in the second stage)
     - LF model relaxes the second stage binary vars
         - LF scenarios are the same as HF
         - Constraint ensuring logic between z and y is taken out so that y takes on continuous values
-* Can specify number of scenarios by including "num_HF" key in app_data; otherwise, defaults to 8
+* Scenarios are generated using linear interpolation between low and high demand values for each city, 
+  creating a discrete uniform distribution over all resulting scenarios
+* The number of scenarios is controlled by the shell script's N parameter, not by app_data
+* You can run this file as a script to write the full scenario population to a .json or .npy file
 * Problem data adapted from https://ampl.com/colab/notebooks/ampl-development-tutorial-26-stochastic-capacitated-facility-location-problem.html#problem-description
 """
 
@@ -27,7 +33,6 @@ app_data["c"] = [
     [8650.40, 7539.055, 4539.72, 15024.325],
 ]  # servicing costs
 app_data["k"] = [1550, 650, 1750]  # facility capacity
-app_data["num_HF"] = 10
 app_data["s"] = [1, 1, 2] # max number of customers each facility can service
 app_data["a"] = [
     [5688.12, 6601.44, 8723.91, 21998.50],
@@ -42,12 +47,76 @@ with open(bigM_path, "r") as file: # read in big-M value from bigM.txt
     bigM_str = file.read()
 app_data["bigM"] = float(bigM_str)
 
-scens_path = BASE_DIR / "scens_list.npy"
-scenarios = np.load(scens_path, allow_pickle=True).tolist()
-model_data = {
-    "data": {}, # deterministic, model-specific parameters not already in app_data 
-    "scenarios": scenarios, # list of scenario dictionaries, each containing at least an "ID" plus the scenario-specific data
+
+# ==== SCENARIO DATA ===========================================================
+
+# Define low and high demand values for each city (customer)
+low_demands = [376.65200372, 832.15820446, 309.19416634, 68.99908022]
+high_demands = [914.15449876, 1475.04577916, 696.24625082, 227.55065548]
+
+class FacilityLocationScenarioData(object):
+    """
+    Construct the full finite population set of facility-location scenarios.
+
+    For each customer, linearly interpolate between the low and high demand
+    values using num_data_points support points. The full
+    scenario distribution is then the Cartesian product of those support
+    points across the customers, with equal probability assigned to each
+    possible scenario vector.
+    """
+
+    def __init__(self, num_data_points):
+        self.num_data_points = num_data_points
+
+        self.demand_supports = []
+        for low, high in zip(low_demands, high_demands):
+            self.demand_supports.append(np.linspace(low, high, num_data_points))
+
+    def scenario_generator(self):
+        """
+        Final output is a dictionary with a single key-value pair.
+        The key is "scenarios"
+        The value is a list, called scen_dict_list. It contains one dictionary per possible
+        population scenario. Each scenario's dictionary must contain "ID", demands, and
+        "Probability".
+        """
+        total_scens = self.num_data_points ** len(self.demand_supports)
+        scen_prob = 1.0 / total_scens # each scenario vector gets equal probability
+
+        scen_id = 0 # naming convention: each scenario ID string ends in a number (population index)
+        scen_dict_list = []
+
+        # Use itertools.product to get cartesian product
+        for demand_tuple in itertools.product(*self.demand_supports):
+            scen_dict_list.append(
+                {
+                    "ID": f"scen_{scen_id}",
+                    "Demand": [float(d) for d in demand_tuple],
+                    "Probability": scen_prob,
+                }
+            )
+            scen_id += 1
+
+        return {"scenarios": scen_dict_list}
+
+
+HFScenarioObject = FacilityLocationScenarioData(num_data_points=5)
+LFScenarioObject = FacilityLocationScenarioData(num_data_points=5)
+
+HF_scendata = HFScenarioObject.scenario_generator()
+LF_scendata = LFScenarioObject.scenario_generator()
+
+
+# ==== MODEL DATA ===============================================================
+
+# This is a multi-model container:
+# stores scenario datasets for each model
+scenario_data_by_model = {
+    "HF": HF_scendata,
+    "LF": LF_scendata,
 }
+
+# ==== MODEL BUILDERS ===========================================================
 
 def LF_builder(data, args):
     n = data["n"]
@@ -194,29 +263,29 @@ def HF_builder(data, args):
     return model
 
 
-#
-# options to solve LF and HF models:
-#
+# #
+# # options to solve LF and HF models:
+# #
 
 
-def HF_mrp_discrete_facilityloc():
-    print("\n Initializing HF MRP discrete facilityloc model...")
-    sp = stochastic_program(first_stage_variables=["x"])
-    sp.initialize_application(app_data=app_data)
-    sp.initialize_model(
-        name="HF", model_data=model_data, model_builder=HF_builder
-    )
-    return sp
+# def HF_mrp_discrete_facilityloc():
+#     print("\n Initializing HF MRP discrete facilityloc model...")
+#     sp = stochastic_program(first_stage_variables=["x"])
+#     sp.initialize_application(app_data=app_data)
+#     sp.initialize_model(
+#         name="HF", model_data=model_data, model_builder=HF_builder
+#     )
+#     return sp
 
 
-def LF_mrp_discrete_facilityloc():
-    print("\n Initializing LF MRP discrete facilityloc model...")
-    sp = stochastic_program(first_stage_variables=["x"])
-    sp.initialize_application(app_data=app_data)
-    sp.initialize_model(
-        name="LF", model_data=model_data, model_builder=LF_builder
-    )
-    return sp
+# def LF_mrp_discrete_facilityloc():
+#     print("\n Initializing LF MRP discrete facilityloc model...")
+#     sp = stochastic_program(first_stage_variables=["x"])
+#     sp.initialize_application(app_data=app_data)
+#     sp.initialize_model(
+#         name="LF", model_data=model_data, model_builder=LF_builder
+#     )
+#     return sp
 
 
 # ==== CI ADAPTER ==============================================================
@@ -230,15 +299,17 @@ class FacilityLocCIAdapter(CIProblemAdapter):
     core sparow.ci CIProblemAdapter base class:
         1. get_scenario_population()
         2. build_model_data(scenarios)
-        3. build_stochastic_program(model_data) [THIS IS THE HF MODEL]
+        3. build_stochastic_program(model_data) [DEFAULTS TO HF MODEL]
         4. first_stage_variable_order()
 
     It also implements a required_scenario_keys() method that is specific to this problem's data.
 
     Moreover, it overrides the following methods in order to support low-fidelity models for ACV-MRP:
-        - build_low_fidelity_stochastic_program(model_data)
+
         - get_fidelity_levels()  # returns ["high", "low"]
         - supports_acv()  # returns True
+        - set_active_fidelity
+        - get_active_fidelity
     """
 
     def __init__(
@@ -258,6 +329,7 @@ class FacilityLocCIAdapter(CIProblemAdapter):
             if first_stage_variables is None
             else first_stage_variables
         )
+        self._active_fidelity = "high"
 
     def get_scenario_population(self):
         """
@@ -274,16 +346,26 @@ class FacilityLocCIAdapter(CIProblemAdapter):
 
     def build_stochastic_program(self, model_data):
         """
-        Build and return the Sparow stochastic_program object for this
-        facility location model instance. THIS IS THE HF MODEL.
+        Build and return the stochastic_program object for the currently active fidelity.
         """
         sp = stochastic_program(first_stage_variables=self.first_stage_variables)
         sp.initialize_application(app_data=self.app_data)
-        sp.initialize_model(
-            name="HF",
-            model_data=model_data,
-            model_builder=HF_builder,
-        )
+
+        if self._active_fidelity == "high":
+            sp.initialize_model(
+                name="HF",
+                model_data=model_data,
+                model_builder=HF_builder,
+            )
+        elif self._active_fidelity == "low":
+            sp.initialize_model(
+                name="LF",
+                model_data=model_data,
+                model_builder=LF_builder,
+            )
+        else:
+            raise RuntimeError(f"Invalid active fidelity: {self._active_fidelity}")
+
         return sp
 
     def first_stage_variable_order(self):
@@ -295,7 +377,7 @@ class FacilityLocCIAdapter(CIProblemAdapter):
             - convert xhat dicts into vectors for sp.evaluate(...).
         """
         # Return the first-stage variables in order: x[0], x[1], x[2], ...
-        n = self.app_data.get("n", 3)
+        n = self.app_data.get("n", 3) # 3 is the default number of facilities if not specified in app_data
         return [f"x[{i}]" for i in range(n)]
 
     def required_scenario_keys(self):
@@ -309,7 +391,11 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         """
         Build and return the low-fidelity stochastic program for ACV-MRP.
         This is the LF (relaxed) model where second-stage binary variables are continuous.
+
+        NOTE: argument should be single-model data dictionary of 
+        the form {"data": ..., "scenarios": ...}.
         """
+        print("\n Initializing LF MRP discrete facilityloc model...")
         sp = stochastic_program(first_stage_variables=self.first_stage_variables)
         sp.initialize_application(app_data=self.app_data)
         sp.initialize_model(
@@ -329,6 +415,17 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         Returns True since we have both HF and LF models implemented.
         """
         return True
+    
+    def set_active_fidelity(self, fidelity):
+        """
+        Set the active fidelity level used by build_stochastic_program().
+        """
+        if fidelity not in ("high", "low"):
+            raise ValueError(f"Unknown fidelity level: {fidelity}")
+        self._active_fidelity = fidelity
+
+    def get_active_fidelity(self):
+        return self._active_fidelity
 
 
 # =================================================================
@@ -340,8 +437,7 @@ def get_ci_problem_adapter(model_name="HF", use_integer=False):
     Module-level factory function expected by the generic sparow.ci core code.
 
     This function dispatches to the appropriate facility location-specific CI adapter
-    (HF or LF) based on `model_name`, while exposing one standard
-    factory name that the core CI logic expects to call.
+    (HF or LF) based on "model_name" argument.
     """
     if model_name == "HF":
         return get_hf_ci_problem_adapter()
@@ -353,7 +449,7 @@ def get_ci_problem_adapter(model_name="HF", use_integer=False):
 def get_hf_ci_problem_adapter():
     return FacilityLocCIAdapter(
         model_name="HF",
-        scenario_data=model_data,
+        scenario_data=scenario_data_by_model["HF"],
         model_builder=HF_builder,
         app_data=app_data,
         first_stage_variables=["x"],
@@ -363,8 +459,56 @@ def get_hf_ci_problem_adapter():
 def get_lf_ci_problem_adapter():
     return FacilityLocCIAdapter(
         model_name="LF",
-        scenario_data=model_data,
+        scenario_data=scenario_data_by_model["LF"],
         model_builder=LF_builder,
         app_data=app_data,
         first_stage_variables=["x"],
     )
+
+# =================================================================
+# Write the scenario data to file for use in the CI tests
+# =================================================================
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Write the full facility location scenario population to a file "
+                    "that sparow.ci.cli --scenario-file can read."
+    )
+    parser.add_argument("--output", required=True, help="Output file path ending in .json or .npy")
+    parser.add_argument("--num-data-points", type=int, default=10, help="Number of interpolated demand values per customer (default: 10)")
+    args = parser.parse_args()
+
+    scenario_object = FacilityLocationScenarioData(args.num_data_points)
+    scenario_data = scenario_object.scenario_generator()
+    scen_dict_list = scenario_data["scenarios"]
+    print(f"\n ==== Number of population scenarios: {len(scen_dict_list)} === \n")
+
+    # Scenarios are the same for the LF and HF models
+    adapter = FacilityLocCIAdapter(
+        model_name="HF",
+        scenario_data=scenario_data,
+        model_builder=HF_builder,
+        app_data=app_data,
+        first_stage_variables=["x"],
+    )
+
+    scenarios = adapter.get_scenario_population()
+    adapter.validate_scenario_population(scenarios)
+
+    outpath = os.path.abspath(args.output)
+    os.makedirs(os.path.dirname(outpath), exist_ok=True) if os.path.dirname(outpath) else None
+
+    if outpath.endswith(".json"):
+        with open(outpath, "w") as f:
+            json.dump({"scenarios": scenarios}, f, indent=2)
+    elif outpath.endswith(".npy"):
+        np.save(outpath, {"scenarios": scenarios}, allow_pickle=True)
+    else:
+        raise ValueError("Output file must end with .json or .npy")
+
+    print(f"Wrote {len(scenarios)} scenarios to: {outpath}")
+    print(f"Use this with: --scenario-file {outpath}")
+
+
+if __name__ == "__main__":
+    main()
