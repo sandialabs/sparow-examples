@@ -26,7 +26,7 @@ for index in results.model.s:
 # Run AOS
 aos_results = lp_enum.enumerate_linear_solutions(results.model, solver="gurobi")
 
-if True:
+if False:
     for s in aos_results:
         print(s)
         print(s.objective().value)
@@ -34,5 +34,5 @@ if True:
 # Dump results to a JSON file
 aos_dict = aos_results.to_dict()
 with open('newsvendor.json','w') as OUTPUT:
-    json.dump(aos_dict, OUTPUT, indent=4)
+    json.dump(aos_dict, OUTPUT, indent=0)
 
