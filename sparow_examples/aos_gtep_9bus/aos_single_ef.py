@@ -1,29 +1,27 @@
 import json
-from or_topas.aos import lp_enum
-from sparow.ef import ExtensiveFormSolver
+import or_topas.aos
 from sparow_examples.aos_gtep_9bus.aos_single import create_sp
+from sparow.sp.util import relax_second_stage
 
-#
-# Create newsvendor, solve and return model
-#
+OUTPUT_FILE = 'aos_single.json'
+
+
+print("\n--- Creating model ---")
 sp = create_sp()
-solver = ExtensiveFormSolver()
-solver.set_options(solver="gurobi")
-results = solver.solve_and_return_EF(sp)
-# TODO - remove solve step here
+sp.add_transformation(relax_second_stage)
+model = sp.create_EF(compact_repn=True)
 
-import sys
-sys.exit(0)
-# Run AOS
-aos_results = lp_enum.enumerate_linear_solutions(results.model, solver="gurobi")
+print("\n--- Running AOS ---")
+aos_results = or_topas.aos.enumerate_binary_solutions(model, num_solutions=2, solver="gurobi")
 
-if True:
+if False:
+    print("\n--- Printing results ---")
     for s in aos_results:
         print(s)
         print(s.objective().value)
 
-# Dump results to a JSON file
+print("\n--- Saving results to an output file ---")
 aos_dict = aos_results.to_dict()
-with open('newsvendor.json','w') as OUTPUT:
-    json.dump(aos_dict, OUTPUT, indent=4)
+with open(OUTPUT_FILE,'w') as OUTPUT:
+    json.dump(aos_dict, OUTPUT, indent=0)
 
