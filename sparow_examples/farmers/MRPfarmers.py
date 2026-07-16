@@ -375,13 +375,15 @@ class FarmerCIAdapter(CIProblemAdapter):
 # Core CI code expects exactly one standard factory name
 # =================================================================
 
-def get_ci_problem_adapter(model_name="Advanced", use_integer=False):
+def get_ci_problem_adapter(model_name="Advanced", use_integer=False, lf_model_type="classic"):
     """
     Module-level factory function expected by the generic sparow.ci core code.
 
     This function dispatches to the appropriate farmer-specific CI adapter
     (Basic or Advanced) based on `model_name`, while exposing one standard
     factory name that the core CI logic expects to call.
+
+    NOTE: lf_model_type is dummy argument here
     """
     if model_name == "Basic":
         return get_basic_ci_problem_adapter(use_integer=use_integer)

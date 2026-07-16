@@ -37,32 +37,37 @@ Models:
        the realized disruption structure.
 """
 
+# Large multiplicative constant for objective
+# This helps us ensure that the optimality gap estimates are on 
+# the order of magnitude we'd like for downstream analysis
+MULT_CONSTANT = 1.0
+
 app_data = {}
 
 app_data["num_demand_points"] = 4   # |I| is number of clients
 app_data["num_sites"] = 4           # |J| is number of potential facility locations
-app_data["p"] = 2                   # number of facilities that must be opened
+app_data["p"] = 1                   # number of facilities that must be opened
 
 app_data["I"] = [f"i{i}" for i in range(app_data["num_demand_points"])]
 app_data["J"] = [f"j{j}" for j in range(app_data["num_sites"])]
 
-app_data["alpha1"] = 0.5 # weight placed on maximum transport cost in 1st stage
-app_data["alpha2"] = 0.5 # weight placed on maximum transport cost in 2nd stage
+app_data["alpha1"] = 0.2 # weight placed on maximum transport cost in 1st stage
+app_data["alpha2"] = 0.8 # weight placed on maximum transport cost in 2nd stage
 
 # Deterministic first-stage nominal transport costs used before disruption
 app_data["c_stage1"] = {
-    "i0": {"j0": 4.0, "j1": 6.0, "j2": 9.0, "j3": 7.0},
-    "i1": {"j0": 5.0, "j1": 3.0, "j2": 8.0, "j3": 6.0},
-    "i2": {"j0": 7.0, "j1": 5.0, "j2": 4.0, "j3": 3.0},
-    "i3": {"j0": 6.0, "j1": 8.0, "j2": 5.0, "j3": 4.0},
+    "i0": {"j0": 1.0, "j1": 8.0, "j2": 11.0, "j3": 14.0},
+    "i1": {"j0": 1.2, "j1": 8.0, "j2": 11.0, "j3": 14.0},
+    "i2": {"j0": 9.5, "j1": 14.0, "j2": 1.0, "j3": 8.0},
+    "i3": {"j0": 9.8, "j1": 14.0, "j2": 1.2, "j3": 8.0},
 }
 
 # Deterministic first-stage demand weights used before disruption
 app_data["d_stage1"] = {
-    "i0": 10.0,
-    "i1": 12.0,
-    "i2": 8.0,
-    "i3": 9.0,
+    "i0": 55.0,
+    "i1": 50.0,
+    "i2": 35.0,
+    "i3": 30.0,
 }
 
 # ==== SCENARIO DATA ===========================================================
@@ -84,16 +89,16 @@ class ReliablePCenterScenarioData(object):
 
         # Demand multipliers for each customer after disruption
         self.low_demand_multiplier = {
-            "i0": 0.8,
-            "i1": 0.85,
-            "i2": 0.75,
-            "i3": 0.80,
+            "i0": 0.6,
+            "i1": 0.6,
+            "i2": 0.3,
+            "i3": 0.3,
         }
         self.high_demand_multiplier = {
-            "i0": 1.3,
-            "i1": 1.25,
-            "i2": 1.35,
-            "i3": 1.20,
+            "i0": 1.2,
+            "i1": 1.2,
+            "i2": 2.4,
+            "i3": 2.4,
         }
 
         self.demand_multiplier_supports = {}
@@ -157,7 +162,7 @@ class ReliablePCenterScenarioData(object):
                 for i in I:
                     cost2[i] = {}
                     for j in J:
-                        failure_penalty = 1.50 if failure_pattern[j] == 1 else 1.00
+                        failure_penalty = 3.0 if failure_pattern[j] == 1 else 1.00
                         cost2[i][j] = float(c_stage1[i][j] * failure_penalty)
 
                 scen_dict_list.append(
@@ -240,7 +245,9 @@ def classic_pcenter_builder(data, args):
     model.AssignOne = pyo.Constraint(model.I, rule=assign_one_rule)
 
     # Minimize the maximum transportation cost
-    model.obj = pyo.Objective(expr=model.L, sense=pyo.minimize)
+    # Large multiplicative constant helps ensure that the optimality gap estimates are on 
+    # the order of magnitude we'd like for downstream analysis
+    model.obj = pyo.Objective(expr=MULT_CONSTANT*(model.L), sense=pyo.minimize)
 
     return model
 
@@ -324,8 +331,10 @@ def stochastic_reliable_pcenter_builder(data, args):
     model.RecourseAssignOne = pyo.Constraint(model.I, rule=recourse_assign_one_rule)
 
     # Minimize the stage-weighted maximum transportation costs
+    # Large multiplicative constant helps ensure that the optimality gap estimates are on 
+    # the order of magnitude we'd like for downstream analysis
     model.obj = pyo.Objective(
-        expr=alpha1 * model.L1 + alpha2 * model.L2,
+        expr= MULT_CONSTANT*(alpha1 * model.L1 + alpha2 * model.L2),
         sense=pyo.minimize,
     )
 
@@ -416,8 +425,10 @@ def robust_reliable_pcenter_builder(data, args):
     model.RecourseAssignOne = pyo.Constraint(model.I, rule=recourse_assign_one_rule)
 
     # Slightly more conservative second-stage emphasis than LF stochastic
+    # Large multiplicative constant helps ensure that the optimality gap estimates are on 
+    # the order of magnitude we'd like for downstream analysis
     model.obj = pyo.Objective(
-        expr=alpha1 * model.L1 + (alpha2 * 1.5) * model.L2,
+        expr=MULT_CONSTANT*(alpha1 * model.L1 + (alpha2 * 1.5) * model.L2),
         sense=pyo.minimize,
     )
 
@@ -460,16 +471,16 @@ class ReliablePCenterCIAdapter(CIProblemAdapter):
         self.model_builder = model_builder
         self.app_data = {} if app_data is None else dict(app_data)
         self.first_stage_variables = (
-            ["x[*]", "y[*]"] if first_stage_variables is None else first_stage_variables
+            ["x[*,*]", "y[*]"] if first_stage_variables is None else first_stage_variables
         )
 
         if lf_model_type not in ("classic", "stochastic"):
             raise ValueError(f"Unknown lf_model_type: {lf_model_type}")
 
-        # Script-specific selector for which concrete model the generic "low" fidelity means
+        # Script-specific selector for which concrete model we want to serve as the generic "low" fidelity model
         self.lf_model_type = lf_model_type
 
-        # Core ACV code only expects "high" or "low"
+        # Core ACV code only expects "high" or "low", default is high
         self._active_fidelity = "high"
 
     def get_scenario_population(self):
@@ -564,7 +575,7 @@ def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="cl
             scenario_data=scenario_data_by_model["HF"],
             model_builder=robust_reliable_pcenter_builder,
             app_data=app_data,
-            first_stage_variables=["x[*]", "y[*]"],
+            first_stage_variables=["x[*,*]", "y[*]"],
             lf_model_type=lf_model_type,
         )
 
@@ -582,7 +593,7 @@ def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="cl
                 else stochastic_reliable_pcenter_builder
             ),
             app_data=app_data,
-            first_stage_variables=["x[*]", "y[*]"],
+            first_stage_variables=["x[*,*]", "y[*]"],
             lf_model_type=lf_model_type,
         )
 
@@ -601,12 +612,14 @@ def main():
     parser.add_argument("--output", required=True, help="Output file path ending in .json or .npy")
     parser.add_argument("--num-data-points", type=int, default=5,
                         help="Number of support points per client for second-stage uncertain demand")
+    # This argument doesn't actually affect anything right now... 
+    # but need to instantiate an adapter in order to get & validate scenario population
     parser.add_argument(
         "--lf-model-type",
         choices=["classic", "stochastic"],
         default="classic",
         help="Select which concrete model should be used whenever ACV-MRP requests low fidelity",
-    )
+    ) 
     args = parser.parse_args()
 
     scenario_object = ReliablePCenterScenarioData(args.num_data_points)
@@ -617,7 +630,7 @@ def main():
         scenario_data=scenario_data,
         model_builder=robust_reliable_pcenter_builder,
         app_data=app_data,
-        first_stage_variables=["x[*]", "y[*]"],
+        first_stage_variables=["x[*,*]", "y[*]"],
         lf_model_type=args.lf_model_type,
     )
 
