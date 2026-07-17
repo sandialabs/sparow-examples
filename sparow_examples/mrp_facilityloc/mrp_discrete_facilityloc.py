@@ -25,20 +25,26 @@ FACILITY LOCATION
 * Problem data adapted from https://ampl.com/colab/notebooks/ampl-development-tutorial-26-stochastic-capacitated-facility-location-problem.html#problem-description
 """
 
-app_data = {"n": 3, "t": 4}  # number of facilities & customers
-app_data["f"] = [400000, 200000, 600000]  # fixed costs for opening facilities
+app_data = {"n": 6, "t": 4}  # number of facilities & customers
+app_data["f"] = [260000, 275000, 270000, 285000, 320000, 340000]  # fixed costs for opening facilities
 app_data["c"] = [
-    [5739.725, 6539.725, 8650.40, 22372.1125],
-    [6055.05, 6739.055, 8050.40, 21014.225],
-    [8650.40, 7539.055, 4539.72, 15024.325],
-]  # servicing costs
-app_data["k"] = [1550, 650, 1750]  # facility capacity
-app_data["s"] = [1, 1, 2] # max number of customers each facility can service
+    [4200.0, 5200.0, 12500.0, 18000.0],   # facility 0 good for cust 0,1
+    [4600.0, 4800.0, 11800.0, 17500.0],   # facility 1 also good for cust 0,1
+    [12800.0, 12000.0, 4100.0, 5600.0],   # facility 2 good for cust 2,3
+    [13500.0, 12600.0, 4500.0, 5100.0],   # facility 3 also good for cust 2,3
+    [7600.0, 7900.0, 7800.0, 8200.0],     # facility 4 compromise facility
+    [9000.0, 9400.0, 9100.0, 9600.0],     # facility 5 dominated-ish but feasible
+] # servicing costs
+app_data["k"] = [2500, 2500, 2500, 2500, 2500, 2500]  # facility capacity
+app_data["s"] = [2, 2, 2, 2, 2, 2] # max number of customers each facility can service
 app_data["a"] = [
-    [5688.12, 6601.44, 8723.91, 21998.50],
-    [6110.38, 6682.17, 7962.35, 21280.77],
-    [8581.33, 7604.28, 4582.91, 14811.46],
-]  # transportation costs
+    [3900.0, 5000.0, 12000.0, 17000.0],
+    [4300.0, 4700.0, 11400.0, 16800.0],
+    [12200.0, 11600.0, 3900.0, 5200.0],
+    [12900.0, 12100.0, 4300.0, 4800.0],
+    [7000.0, 7300.0, 7100.0, 7600.0],
+    [8600.0, 9000.0, 8700.0, 9200.0],
+] # transportation costs
 
 BASE_DIR = Path(__file__).resolve().parent # path to directory that contains this file
 
@@ -51,8 +57,8 @@ app_data["bigM"] = float(bigM_str)
 # ==== SCENARIO DATA ===========================================================
 
 # Define low and high demand values for each city (customer)
-low_demands = [376.65200372, 832.15820446, 309.19416634, 68.99908022]
-high_demands = [914.15449876, 1475.04577916, 696.24625082, 227.55065548]
+low_demands = [180.0, 500.0, 140.0, 40.0]
+high_demands = [700.0, 1400.0, 650.0, 260.0]
 
 class FacilityLocationScenarioData(object):
     """
@@ -432,12 +438,14 @@ class FacilityLocCIAdapter(CIProblemAdapter):
 # Core CI code expects exactly one standard factory name
 # =================================================================
 
-def get_ci_problem_adapter(model_name="HF", use_integer=False):
+def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="classic"):
     """
     Module-level factory function expected by the generic sparow.ci core code.
 
     This function dispatches to the appropriate facility location-specific CI adapter
     (HF or LF) based on "model_name" argument.
+
+    NOTE: lf_model_type is dummy argument here
     """
     if model_name == "HF":
         return get_hf_ci_problem_adapter()
