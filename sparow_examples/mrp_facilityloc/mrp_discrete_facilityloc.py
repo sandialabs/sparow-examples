@@ -22,7 +22,6 @@ FACILITY LOCATION
   creating a discrete uniform distribution over all resulting scenarios
 * The number of scenarios is controlled by the shell script's N parameter, not by app_data
 * You can run this file as a script to write the full scenario population to a .json or .npy file
-* Problem data adapted from https://ampl.com/colab/notebooks/ampl-development-tutorial-26-stochastic-capacitated-facility-location-problem.html#problem-description
 """
 
 app_data = {"n": 6, "t": 4}  # number of facilities & customers
@@ -326,14 +325,16 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         app_data=None,
         first_stage_variables=None,
     ):
-        self.model_name = model_name
-        self.scenario_data = scenario_data
-        self.model_builder = model_builder
-        self.app_data = {} if app_data is None else dict(app_data)
-        self.first_stage_variables = (
-            ["x"]
-            if first_stage_variables is None
-            else first_stage_variables
+        super().__init__(
+            model_name=model_name,
+            scenario_data=scenario_data,
+            model_builder=model_builder,
+            app_data=app_data,
+            first_stage_variables=(
+                ["x"]
+                if first_stage_variables is None
+                else first_stage_variables
+            ),
         )
         if model_name == "HF":
             self._active_fidelity = "high"
@@ -528,7 +529,6 @@ def main():
 
     print(f"Wrote {len(scenarios)} scenarios to: {outpath}")
     print(f"Use this with: --scenario-file {outpath}")
-
 
 if __name__ == "__main__":
     main()

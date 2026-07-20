@@ -309,16 +309,17 @@ class FarmerCIAdapter(CIProblemAdapter):
         first_stage_variables=None,
         use_integer=False,
     ):
-        self.model_name = model_name
-        self.scenario_data = scenario_data
-        self.model_builder = model_builder
-        self.app_data = {} if app_data is None else dict(app_data)
-        self.first_stage_variables = (
-            ["DevotedAcreage[*]"]
-            if first_stage_variables is None
-            else first_stage_variables
+        super().__init__(
+            model_name=model_name,
+            scenario_data=scenario_data,
+            model_builder=model_builder,
+            app_data=app_data,
+            first_stage_variables=(
+                ["DevotedAcreage[*]"]
+                if first_stage_variables is None
+                else first_stage_variables
+            ),
         )
-        self.use_integer = use_integer
 
     def get_scenario_population(self):
         """
