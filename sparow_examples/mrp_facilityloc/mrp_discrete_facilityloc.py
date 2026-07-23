@@ -268,31 +268,6 @@ def HF_builder(data, args):
     return model
 
 
-# #
-# # options to solve LF and HF models:
-# #
-
-
-# def HF_mrp_discrete_facilityloc():
-#     print("\n Initializing HF MRP discrete facilityloc model...")
-#     sp = stochastic_program(first_stage_variables=["x"])
-#     sp.initialize_application(app_data=app_data)
-#     sp.initialize_model(
-#         name="HF", model_data=model_data, model_builder=HF_builder
-#     )
-#     return sp
-
-
-# def LF_mrp_discrete_facilityloc():
-#     print("\n Initializing LF MRP discrete facilityloc model...")
-#     sp = stochastic_program(first_stage_variables=["x"])
-#     sp.initialize_application(app_data=app_data)
-#     sp.initialize_model(
-#         name="LF", model_data=model_data, model_builder=LF_builder
-#     )
-#     return sp
-
-
 # ==== CI ADAPTER ==============================================================
 
 class FacilityLocCIAdapter(CIProblemAdapter):
@@ -360,19 +335,19 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         """
         Build and return the stochastic_program object for the currently active fidelity.
         """
-        print(f"Active fidelity state: {self._active_fidelity}")
+        # print(f"Active fidelity state: {self._active_fidelity}")
         sp = stochastic_program(first_stage_variables=self.first_stage_variables)
         sp.initialize_application(app_data=self.app_data)
 
         if self._active_fidelity == "high":
-            print("Initializing HF model")
+            # print("Initializing HF model")
             sp.initialize_model(
                 name="HF",
                 model_data=model_data,
                 model_builder=HF_builder,
             )
         elif self._active_fidelity == "low":
-            print("Initializing LF model")
+            # print("Initializing LF model")
             sp.initialize_model(
                 name="LF",
                 model_data=model_data,
@@ -401,24 +376,6 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         always-required "ID" and "Probability" keys.
         """
         return ["Demand"]
-
-    # def build_low_fidelity_stochastic_program(self, model_data):
-    #     """
-    #     Build and return the low-fidelity stochastic program for ACV-MRP.
-    #     This is the LF (relaxed) model where second-stage binary variables are continuous.
-
-    #     NOTE: argument should be single-model data dictionary of 
-    #     the form {"data": ..., "scenarios": ...}.
-    #     """
-    #     print("\n Initializing LF MRP discrete facilityloc model...")
-    #     sp = stochastic_program(first_stage_variables=self.first_stage_variables)
-    #     sp.initialize_application(app_data=self.app_data)
-    #     sp.initialize_model(
-    #         name="LF",
-    #         model_data=model_data,
-    #         model_builder=LF_builder,
-    #     )
-    #     return sp
 
     def get_fidelity_levels(self):
         """Return list of supported fidelity levels."""
@@ -457,16 +414,16 @@ def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="cl
     NOTE: lf_model_type is dummy argument here
     """
     if model_name == "HF":
-        print("Returning HF Problem Adapter")
+        # print("Returning HF Problem Adapter")
         return get_hf_ci_problem_adapter()
     if model_name == "LF":
-        print("Returning LF Problem Adapter")
+        # print("Returning LF Problem Adapter")
         return get_lf_ci_problem_adapter()
     raise ValueError(f"Unknown facility location model_name: {model_name}")
 
 
 def get_hf_ci_problem_adapter():
-    print("\nBuilding HF Discrete FacilityLoc\n")
+    # print("\nBuilding HF Discrete FacilityLoc\n")
     return FacilityLocCIAdapter(
         model_name="HF",
         scenario_data=scenario_data_by_model["HF"],
@@ -477,7 +434,7 @@ def get_hf_ci_problem_adapter():
 
 
 def get_lf_ci_problem_adapter():
-    print("\nBuilding LF Discrete FacilityLoc\n")
+    # print("\nBuilding LF Discrete FacilityLoc\n")
     return FacilityLocCIAdapter(
         model_name="LF",
         scenario_data=scenario_data_by_model["LF"],

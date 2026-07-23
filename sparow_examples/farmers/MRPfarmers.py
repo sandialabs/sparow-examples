@@ -395,7 +395,7 @@ def get_ci_problem_adapter(model_name="Advanced", use_integer=False, lf_model_ty
     
 
 def get_basic_ci_problem_adapter(use_integer=False):
-    print(f"Basic farmers (3 scenarios) with use_integer = {use_integer}")
+    # print(f"Basic farmers (3 scenarios) with use_integer = {use_integer}")
     return FarmerCIAdapter(
         model_name="Basic",
         scenario_data=Basic_scendata,
@@ -406,7 +406,7 @@ def get_basic_ci_problem_adapter(use_integer=False):
     )
 
 def get_advanced_ci_problem_adapter(use_integer=False):
-    print(f"Advanced farmers (num_data_points^3 scenarios) with use_integer = {use_integer}")
+    # print(f"Advanced farmers (num_data_points^3 scenarios) with use_integer = {use_integer}")
     return FarmerCIAdapter(
         model_name="Advanced",
         scenario_data=Advanced_scendata,
