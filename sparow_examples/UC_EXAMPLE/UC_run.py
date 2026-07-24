@@ -10,7 +10,7 @@ import egret.models.unit_commitment as uc
 import mpisppy.utils.sputils as sputils
 
 from pyomo.dataportal import DataPortal
-from pyomo.environ import value, SolverFactory
+from pyomo.environ import value, SolverFactory, NonNegativeReals, TransformationFactory
 from IPython import embed
 
 def uc_model_builder(data, args):
@@ -42,6 +42,38 @@ def uc_model_builder(data, args):
 
     return scenario_instance
 
+def uc_relaxed_model_builder(data, args):
+    path = data["data_dir"]
+    scenario_name = data["ID"]
+
+    scennum = sputils.extract_num(scenario_name)
+
+    uc_model_params = pdp.get_uc_model()
+
+    scenario_data = DataPortal(model=uc_model_params)
+    scenario_data.load(filename=os.path.join(path, "RootNode.dat"))
+    scenario_data.load(filename=os.path.join(path, f"Node{scennum}.dat"))
+
+    scenario_params = uc_model_params.create_instance(
+        scenario_data,
+        report_timing=False,
+        name=scenario_name,
+    )
+
+    scenario_md = md.ModelData(
+        pdp.create_model_data_dict_params(scenario_params, keep_names=True)
+    )
+
+    scenario_instance = uc.create_tight_unit_commitment_model(
+        scenario_md,
+        network_constraints="power_balance_constraints",
+        #network_constraints='copperplate_power_flow',
+    )
+
+    TransformationFactory("core.relax_integer_vars").apply_to(scenario_instance)
+
+    return scenario_instance
+
 
 if __name__ == "__main__":
     scen_count = 10
@@ -70,7 +102,7 @@ if __name__ == "__main__":
     sp.initialize_model(
         name="UC",
         model_data=model_data_uc,
-        model_builder=uc_model_builder,
+        model_builder=uc_relaxed_model_builder,
     )
 
     solver = ExtensiveFormSolver()
@@ -84,8 +116,6 @@ if __name__ == "__main__":
     results = opt.solve(M, tee=True)
     end = time.time()
 
-    #start = time.time()
-    #res = solver.solve_and_return_EF(sp)
-    #end = time.time()
-
     print(f"Elapsed time: {end - start:.4f} seconds")
+
+    embed()
