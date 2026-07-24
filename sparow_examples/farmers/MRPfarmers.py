@@ -3,21 +3,22 @@
 #
 # Basic farmers = Classic 3-scenario problem from Birge & Louveaux
 # Advanced farmers = For each crop, do a linear interpolation between the BelowAverage
-#                    scenario yield and the AboveAverage scenario yield from the Basic 
-#                    farmers problem. For each crop, select any one of these yields 
-#                    with equal probability. The full scenario distribution is a 
+#                    scenario yield and the AboveAverage scenario yield from the Basic
+#                    farmers problem. For each crop, select any one of these yields
+#                    with equal probability. The full scenario distribution is a
 #                    discrete uniform over all resulting scenario vectors.
 #
 # You can run this file as a script to write the full Advanced Farmers scenario population to file.
 #
 # NOTE: Advanced farmers intentionally has a finite set of possible scenarios,
-# so that the Extensive Form can be solved over all possible scenarios to get the 
-# exact optimal value for computing the true optimality gap of any given 
+# so that the Extensive Form can be solved over all possible scenarios to get the
+# exact optimal value for computing the true optimality gap of any given
 # candidate solution.
 
 import pyomo.environ as pyo
 import numpy as np
 from sparow.sp import stochastic_program
+
 # from sparow.ef import ExtensiveFormSolver
 from sparow.ci import CIProblemAdapter
 
@@ -27,9 +28,11 @@ import os
 
 # ==== GLOBAL DATA =============================================================
 
+
 class GlobalData:
     num_scens = 3  ### should be >= 3
-    num_data_points = 10 # number of interpolated yield values per crop
+    num_data_points = 10  # number of interpolated yield values per crop
+
 
 if GlobalData.num_scens < 3:
     raise RuntimeError(f"Number of scenarios must be >= 3")
@@ -58,6 +61,7 @@ Basic_scendata = {
 
 # ==== ADVANCED FARMERS SCENARIO DATA ==========================================
 
+
 class AdvancedScenario_dict(object):
     """
     Construct the full finite population set of scenarios for Advanced Farmers.
@@ -84,10 +88,12 @@ class AdvancedScenario_dict(object):
         population scenario. Each scenario's dictionary must contain "ID", set of yields, and
         "Probability".
         """
-        total_scens = self.num_data_points ** 3 # there are 3 crops, each with num_data_points possible yields
-        scen_prob = 1.0 / total_scens # each scenario vector gets equal probability
+        total_scens = (
+            self.num_data_points**3
+        )  # there are 3 crops, each with num_data_points possible yields
+        scen_prob = 1.0 / total_scens  # each scenario vector gets equal probability
 
-        scen_id = 0 # naming convention: each scenario ID string ends in a number (population index)
+        scen_id = 0  # naming convention: each scenario ID string ends in a number (population index)
         scen_dict_list = []
 
         for w in self.wheat_support:
@@ -108,6 +114,7 @@ class AdvancedScenario_dict(object):
 
         return {"scenarios": scen_dict_list}
 
+
 AdvancedScen_object = AdvancedScenario_dict(GlobalData.num_data_points)
 Advanced_scendata = AdvancedScen_object.scenario_generator()
 
@@ -122,7 +129,7 @@ def model_builder(data, args):
     The model structure is the same, only the scenario data (yield values
     and probabilities) differ.
     """
-    
+
     model = pyo.ConcreteModel(data["ID"])
 
     ### PARAMETERS
@@ -140,23 +147,25 @@ def model_builder(data, args):
         {"WHEAT": 100000.0, "CORN": 100000.0, "SUGAR_BEETS": 6000.0}
     )
 
-    model.SubQuotaSellingPrice = _data( # favorable selling prices
+    model.SubQuotaSellingPrice = _data(  # favorable selling prices
         {"WHEAT": 170.0, "CORN": 150.0, "SUGAR_BEETS": 36.0}
     )
 
-    model.SuperQuotaSellingPrice = _data( # unfavorable selling prices
+    model.SuperQuotaSellingPrice = _data(  # unfavorable selling prices
         {"WHEAT": 0.0, "CORN": 0.0, "SUGAR_BEETS": 10.0}
     )
 
-    model.CattleFeedRequirement = _data( # right hand sides of demand constraints
+    model.CattleFeedRequirement = _data(  # right hand sides of demand constraints
         {"WHEAT": 200.0, "CORN": 240.0, "SUGAR_BEETS": 0.0}
     )
 
-    model.PurchasePrice = _data( # purchasing costs.... cannot purchase sugar beets, so use dummy value
-        {"WHEAT": 238.0, "CORN": 210.0, "SUGAR_BEETS": 100000.0}
+    model.PurchasePrice = (
+        _data(  # purchasing costs.... cannot purchase sugar beets, so use dummy value
+            {"WHEAT": 238.0, "CORN": 210.0, "SUGAR_BEETS": 100000.0}
+        )
     )
 
-    model.PlantingCostPerAcre = _data( # planting costs
+    model.PlantingCostPerAcre = _data(  # planting costs
         {"WHEAT": 150.0, "CORN": 230.0, "SUGAR_BEETS": 260.0}
     )
 
@@ -172,21 +181,25 @@ def model_builder(data, args):
     )
 
     ### VARIABLES
-    if args.get("use_integer", False): # stage-1 vars integer
+    if args.get("use_integer", False):  # stage-1 vars integer
         model.DevotedAcreage = pyo.Var(
             model.CROPS,
             within=pyo.NonNegativeIntegers,
             bounds=(0.0, model.TOTAL_ACREAGE),
         )
     else:
-        model.DevotedAcreage = pyo.Var( # stage-1 vars continuous
+        model.DevotedAcreage = pyo.Var(  # stage-1 vars continuous
             model.CROPS,
             bounds=(0.0, model.TOTAL_ACREAGE),
         )
 
-    model.QuantitySubQuotaSold = pyo.Var(model.CROPS, bounds=(0.0, None)) # qnty sold at favorable price
-    model.QuantitySuperQuotaSold = pyo.Var(model.CROPS, bounds=(0.0, None)) # qnty sold at unfavorable price
-    model.QuantityPurchased = pyo.Var(model.CROPS, bounds=(0.0, None)) # qnty purchased
+    model.QuantitySubQuotaSold = pyo.Var(
+        model.CROPS, bounds=(0.0, None)
+    )  # qnty sold at favorable price
+    model.QuantitySuperQuotaSold = pyo.Var(
+        model.CROPS, bounds=(0.0, None)
+    )  # qnty sold at unfavorable price
+    model.QuantityPurchased = pyo.Var(model.CROPS, bounds=(0.0, None))  # qnty purchased
 
     ### CONSTRAINTS
     def ConstrainTotalAcreage_rule(model):
@@ -223,14 +236,15 @@ def model_builder(data, args):
     ### OBJECTIVE
     def ComputeFirstStageCost_rule(model):
         return sum(
-            model.PlantingCostPerAcre[c] * model.DevotedAcreage[c]
-            for c in model.CROPS
+            model.PlantingCostPerAcre[c] * model.DevotedAcreage[c] for c in model.CROPS
         )
 
     model.FirstStageCost = pyo.Expression(rule=ComputeFirstStageCost_rule)
 
     def ComputeSecondStageCost_rule(model):
-        expr = sum(model.PurchasePrice[c] * model.QuantityPurchased[c] for c in model.CROPS)
+        expr = sum(
+            model.PurchasePrice[c] * model.QuantityPurchased[c] for c in model.CROPS
+        )
         expr -= sum(
             model.SubQuotaSellingPrice[c] * model.QuantitySubQuotaSold[c]
             for c in model.CROPS
@@ -253,6 +267,7 @@ def model_builder(data, args):
 
     return model
 
+
 # ==== MODEL DATA ===============================================================
 app_data = {}
 model_data = {
@@ -261,6 +276,7 @@ model_data = {
 }
 
 # ==== STOCHASTIC PROGRAM CONSTRUCTORS =========================================
+
 
 def Basic_farmers():
     sp = stochastic_program(first_stage_variables=["DevotedAcreage[*]"])
@@ -271,6 +287,7 @@ def Basic_farmers():
         model_builder=model_builder,
     )
     return sp
+
 
 def Advanced_farmers():
     sp = stochastic_program(first_stage_variables=["DevotedAcreage[*]"])
@@ -284,6 +301,7 @@ def Advanced_farmers():
 
 
 # ==== CI ADAPTER ==============================================================
+
 
 class FarmerCIAdapter(CIProblemAdapter):
     """
@@ -320,7 +338,7 @@ class FarmerCIAdapter(CIProblemAdapter):
                 else first_stage_variables
             ),
         )
-        self.use_integer=use_integer
+        self.use_integer = use_integer
 
     def get_scenario_population(self):
         """
@@ -333,7 +351,10 @@ class FarmerCIAdapter(CIProblemAdapter):
         """
         Build the model_data dictionary expected by Sparow.
         """
-        return {"data": {}, "scenarios": scenarios,}
+        return {
+            "data": {},
+            "scenarios": scenarios,
+        }
 
     def build_stochastic_program(self, model_data):
         """
@@ -372,12 +393,16 @@ class FarmerCIAdapter(CIProblemAdapter):
         always-required "ID" and "Probability" keys.
         """
         return ["Yield"]
-    
+
+
 # =================================================================
 # Core CI code expects exactly one standard factory name
 # =================================================================
 
-def get_ci_problem_adapter(model_name="Advanced", use_integer=False, lf_model_type="classic"):
+
+def get_ci_problem_adapter(
+    model_name="Advanced", use_integer=False, lf_model_type="classic"
+):
     """
     Module-level factory function expected by the generic sparow.ci core code.
 
@@ -392,7 +417,7 @@ def get_ci_problem_adapter(model_name="Advanced", use_integer=False, lf_model_ty
     if model_name == "Advanced":
         return get_advanced_ci_problem_adapter(use_integer=use_integer)
     raise ValueError(f"Unknown farmer model_name: {model_name}")
-    
+
 
 def get_basic_ci_problem_adapter(use_integer=False):
     # print(f"Basic farmers (3 scenarios) with use_integer = {use_integer}")
@@ -405,6 +430,7 @@ def get_basic_ci_problem_adapter(use_integer=False):
         use_integer=use_integer,
     )
 
+
 def get_advanced_ci_problem_adapter(use_integer=False):
     # print(f"Advanced farmers (num_data_points^3 scenarios) with use_integer = {use_integer}")
     return FarmerCIAdapter(
@@ -416,16 +442,22 @@ def get_advanced_ci_problem_adapter(use_integer=False):
         use_integer=use_integer,
     )
 
+
 # =================================================================
 # Write the scenario data to file for use in the CI tests
 # =================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Write the full Advanced Farmers scenario population to a file "
-                    "that sparow.ci.cli --scenario-file can read."
+        "that sparow.ci.cli --scenario-file can read."
     )
-    parser.add_argument("--output", required=True, help="Output file path ending in .json or .npy",)
+    parser.add_argument(
+        "--output",
+        required=True,
+        help="Output file path ending in .json or .npy",
+    )
     args = parser.parse_args()
 
     adapter = get_advanced_ci_problem_adapter()
@@ -433,7 +465,11 @@ def main():
     adapter.validate_scenario_population(scenarios)
 
     outpath = os.path.abspath(args.output)
-    os.makedirs(os.path.dirname(outpath), exist_ok=True) if os.path.dirname(outpath) else None
+    (
+        os.makedirs(os.path.dirname(outpath), exist_ok=True)
+        if os.path.dirname(outpath)
+        else None
+    )
 
     if outpath.endswith(".json"):
         with open(outpath, "w") as f:

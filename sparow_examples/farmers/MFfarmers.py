@@ -22,10 +22,10 @@ class GlobalData:
 if GlobalData.num_scens < 3:
     raise RuntimeError(f"Number of scenarios must be >= 3")
 
-# 
+#
 # List of possible scenarios for basic farmers problem
 # No notion of seperate plots... use this to compare against mpisppy code outputs
-# 
+#
 Basic_scendata = {
     "scenarios": [
         {
@@ -344,9 +344,10 @@ app_data = {"num_plots": GlobalData.num_plots}
 model_data = {"Basic": Basic_scendata, "LF": LF_scendata, "HF": HF_data}
 # print(HF_data)
 
+
 #
 # Construct Basic farmers problem model:
-# 
+#
 def Basic_model_builder(data, args):
     model = pyo.ConcreteModel(data["ID"])
 
@@ -365,23 +366,25 @@ def Basic_model_builder(data, args):
         {"WHEAT": 100000.0, "CORN": 100000.0, "SUGAR_BEETS": 6000.0}
     )
 
-    model.SubQuotaSellingPrice = _data( # favorable selling prices
+    model.SubQuotaSellingPrice = _data(  # favorable selling prices
         {"WHEAT": 170.0, "CORN": 150.0, "SUGAR_BEETS": 36.0}
     )
 
-    model.SuperQuotaSellingPrice = _data( # unfavorable selling prices
+    model.SuperQuotaSellingPrice = _data(  # unfavorable selling prices
         {"WHEAT": 0.0, "CORN": 0.0, "SUGAR_BEETS": 10.0}
     )
 
-    model.CattleFeedRequirement = _data( # right hand sides of demand constraints
+    model.CattleFeedRequirement = _data(  # right hand sides of demand constraints
         {"WHEAT": 200.0, "CORN": 240.0, "SUGAR_BEETS": 0.0}
     )
 
-    model.PurchasePrice = _data( # purchasing costs.... cannot purchase sugar beets, so use dummy value
-        {"WHEAT": 238.0, "CORN": 210.0, "SUGAR_BEETS": 100000.0}
+    model.PurchasePrice = (
+        _data(  # purchasing costs.... cannot purchase sugar beets, so use dummy value
+            {"WHEAT": 238.0, "CORN": 210.0, "SUGAR_BEETS": 100000.0}
+        )
     )
 
-    model.PlantingCostPerAcre = _data( # planting costs
+    model.PlantingCostPerAcre = _data(  # planting costs
         {"WHEAT": 150.0, "CORN": 230.0, "SUGAR_BEETS": 260.0}
     )
 
@@ -397,21 +400,25 @@ def Basic_model_builder(data, args):
     )
 
     ### VARIABLES
-    if args.get("use_integer", False): # stage-1 vars integer
+    if args.get("use_integer", False):  # stage-1 vars integer
         model.DevotedAcreage = pyo.Var(
             model.CROPS,
             within=pyo.NonNegativeIntegers,
             bounds=(0.0, model.TOTAL_ACREAGE),
         )
     else:
-        model.DevotedAcreage = pyo.Var( # stage-1 vars continuous
+        model.DevotedAcreage = pyo.Var(  # stage-1 vars continuous
             model.CROPS,
             bounds=(0.0, model.TOTAL_ACREAGE),
         )
 
-    model.QuantitySubQuotaSold = pyo.Var(model.CROPS, bounds=(0.0, None)) # qnty sold at favorable price
-    model.QuantitySuperQuotaSold = pyo.Var(model.CROPS, bounds=(0.0, None)) # qnty sold at unfavorable price
-    model.QuantityPurchased = pyo.Var(model.CROPS, bounds=(0.0, None)) # qnty purchased
+    model.QuantitySubQuotaSold = pyo.Var(
+        model.CROPS, bounds=(0.0, None)
+    )  # qnty sold at favorable price
+    model.QuantitySuperQuotaSold = pyo.Var(
+        model.CROPS, bounds=(0.0, None)
+    )  # qnty sold at unfavorable price
+    model.QuantityPurchased = pyo.Var(model.CROPS, bounds=(0.0, None))  # qnty purchased
 
     ### CONSTRAINTS
     def ConstrainTotalAcreage_rule(model):
@@ -448,14 +455,15 @@ def Basic_model_builder(data, args):
     ### OBJECTIVE
     def ComputeFirstStageCost_rule(model):
         return sum(
-            model.PlantingCostPerAcre[c] * model.DevotedAcreage[c]
-            for c in model.CROPS
+            model.PlantingCostPerAcre[c] * model.DevotedAcreage[c] for c in model.CROPS
         )
 
     model.FirstStageCost = pyo.Expression(rule=ComputeFirstStageCost_rule)
 
     def ComputeSecondStageCost_rule(model):
-        expr = sum(model.PurchasePrice[c] * model.QuantityPurchased[c] for c in model.CROPS)
+        expr = sum(
+            model.PurchasePrice[c] * model.QuantityPurchased[c] for c in model.CROPS
+        )
         expr -= sum(
             model.SubQuotaSellingPrice[c] * model.QuantitySubQuotaSold[c]
             for c in model.CROPS
@@ -477,6 +485,7 @@ def Basic_model_builder(data, args):
     )
 
     return model
+
 
 #
 # Construct LF farmers problem model:
@@ -805,6 +814,7 @@ def model_builder(data, args):
 # options to solve, LF, HF, or MF models with PH or EF:
 #
 
+
 def Basic_farmers():
     sp = stochastic_program(first_stage_variables=["DevotedAcreage[*]"])
     sp.initialize_application(app_data=app_data)
@@ -814,6 +824,7 @@ def Basic_farmers():
         model_builder=Basic_model_builder,
     )
     return sp
+
 
 def HF_farmers():
     sp = stochastic_program(first_stage_variables=["DevotedAcreage[*,*]"])
