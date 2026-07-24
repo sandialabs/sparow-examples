@@ -1,0 +1,27 @@
+{
+    "experimental_name": "test_gtep",
+    "case_study": "9-bus",
+    "scenario": "scenario_A",
+    "alpha": 1.0,
+    "growth_rate": 1.0,
+    "num_representative_days": 4,
+    "representative_dates": [
+        "2020-01-28 00:00",
+        "2020-04-23 00:00",
+        "2020-07-05 00:00",
+        "2020-10-14 00:00"
+    ],
+    "representative_weights": [
+        1,
+        1,
+        1,
+        1
+    ],
+    "power_flow_fidelity": "DC",
+    "relaxations": {
+        "relax_second_stage": false,
+        "unit_commitment": true
+    },
+    "number_of_commitment": 24,
+    "include_commitment": true
+}

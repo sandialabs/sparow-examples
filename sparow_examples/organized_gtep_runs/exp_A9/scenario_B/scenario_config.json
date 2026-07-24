@@ -1,0 +1,14 @@
+{
+    "experimental_name": "exp_A9",
+    "case_study": "9-bus",
+    "scenario": "scenario_B",
+    "alpha": 1.2,
+    "growth_rate": 1.0,
+    "num_representative_days": 4,
+    "power_flow_fidelity": "DC",
+    "relaxations": {
+        "relax_second_stage": false,
+        "unit_commitment": true
+    },
+    "number_of_commitment": 4
+}

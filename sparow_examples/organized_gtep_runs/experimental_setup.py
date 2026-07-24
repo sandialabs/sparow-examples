@@ -107,7 +107,7 @@ post_process(mod_object)
     with open(experiment_path / "execute_run.py", "w") as f:
         f.write(execute_run_template)
 
-    source_model_dir = Path.cwd() / "model"
+    source_model_dir = Path.cwd() / "new_model"
     if not source_model_dir.exists() or not source_model_dir.is_dir():
         raise FileNotFoundError(
             f"Could not find source data directory at: {source_model_dir}"
@@ -236,7 +236,7 @@ def create_sp():
 
 if __name__ == "__main__":
 
-    experimental_name = "new_NORSS_UC_DC"
+    experimental_name = "test_gtep"
     case_study = "9-bus"
 
     scenarios = ["scenario_A"]
@@ -248,7 +248,7 @@ if __name__ == "__main__":
     growth_rate = 1.00
 
     num_representative_days = {
-        "scenario_A": 6,
+        "scenario_A": 4,
     }
 
     power_flow_fidelity = {

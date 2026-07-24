@@ -1,0 +1,11 @@
+{
+    "experimental_name": "exp_NO_UC",
+    "case_study": "9-bus",
+    "scenarios": [
+        "scenario_A"
+    ],
+    "growth_rate": 1.0,
+    "num_representative_days": {
+        "scenario_A": 1
+    }
+}

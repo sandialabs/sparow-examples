@@ -182,7 +182,7 @@ def create_gtep_model(
     print(f"Experimental setup created at: {experiment_path.resolve()}")
 
 if __name__ == "__main__":
-    experimental_name = "exp_A9"
+    experimental_name = "exp_SFSS_RSS"
     case_study = "9-bus"
 
     scenarios = ["scenario_A", "scenario_B"]
@@ -201,7 +201,7 @@ if __name__ == "__main__":
     }
 
     relaxations = {
-        "scenario_A": {"relax_second_stage": True, "unit_commitment": False},
+        "scenario_A": {"relax_second_stage": True, "unit_commitment": True},
         "scenario_B": {"relax_second_stage": False, "unit_commitment": True}
     }
 

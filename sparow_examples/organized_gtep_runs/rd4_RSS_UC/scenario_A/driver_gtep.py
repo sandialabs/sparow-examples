@@ -1,0 +1,48 @@
+from pathlib import Path
+from pyomo.core import TransformationFactory
+from .gtep_model import ExpansionPlanningModel
+from .gtep_data import ExpansionPlanningData
+
+current_file_dir = Path(__file__).resolve().parent
+
+
+def create_gtep_model(
+    *,
+    num_stages,
+    num_rep_days,
+    len_rep_days,
+    num_commit_p,
+    num_disp,
+    alpha=1.0,
+    flow_model="CP",
+    include_commitment=True,
+):
+    data_path = str(current_file_dir / "data")
+    data_object = ExpansionPlanningData()
+    data_object.load_prescient(data_path)
+    # data_object.load_storage_csv(data_path)
+
+    mod_object = ExpansionPlanningModel(
+        stages=num_stages,
+        data=data_object,
+        num_reps=num_rep_days,
+        len_reps=len_rep_days,
+        num_commit=num_commit_p,
+        num_dispatch=num_disp,
+    )
+
+    mod_object.config["include_commitment"] = include_commitment
+    mod_object.config["alpha_scaler"] = alpha
+    mod_object.config["flow_model"] = flow_model
+    mod_object.config["storage"] = True
+    mod_object.config["transmission"] = True
+    mod_object.config["thermal_generation"] = True
+    mod_object.config["renewable_generation"] = True
+    mod_object.config["scale_loads"] = False
+    mod_object.config["scale_texas_loads"] = False
+
+    mod_object.create_model()
+    TransformationFactory("gdp.bound_pretransformation").apply_to(mod_object.model)
+    TransformationFactory("gdp.bigm").apply_to(mod_object.model)
+
+    return mod_object.model

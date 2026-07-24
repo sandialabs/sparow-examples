@@ -1,0 +1,654 @@
+nohup: ignoring input
+[    0.00] Initializing mpi-sppy
+Alternative solutions package from or_topas is available.
+INFO - 
+INFO - ----------------------------------------------------------------------
+INFO - ExtensiveFormSolver - START
+INFO - Using single_bundle scheme (extensive form solve).
+WARNING: DEPRECATED: Declaring class 'BaseRelaxationData' derived from
+'_BlockData'.  The class '_BlockData' has been renamed to 'BlockData'.
+(deprecated in 6.7.2) (called from
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-
+packages/coramin/relaxations/relaxations_base.py:43)
+WARNING: DEPRECATED: pyomo.core.expr.current is deprecated.  Please import
+expression symbols from pyomo.core.expr  (deprecated in 6.6.2) (called from
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-
+packages/coramin/domain_reduction/filters.py:4)
+WARNING: DEPRECATED: Declaring class 'TreeBlockData' derived from
+'_BlockData'. The class '_BlockData' has been renamed to 'BlockData'.
+(deprecated in 6.7.2) (called from
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-
+packages/coramin/domain_reduction/dbt.py:39)
+Did not find reserves.csv; assuming no reserves
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-packages/egret/parsers/rts_gmlc/parser.py:254: FutureWarning: Support for nested sequences for 'parse_dates' in pd.read_csv is deprecated. Combine the desired columns with pd.to_datetime after parsing instead.
+  df = pd.read_csv(file_name,
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-packages/egret/parsers/rts_gmlc/parser.py:254: FutureWarning: Support for nested sequences for 'parse_dates' in pd.read_csv is deprecated. Combine the desired columns with pd.to_datetime after parsing instead.
+  df = pd.read_csv(file_name,
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-packages/egret/parsers/rts_gmlc/parser.py:254: FutureWarning: Support for nested sequences for 'parse_dates' in pd.read_csv is deprecated. Combine the desired columns with pd.to_datetime after parsing instead.
+  df = pd.read_csv(file_name,
+/home/zakilwe/anaconda3/envs/Parapint/lib/python3.11/site-packages/egret/parsers/rts_gmlc/parser.py:254: FutureWarning: Support for nested sequences for 'parse_dates' in pd.read_csv is deprecated. Combine the desired columns with pd.to_datetime after parsing instead.
+  df = pd.read_csv(file_name,
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+61975.19999999998
+21027.82164031656
+WARNING: Implicitly replacing the Component attribute storageCostInvestment
+(type=<class 'pyomo.core.base.var.ScalarVar'>) on block investmentStage[1]
+with a new Component (type=<class
+'pyomo.core.base.expression.ScalarExpression'>). This is usually indicative of
+a modelling error. To avoid this warning, use block.del_component() and
+block.add_component().
+WARNING: Implicitly replacing the Component attribute storageCostInvestment
+(type=<class 'pyomo.core.base.var.ScalarVar'>) on block investmentStage[2]
+with a new Component (type=<class
+'pyomo.core.base.expression.ScalarExpression'>). This is usually indicative of
+a modelling error. To avoid this warning, use block.del_component() and
+block.add_component().
+WARNING: Implicitly replacing the Component attribute storageCostInvestment
+(type=<class 'pyomo.core.base.var.ScalarVar'>) on block investmentStage[3]
+with a new Component (type=<class
+'pyomo.core.base.expression.ScalarExpression'>). This is usually indicative of
+a modelling error. To avoid this warning, use block.del_component() and
+block.add_component().
+INFO - 
+INFO - ----------------------------------------------------------------------
+INFO - ExtensiveFormSolver - STOP
+Objective value: 216942084439.06598
+Solve time (seconds): 12.2658
+Total runtime (seconds): 12.2740
+Operating costs:
+[72314028146.35533, 72314028146.35533, 72314028146.35533]
+Investment costs:
+[0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+[1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+Investment Stage: 1, Representative Period: 1, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 28246.189076126044
+Investment Stage: 1, Representative Period: 1, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 26312.007786628903
+Investment Stage: 1, Representative Period: 1, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 23833.443439695126
+Investment Stage: 1, Representative Period: 1, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 22407.06198665727
+Investment Stage: 1, Representative Period: 1, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 22280.246792257552
+Investment Stage: 1, Representative Period: 1, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 22416.19467122599
+Investment Stage: 1, Representative Period: 1, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 23729.139108149066
+Investment Stage: 1, Representative Period: 1, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 25165.42136531289
+Investment Stage: 1, Representative Period: 1, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 26976.526831997726
+Investment Stage: 1, Representative Period: 1, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 28512.06838585472
+Investment Stage: 1, Representative Period: 1, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 33611.99050742785
+Investment Stage: 1, Representative Period: 1, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 37647.45209292877
+Investment Stage: 1, Representative Period: 1, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 39452.541669926104
+Investment Stage: 1, Representative Period: 1, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 33173.18939678877
+Investment Stage: 1, Representative Period: 1, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 2653826.0262242095
+Investment Stage: 1, Representative Period: 1, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 523.9788000000008
+Investment Stage: 1, Representative Period: 1, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 10384475.313797154
+Investment Stage: 1, Representative Period: 1, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 2070.592400000005
+Investment Stage: 1, Representative Period: 1, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 14472692.322703132
+Investment Stage: 1, Representative Period: 1, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 2888.5138000000043
+Investment Stage: 1, Representative Period: 1, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 15397193.564120887
+Investment Stage: 1, Representative Period: 1, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 3072.5770999999986
+Investment Stage: 1, Representative Period: 1, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 11119987.81407184
+Investment Stage: 1, Representative Period: 1, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 2216.0504
+Investment Stage: 1, Representative Period: 1, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 4610249.535698545
+Investment Stage: 1, Representative Period: 1, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 914.2204999999994
+Investment Stage: 1, Representative Period: 1, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 37943.629058392406
+Investment Stage: 1, Representative Period: 1, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 37630.30955584971
+Investment Stage: 1, Representative Period: 1, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 35958.67023885547
+Investment Stage: 1, Representative Period: 1, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 1, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 34243.76423556818
+Investment Stage: 1, Representative Period: 1, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 32069.80584033666
+Investment Stage: 1, Representative Period: 2, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 28406.915618890755
+Investment Stage: 1, Representative Period: 2, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 25752.91333000941
+Investment Stage: 1, Representative Period: 2, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 23524.28902405218
+Investment Stage: 1, Representative Period: 2, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 20145.52774856213
+Investment Stage: 1, Representative Period: 2, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 20233.163386957494
+Investment Stage: 1, Representative Period: 2, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 21229.358670507514
+Investment Stage: 1, Representative Period: 2, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 21724.357155220867
+Investment Stage: 1, Representative Period: 2, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 22773.995578231967
+Investment Stage: 1, Representative Period: 2, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 24094.67545306355
+Investment Stage: 1, Representative Period: 2, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 26283.454748628126
+Investment Stage: 1, Representative Period: 2, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 27822.398941843312
+Investment Stage: 1, Representative Period: 2, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 26065.64209231051
+Investment Stage: 1, Representative Period: 2, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 19612.67493834952
+Investment Stage: 1, Representative Period: 2, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 24566.66473012731
+Investment Stage: 1, Representative Period: 2, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 25797.725879719917
+Investment Stage: 1, Representative Period: 2, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 28049.98811173588
+Investment Stage: 1, Representative Period: 2, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 33928.64463392322
+Investment Stage: 1, Representative Period: 2, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 36790.50088365256
+Investment Stage: 1, Representative Period: 2, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 36783.07462829467
+Investment Stage: 1, Representative Period: 2, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 36221.46170951378
+Investment Stage: 1, Representative Period: 2, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 34665.73046105303
+Investment Stage: 1, Representative Period: 2, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 34166.46805489065
+Investment Stage: 1, Representative Period: 2, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 2, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 32866.937933183566
+Investment Stage: 1, Representative Period: 2, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 27636.834333539482
+Investment Stage: 1, Representative Period: 3, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 23825.69285029456
+Investment Stage: 1, Representative Period: 3, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 20746.633636833394
+Investment Stage: 1, Representative Period: 3, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 19287.720302504586
+Investment Stage: 1, Representative Period: 3, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 17513.973525705755
+Investment Stage: 1, Representative Period: 3, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 17705.60608839099
+Investment Stage: 1, Representative Period: 3, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 18479.28913292515
+Investment Stage: 1, Representative Period: 3, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 19722.039661685973
+Investment Stage: 1, Representative Period: 3, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 21780.90448602866
+Investment Stage: 1, Representative Period: 3, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 23684.42929283143
+Investment Stage: 1, Representative Period: 3, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 22772.319284412362
+Investment Stage: 1, Representative Period: 3, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 24417.67021010472
+Investment Stage: 1, Representative Period: 3, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 27335.001122702073
+Investment Stage: 1, Representative Period: 3, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 25288.12138209948
+Investment Stage: 1, Representative Period: 3, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 20783.70699486015
+Investment Stage: 1, Representative Period: 3, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 19343.644207512232
+Investment Stage: 1, Representative Period: 3, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 17319.10259589283
+Investment Stage: 1, Representative Period: 3, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 20964.28193065786
+Investment Stage: 1, Representative Period: 3, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 29051.804142765068
+Investment Stage: 1, Representative Period: 3, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 33153.163059340186
+Investment Stage: 1, Representative Period: 3, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 32208.75871540325
+Investment Stage: 1, Representative Period: 3, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 29980.14656621508
+Investment Stage: 1, Representative Period: 3, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 29629.185029700813
+Investment Stage: 1, Representative Period: 3, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 3, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 27323.749313288004
+Investment Stage: 1, Representative Period: 3, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 29831.309971076815
+Investment Stage: 1, Representative Period: 4, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 25143.175846649363
+Investment Stage: 1, Representative Period: 4, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 21114.754770672902
+Investment Stage: 1, Representative Period: 4, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 19273.95367852594
+Investment Stage: 1, Representative Period: 4, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 18394.455251692663
+Investment Stage: 1, Representative Period: 4, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 18122.740101797972
+Investment Stage: 1, Representative Period: 4, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 18204.658153439093
+Investment Stage: 1, Representative Period: 4, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 19319.059010454996
+Investment Stage: 1, Representative Period: 4, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 21112.93843131023
+Investment Stage: 1, Representative Period: 4, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 24546.55893067594
+Investment Stage: 1, Representative Period: 4, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 28507.60917026751
+Investment Stage: 1, Representative Period: 4, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 33583.28522334275
+Investment Stage: 1, Representative Period: 4, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 38219.91381437114
+Investment Stage: 1, Representative Period: 4, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 6306833.303784566
+Investment Stage: 1, Representative Period: 4, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 1253.8586000000032
+Investment Stage: 1, Representative Period: 4, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 15287301.787496362
+Investment Stage: 1, Representative Period: 4, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 3050.2863000000034
+Investment Stage: 1, Representative Period: 4, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 19671215.13241426
+Investment Stage: 1, Representative Period: 4, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 3927.1038999999982
+Investment Stage: 1, Representative Period: 4, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 20114656.204781353
+Investment Stage: 1, Representative Period: 4, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 4015.259900000001
+Investment Stage: 1, Representative Period: 4, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 18025272.81236586
+Investment Stage: 1, Representative Period: 4, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 3596.816500000001
+Investment Stage: 1, Representative Period: 4, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 12670724.582164912
+Investment Stage: 1, Representative Period: 4, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 2525.237200000003
+Investment Stage: 1, Representative Period: 4, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 5544610.578702839
+Investment Stage: 1, Representative Period: 4, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 1099.9877000000015
+Investment Stage: 1, Representative Period: 4, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 43423.66680428699
+Investment Stage: 1, Representative Period: 4, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 39401.64396200415
+Investment Stage: 1, Representative Period: 4, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 34567.65883386927
+Investment Stage: 1, Representative Period: 4, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 1, Representative Period: 4, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 31623.69290745145
+Investment Stage: 1, Representative Period: 4, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 28246.189076126044
+Investment Stage: 2, Representative Period: 1, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 26312.007786628903
+Investment Stage: 2, Representative Period: 1, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 23833.443439695126
+Investment Stage: 2, Representative Period: 1, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 22407.061986657267
+Investment Stage: 2, Representative Period: 1, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 22280.24679225755
+Investment Stage: 2, Representative Period: 1, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 22416.19467122599
+Investment Stage: 2, Representative Period: 1, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 23729.139108149066
+Investment Stage: 2, Representative Period: 1, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 25165.421365312886
+Investment Stage: 2, Representative Period: 1, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 26976.52683199772
+Investment Stage: 2, Representative Period: 1, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 28512.06838585472
+Investment Stage: 2, Representative Period: 1, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 33611.99050742785
+Investment Stage: 2, Representative Period: 1, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 37647.45209292877
+Investment Stage: 2, Representative Period: 1, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 39452.541669926104
+Investment Stage: 2, Representative Period: 1, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 33173.189396788766
+Investment Stage: 2, Representative Period: 1, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 2653826.0262242095
+Investment Stage: 2, Representative Period: 1, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 523.9788000000008
+Investment Stage: 2, Representative Period: 1, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 10384475.313797154
+Investment Stage: 2, Representative Period: 1, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 2070.592400000005
+Investment Stage: 2, Representative Period: 1, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 14472692.322703132
+Investment Stage: 2, Representative Period: 1, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 2888.5138000000043
+Investment Stage: 2, Representative Period: 1, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 15397193.564120887
+Investment Stage: 2, Representative Period: 1, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 3072.5770999999986
+Investment Stage: 2, Representative Period: 1, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 11119987.81407184
+Investment Stage: 2, Representative Period: 1, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 2216.0504
+Investment Stage: 2, Representative Period: 1, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 4610249.535698545
+Investment Stage: 2, Representative Period: 1, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 914.2204999999994
+Investment Stage: 2, Representative Period: 1, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 37943.62905839241
+Investment Stage: 2, Representative Period: 1, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 37630.30955584971
+Investment Stage: 2, Representative Period: 1, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 35958.67023885547
+Investment Stage: 2, Representative Period: 1, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 1, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 34243.76423556818
+Investment Stage: 2, Representative Period: 1, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 32069.805840336663
+Investment Stage: 2, Representative Period: 2, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 28406.91561889076
+Investment Stage: 2, Representative Period: 2, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 25752.913330009414
+Investment Stage: 2, Representative Period: 2, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 23524.28902405218
+Investment Stage: 2, Representative Period: 2, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 20145.527748562134
+Investment Stage: 2, Representative Period: 2, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 20233.163386957494
+Investment Stage: 2, Representative Period: 2, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 21229.358670507514
+Investment Stage: 2, Representative Period: 2, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 21724.357155220867
+Investment Stage: 2, Representative Period: 2, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 22773.995578231963
+Investment Stage: 2, Representative Period: 2, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 24094.67545306355
+Investment Stage: 2, Representative Period: 2, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 26283.454748628123
+Investment Stage: 2, Representative Period: 2, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 27822.398941843312
+Investment Stage: 2, Representative Period: 2, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 26065.64209231051
+Investment Stage: 2, Representative Period: 2, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 19612.67493834952
+Investment Stage: 2, Representative Period: 2, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 24566.66473012731
+Investment Stage: 2, Representative Period: 2, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 25797.725879719925
+Investment Stage: 2, Representative Period: 2, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 28049.988111735867
+Investment Stage: 2, Representative Period: 2, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 33928.64463392323
+Investment Stage: 2, Representative Period: 2, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 36790.50088365256
+Investment Stage: 2, Representative Period: 2, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 36783.07462829468
+Investment Stage: 2, Representative Period: 2, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 36221.46170951378
+Investment Stage: 2, Representative Period: 2, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 34665.73046105302
+Investment Stage: 2, Representative Period: 2, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 34166.46805489065
+Investment Stage: 2, Representative Period: 2, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 2, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 32866.93793318356
+Investment Stage: 2, Representative Period: 2, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 27636.83433353949
+Investment Stage: 2, Representative Period: 3, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 23825.69285029456
+Investment Stage: 2, Representative Period: 3, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 20746.633636833398
+Investment Stage: 2, Representative Period: 3, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 19287.720302504582
+Investment Stage: 2, Representative Period: 3, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 17513.973525705755
+Investment Stage: 2, Representative Period: 3, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 17705.60608839099
+Investment Stage: 2, Representative Period: 3, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 18479.28913292515
+Investment Stage: 2, Representative Period: 3, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 19722.039661685976
+Investment Stage: 2, Representative Period: 3, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 21780.90448602866
+Investment Stage: 2, Representative Period: 3, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 23684.42929283143
+Investment Stage: 2, Representative Period: 3, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 22772.319284412362
+Investment Stage: 2, Representative Period: 3, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 24417.670210104723
+Investment Stage: 2, Representative Period: 3, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 27335.001122702073
+Investment Stage: 2, Representative Period: 3, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 25288.121382099474
+Investment Stage: 2, Representative Period: 3, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 20783.70699486015
+Investment Stage: 2, Representative Period: 3, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 19343.64420751223
+Investment Stage: 2, Representative Period: 3, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 17319.10259589283
+Investment Stage: 2, Representative Period: 3, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 20964.28193065786
+Investment Stage: 2, Representative Period: 3, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 29051.80414276507
+Investment Stage: 2, Representative Period: 3, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 33153.163059340186
+Investment Stage: 2, Representative Period: 3, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 32208.758715403244
+Investment Stage: 2, Representative Period: 3, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 29980.146566215088
+Investment Stage: 2, Representative Period: 3, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 29629.185029700817
+Investment Stage: 2, Representative Period: 3, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 3, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 27323.749313288004
+Investment Stage: 2, Representative Period: 3, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 29831.30997107682
+Investment Stage: 2, Representative Period: 4, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 25143.17584664937
+Investment Stage: 2, Representative Period: 4, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 21114.754770672902
+Investment Stage: 2, Representative Period: 4, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 19273.953678525937
+Investment Stage: 2, Representative Period: 4, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 18394.455251692667
+Investment Stage: 2, Representative Period: 4, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 18122.740101797972
+Investment Stage: 2, Representative Period: 4, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 18204.658153439093
+Investment Stage: 2, Representative Period: 4, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 19319.059010455
+Investment Stage: 2, Representative Period: 4, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 21112.93843131023
+Investment Stage: 2, Representative Period: 4, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 24546.558930675936
+Investment Stage: 2, Representative Period: 4, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 28507.60917026751
+Investment Stage: 2, Representative Period: 4, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 33583.28522334275
+Investment Stage: 2, Representative Period: 4, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 38219.91381437113
+Investment Stage: 2, Representative Period: 4, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 6306833.303784566
+Investment Stage: 2, Representative Period: 4, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 1253.8586000000032
+Investment Stage: 2, Representative Period: 4, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 15287301.787496362
+Investment Stage: 2, Representative Period: 4, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 3050.2863000000034
+Investment Stage: 2, Representative Period: 4, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 19671215.13241426
+Investment Stage: 2, Representative Period: 4, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 3927.1038999999982
+Investment Stage: 2, Representative Period: 4, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 20114656.204781353
+Investment Stage: 2, Representative Period: 4, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 4015.259900000001
+Investment Stage: 2, Representative Period: 4, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 18025272.81236586
+Investment Stage: 2, Representative Period: 4, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 3596.816500000001
+Investment Stage: 2, Representative Period: 4, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 12670724.582164912
+Investment Stage: 2, Representative Period: 4, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 2525.237200000003
+Investment Stage: 2, Representative Period: 4, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 5544610.578702839
+Investment Stage: 2, Representative Period: 4, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 1099.9877000000015
+Investment Stage: 2, Representative Period: 4, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 43423.666804287
+Investment Stage: 2, Representative Period: 4, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 39401.64396200415
+Investment Stage: 2, Representative Period: 4, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 34567.65883386927
+Investment Stage: 2, Representative Period: 4, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 2, Representative Period: 4, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 31623.692907451445
+Investment Stage: 2, Representative Period: 4, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 28246.189076126037
+Investment Stage: 3, Representative Period: 1, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 26312.007786628903
+Investment Stage: 3, Representative Period: 1, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 23833.443439695126
+Investment Stage: 3, Representative Period: 1, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 22407.061986657267
+Investment Stage: 3, Representative Period: 1, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 22280.246792257552
+Investment Stage: 3, Representative Period: 1, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 22416.19467122599
+Investment Stage: 3, Representative Period: 1, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 23729.13910814907
+Investment Stage: 3, Representative Period: 1, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 25165.421365312886
+Investment Stage: 3, Representative Period: 1, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 26976.52683199772
+Investment Stage: 3, Representative Period: 1, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 28512.068385854716
+Investment Stage: 3, Representative Period: 1, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 33611.99050742785
+Investment Stage: 3, Representative Period: 1, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 37647.452092928776
+Investment Stage: 3, Representative Period: 1, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 39452.54166992611
+Investment Stage: 3, Representative Period: 1, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 33173.18939678877
+Investment Stage: 3, Representative Period: 1, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 2653826.0262242095
+Investment Stage: 3, Representative Period: 1, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 523.9788000000008
+Investment Stage: 3, Representative Period: 1, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 10384475.313797154
+Investment Stage: 3, Representative Period: 1, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 2070.592400000005
+Investment Stage: 3, Representative Period: 1, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 14472692.322703132
+Investment Stage: 3, Representative Period: 1, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 2888.5138000000043
+Investment Stage: 3, Representative Period: 1, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 15397193.564120887
+Investment Stage: 3, Representative Period: 1, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 3072.5770999999986
+Investment Stage: 3, Representative Period: 1, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 11119987.81407184
+Investment Stage: 3, Representative Period: 1, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 2216.0504
+Investment Stage: 3, Representative Period: 1, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 4610249.535698545
+Investment Stage: 3, Representative Period: 1, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 914.2204999999994
+Investment Stage: 3, Representative Period: 1, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 37943.62905839241
+Investment Stage: 3, Representative Period: 1, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 37630.30955584971
+Investment Stage: 3, Representative Period: 1, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 35958.67023885547
+Investment Stage: 3, Representative Period: 1, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 1, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 34243.76423556818
+Investment Stage: 3, Representative Period: 1, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 32069.805840336663
+Investment Stage: 3, Representative Period: 2, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 28406.915618890755
+Investment Stage: 3, Representative Period: 2, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 25752.913330009418
+Investment Stage: 3, Representative Period: 2, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 23524.28902405218
+Investment Stage: 3, Representative Period: 2, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 20145.527748562134
+Investment Stage: 3, Representative Period: 2, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 20233.163386957494
+Investment Stage: 3, Representative Period: 2, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 21229.358670507514
+Investment Stage: 3, Representative Period: 2, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 21724.35715522087
+Investment Stage: 3, Representative Period: 2, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 22773.995578231967
+Investment Stage: 3, Representative Period: 2, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 24094.675453063555
+Investment Stage: 3, Representative Period: 2, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 26283.45474862813
+Investment Stage: 3, Representative Period: 2, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 27822.398941843312
+Investment Stage: 3, Representative Period: 2, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 26065.642092310518
+Investment Stage: 3, Representative Period: 2, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 19612.67493834952
+Investment Stage: 3, Representative Period: 2, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 24566.66473012731
+Investment Stage: 3, Representative Period: 2, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 25797.725879719925
+Investment Stage: 3, Representative Period: 2, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 28049.988111735867
+Investment Stage: 3, Representative Period: 2, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 33928.64463392323
+Investment Stage: 3, Representative Period: 2, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 36790.50088365256
+Investment Stage: 3, Representative Period: 2, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 36783.07462829468
+Investment Stage: 3, Representative Period: 2, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 36221.46170951378
+Investment Stage: 3, Representative Period: 2, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 34665.73046105303
+Investment Stage: 3, Representative Period: 2, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 34166.468054890654
+Investment Stage: 3, Representative Period: 2, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 2, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 32866.937933183566
+Investment Stage: 3, Representative Period: 2, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 27636.83433353949
+Investment Stage: 3, Representative Period: 3, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 23825.69285029456
+Investment Stage: 3, Representative Period: 3, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 20746.633636833394
+Investment Stage: 3, Representative Period: 3, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 19287.720302504582
+Investment Stage: 3, Representative Period: 3, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 17513.973525705755
+Investment Stage: 3, Representative Period: 3, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 17705.606088390985
+Investment Stage: 3, Representative Period: 3, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 18479.289132925147
+Investment Stage: 3, Representative Period: 3, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 19722.039661685973
+Investment Stage: 3, Representative Period: 3, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 21780.90448602866
+Investment Stage: 3, Representative Period: 3, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 23684.42929283143
+Investment Stage: 3, Representative Period: 3, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 22772.319284412362
+Investment Stage: 3, Representative Period: 3, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 24417.67021010472
+Investment Stage: 3, Representative Period: 3, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 27335.001122702073
+Investment Stage: 3, Representative Period: 3, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 25288.121382099474
+Investment Stage: 3, Representative Period: 3, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 20783.70699486015
+Investment Stage: 3, Representative Period: 3, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 19343.644207512232
+Investment Stage: 3, Representative Period: 3, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 17319.102595892833
+Investment Stage: 3, Representative Period: 3, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 20964.28193065786
+Investment Stage: 3, Representative Period: 3, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 29051.804142765068
+Investment Stage: 3, Representative Period: 3, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 33153.163059340186
+Investment Stage: 3, Representative Period: 3, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 32208.758715403244
+Investment Stage: 3, Representative Period: 3, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 29980.14656621508
+Investment Stage: 3, Representative Period: 3, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 29629.185029700817
+Investment Stage: 3, Representative Period: 3, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 3, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 27323.749313288004
+Investment Stage: 3, Representative Period: 3, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 1, Dispatch Period: 1, Cost Dispatch: 29831.30997107682
+Investment Stage: 3, Representative Period: 4, Commitment Period: 1, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 2, Dispatch Period: 1, Cost Dispatch: 25143.175846649374
+Investment Stage: 3, Representative Period: 4, Commitment Period: 2, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 3, Dispatch Period: 1, Cost Dispatch: 21114.7547706729
+Investment Stage: 3, Representative Period: 4, Commitment Period: 3, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 4, Dispatch Period: 1, Cost Dispatch: 19273.953678525937
+Investment Stage: 3, Representative Period: 4, Commitment Period: 4, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 5, Dispatch Period: 1, Cost Dispatch: 18394.455251692663
+Investment Stage: 3, Representative Period: 4, Commitment Period: 5, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 6, Dispatch Period: 1, Cost Dispatch: 18122.740101797972
+Investment Stage: 3, Representative Period: 4, Commitment Period: 6, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 7, Dispatch Period: 1, Cost Dispatch: 18204.658153439093
+Investment Stage: 3, Representative Period: 4, Commitment Period: 7, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 8, Dispatch Period: 1, Cost Dispatch: 19319.059010455
+Investment Stage: 3, Representative Period: 4, Commitment Period: 8, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 9, Dispatch Period: 1, Cost Dispatch: 21112.93843131023
+Investment Stage: 3, Representative Period: 4, Commitment Period: 9, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 10, Dispatch Period: 1, Cost Dispatch: 24546.55893067594
+Investment Stage: 3, Representative Period: 4, Commitment Period: 10, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 11, Dispatch Period: 1, Cost Dispatch: 28507.60917026751
+Investment Stage: 3, Representative Period: 4, Commitment Period: 11, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 12, Dispatch Period: 1, Cost Dispatch: 33583.28522334275
+Investment Stage: 3, Representative Period: 4, Commitment Period: 12, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 13, Dispatch Period: 1, Cost Dispatch: 38219.91381437114
+Investment Stage: 3, Representative Period: 4, Commitment Period: 13, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 14, Dispatch Period: 1, Cost Dispatch: 6306833.303784566
+Investment Stage: 3, Representative Period: 4, Commitment Period: 14, Dispatch Period: 1, Load Shed Sum: 1253.8586000000032
+Investment Stage: 3, Representative Period: 4, Commitment Period: 15, Dispatch Period: 1, Cost Dispatch: 15287301.787496362/home/zakilwe/Forest/sparow_examples/sparow_examples/organized_gtep_runs/post_process_gtep_solution.py:1070: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`). Consider using `matplotlib.pyplot.close()`.
+  plt.figure(figsize=(15, 8))
+
+Investment Stage: 3, Representative Period: 4, Commitment Period: 15, Dispatch Period: 1, Load Shed Sum: 3050.2863000000034
+Investment Stage: 3, Representative Period: 4, Commitment Period: 16, Dispatch Period: 1, Cost Dispatch: 19671215.13241426
+Investment Stage: 3, Representative Period: 4, Commitment Period: 16, Dispatch Period: 1, Load Shed Sum: 3927.1038999999982
+Investment Stage: 3, Representative Period: 4, Commitment Period: 17, Dispatch Period: 1, Cost Dispatch: 20114656.204781353
+Investment Stage: 3, Representative Period: 4, Commitment Period: 17, Dispatch Period: 1, Load Shed Sum: 4015.259900000001
+Investment Stage: 3, Representative Period: 4, Commitment Period: 18, Dispatch Period: 1, Cost Dispatch: 18025272.81236586
+Investment Stage: 3, Representative Period: 4, Commitment Period: 18, Dispatch Period: 1, Load Shed Sum: 3596.816500000001
+Investment Stage: 3, Representative Period: 4, Commitment Period: 19, Dispatch Period: 1, Cost Dispatch: 12670724.582164912
+Investment Stage: 3, Representative Period: 4, Commitment Period: 19, Dispatch Period: 1, Load Shed Sum: 2525.237200000003
+Investment Stage: 3, Representative Period: 4, Commitment Period: 20, Dispatch Period: 1, Cost Dispatch: 5544610.578702839
+Investment Stage: 3, Representative Period: 4, Commitment Period: 20, Dispatch Period: 1, Load Shed Sum: 1099.9877000000015
+Investment Stage: 3, Representative Period: 4, Commitment Period: 21, Dispatch Period: 1, Cost Dispatch: 43423.666804287
+Investment Stage: 3, Representative Period: 4, Commitment Period: 21, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 22, Dispatch Period: 1, Cost Dispatch: 39401.64396200415
+Investment Stage: 3, Representative Period: 4, Commitment Period: 22, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 23, Dispatch Period: 1, Cost Dispatch: 34567.65883386927
+Investment Stage: 3, Representative Period: 4, Commitment Period: 23, Dispatch Period: 1, Load Shed Sum: 0.0
+Investment Stage: 3, Representative Period: 4, Commitment Period: 24, Dispatch Period: 1, Cost Dispatch: 31623.69290745144
+Investment Stage: 3, Representative Period: 4, Commitment Period: 24, Dispatch Period: 1, Load Shed Sum: 0.0
+Total Load Shed Value:
+93463.44930000007

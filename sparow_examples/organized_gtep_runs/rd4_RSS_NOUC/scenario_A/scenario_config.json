@@ -1,0 +1,15 @@
+{
+    "experimental_name": "rd4_RSS_NOUC",
+    "case_study": "9-bus",
+    "scenario": "scenario_A",
+    "alpha": 1.0,
+    "growth_rate": 1.0,
+    "num_representative_days": 4,
+    "power_flow_fidelity": "DC",
+    "relaxations": {
+        "relax_second_stage": true,
+        "unit_commitment": false
+    },
+    "number_of_commitment": 24,
+    "include_commitment": false
+}

@@ -1,0 +1,27 @@
+{
+    "experimental_name": "test_gtep",
+    "case_study": "9-bus",
+    "scenarios": [
+        "scenario_A"
+    ],
+    "growth_rate": 1.0,
+    "num_representative_days": {
+        "scenario_A": 4
+    },
+    "representative_dates": {
+        "scenario_A": [
+            "2020-01-28 00:00",
+            "2020-04-23 00:00",
+            "2020-07-05 00:00",
+            "2020-10-14 00:00"
+        ]
+    },
+    "representative_weights": {
+        "scenario_A": [
+            1,
+            1,
+            1,
+            1
+        ]
+    }
+}

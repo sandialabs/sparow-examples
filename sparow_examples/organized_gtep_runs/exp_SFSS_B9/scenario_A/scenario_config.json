@@ -1,0 +1,14 @@
+{
+    "experimental_name": "exp_SFSS_B9",
+    "case_study": "9-bus",
+    "scenario": "scenario_A",
+    "alpha": 2.0,
+    "growth_rate": 1.0,
+    "num_representative_days": 12,
+    "power_flow_fidelity": "CP",
+    "relaxations": {
+        "relax_second_stage": false,
+        "unit_commitment": true
+    },
+    "number_of_commitment": 24
+}
