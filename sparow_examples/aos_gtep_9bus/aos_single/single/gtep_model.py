@@ -22,7 +22,7 @@ import math
 
 
 from math import ceil
-from gtep.config_options import (
+from .config_options import (
     _get_model_config,
     _add_common_configs,
     _add_investment_configs,
