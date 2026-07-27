@@ -2052,7 +2052,8 @@ def create_objective_function(m):
         else:
             return (
                 m.investmentStage[1].operatingCostInvestment
-                + m.investmentStage[1].expansionCost
+                # + m.investmentStage[1].expansionCost 
+                + m.investmentStage[1].investment_cost        # was .expansionCost
                 + m.deficitPenalty[1]
                 * m.investmentFactor[1]
                 * m.investmentStage[1].quotaDeficit
