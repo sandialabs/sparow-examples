@@ -427,6 +427,25 @@ class FacilityLocCIAdapter(CIProblemAdapter):
     def get_active_fidelity(self):
         return self._active_fidelity
 
+    def scenario_vector_keys(self):
+        """
+        Return the scenario dictionary keys that correspond to uncertain problem data
+        """
+        return ["Demand"]
+
+    def decode_scenario_vector(self, vector, scenario_id: str):
+        """
+        Rebuild a facility-location scenario dictionary in the 
+        correct format from a flat numeric vector.
+
+        NOTE: probability key and value is computed in the internal
+        PyApproxModelWrapper logic.
+        """
+        return {
+            "ID": scenario_id,
+            "Demand": [float(elem) for elem in vector]
+        }
+
 
 # =================================================================
 # Core CI code expects exactly one standard factory name
