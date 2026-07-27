@@ -435,16 +435,13 @@ class FacilityLocCIAdapter(CIProblemAdapter):
 
     def decode_scenario_vector(self, vector, scenario_id: str):
         """
-        Rebuild a facility-location scenario dictionary in the 
+        Rebuild a facility-location scenario dictionary in the
         correct format from a flat numeric vector.
 
         NOTE: probability key and value is computed in the internal
         PyApproxModelWrapper logic.
         """
-        return {
-            "ID": scenario_id,
-            "Demand": [float(elem) for elem in vector]
-        }
+        return {"ID": scenario_id, "Demand": [float(elem) for elem in vector]}
 
 
 # =================================================================
