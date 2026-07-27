@@ -28,19 +28,20 @@ app_data["c"] = [
 app_data["k"] = [1550, 650, 1750]  # facility capacity
 app_data["num_HF"] = 10
 
-BASE_DIR = Path(__file__).resolve().parent # path to directory that contains this file
+BASE_DIR = Path(__file__).resolve().parent  # path to directory that contains this file
 
 bigM_path = BASE_DIR / "bigM.txt"
-with open(bigM_path, "r") as file: # read in big-M value from bigM.txt
+with open(bigM_path, "r") as file:  # read in big-M value from bigM.txt
     bigM_str = file.read()
 app_data["bigM"] = float(bigM_str)
 
 scens_path = BASE_DIR / "scens_list.npy"
 scenarios = np.load(scens_path, allow_pickle=True).tolist()
 model_data = {
-    "data": {}, # deterministic, model-specific parameters not already in app_data 
-    "scenarios": scenarios, # list of scenario dictionaries, each containing at least an "ID" plus the scenario-specific data
+    "data": {},  # deterministic, model-specific parameters not already in app_data
+    "scenarios": scenarios,  # list of scenario dictionaries, each containing at least an "ID" plus the scenario-specific data
 }
+
 
 def LF1_builder(data, args):
     n = data["n"]
@@ -207,9 +208,7 @@ def HF_mrp_grid_facilityloc():
     sp.initialize_application(app_data=app_data)
 
     print(f"Model data: {model_data}")
-    sp.initialize_model(
-        name="HF", model_data=model_data, model_builder=HF_builder
-    )
+    sp.initialize_model(name="HF", model_data=model_data, model_builder=HF_builder)
     return sp
 
 
@@ -222,7 +221,7 @@ def LF1_mrp_grid_facilityloc():
 
     print(f"Model data: {model_data}")
     sp.initialize_model(
-        name="LF1", model_data=model_data, model_builder=LF1_builder # ERROR HERE
+        name="LF1", model_data=model_data, model_builder=LF1_builder  # ERROR HERE
     )
     return sp
 
@@ -235,8 +234,6 @@ def LF2_mrp_grid_facilityloc():
     sp.initialize_application(app_data=app_data)
 
     print(f"Model data {model_data}")
-    sp.initialize_model(
-        name="LF2", model_data=model_data, model_builder=LF2_builder
-    )
+    sp.initialize_model(name="LF2", model_data=model_data, model_builder=LF2_builder)
 
     return sp

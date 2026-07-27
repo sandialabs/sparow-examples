@@ -38,21 +38,21 @@ Models:
 """
 
 # Large multiplicative constant for objective
-# This helps us ensure that the optimality gap estimates are on 
+# This helps us ensure that the optimality gap estimates are on
 # the order of magnitude we'd like for downstream analysis
 MULT_CONSTANT = 1.0
 
 app_data = {}
 
-app_data["num_demand_points"] = 4   # |I| is number of clients
-app_data["num_sites"] = 4           # |J| is number of potential facility locations
-app_data["p"] = 1                   # number of facilities that must be opened
+app_data["num_demand_points"] = 4  # |I| is number of clients
+app_data["num_sites"] = 4  # |J| is number of potential facility locations
+app_data["p"] = 1  # number of facilities that must be opened
 
 app_data["I"] = [f"i{i}" for i in range(app_data["num_demand_points"])]
 app_data["J"] = [f"j{j}" for j in range(app_data["num_sites"])]
 
-app_data["alpha1"] = 0.2 # weight placed on maximum transport cost in 1st stage
-app_data["alpha2"] = 0.8 # weight placed on maximum transport cost in 2nd stage
+app_data["alpha1"] = 0.2  # weight placed on maximum transport cost in 1st stage
+app_data["alpha2"] = 0.8  # weight placed on maximum transport cost in 2nd stage
 
 # Deterministic first-stage nominal transport costs used before disruption
 app_data["c_stage1"] = {
@@ -71,6 +71,7 @@ app_data["d_stage1"] = {
 }
 
 # ==== SCENARIO DATA ===========================================================
+
 
 class ReliablePCenterScenarioData(object):
     """
@@ -130,12 +131,12 @@ class ReliablePCenterScenarioData(object):
 
         demand_lists = [self.demand_multiplier_supports[i] for i in I]
 
-        # Each client has num_data_points possible demand-multiplier values, so there are num_data_points^|I| joint demand realizations, 
+        # Each client has num_data_points possible demand-multiplier values, so there are num_data_points^|I| joint demand realizations,
         # and each such realization can occur with any failure pattern
         total_scens = (self.num_data_points ** len(I)) * len(self.failure_patterns)
         scen_prob = 1.0 / total_scens
 
-        scen_id = 0 # naming convention: each scenario ID string ends in a number (population index)
+        scen_id = 0  # naming convention: each scenario ID string ends in a number (population index)
         scen_dict_list = []
 
         # We build the full finite scenario population by combining:
@@ -146,10 +147,12 @@ class ReliablePCenterScenarioData(object):
 
             # Each client i has a realized post-disruption
             # demand multiplier stored in multipliers[i] for this scenario.
-            multipliers = {i: float(demand_multiplier_tuple[idx]) for idx, i in enumerate(I)}
+            multipliers = {
+                i: float(demand_multiplier_tuple[idx]) for idx, i in enumerate(I)
+            }
 
             # For each realized disrupted-demand vector, pair it with every possible
-            # facility-failure pattern 
+            # facility-failure pattern
             for failure_pattern in self.failure_patterns:
 
                 # The realized stage-2 demand at client i is modeled as the
@@ -170,13 +173,15 @@ class ReliablePCenterScenarioData(object):
                         "ID": f"scen_{scen_id}",
                         "Demand2": demand2,
                         "Cost2": cost2,
-                        "Availability": failure_pattern,   # 1 means the facility fails in this scenario
+                        "Availability": failure_pattern,  # 1 means the facility fails in this scenario
                         "Probability": scen_prob,
                     }
                 )
                 scen_id += 1
-    
-        print(f"Total number of population scenarios generated and returned: {len(scen_dict_list)}")
+
+        print(
+            f"Total number of population scenarios generated and returned: {len(scen_dict_list)}"
+        )
         return {"scenarios": scen_dict_list}
 
 
@@ -199,6 +204,7 @@ scenario_data_by_model = {
 }
 
 # ==== MODEL BUILDERS ===========================================================
+
 
 def classic_pcenter_builder(data, args):
     """
@@ -227,27 +233,31 @@ def classic_pcenter_builder(data, args):
     # Tracking maximum transportation cost
     def radius_rule(model, i):
         return model.L >= sum(c2[i][j] * d2[i] * model.x[i, j] for j in J)
+
     model.Radius = pyo.Constraint(model.I, rule=radius_rule)
 
     # Must open p facilities
     def open_p_rule(model):
         return sum(model.y[j] for j in J) == p
+
     model.OpenP = pyo.Constraint(rule=open_p_rule)
 
     # Can only assign a client to a facility if we've opened that facility
     def assign_open_rule(model, i, j):
         return model.x[i, j] <= model.y[j]
+
     model.AssignOpen = pyo.Constraint(model.I, model.J, rule=assign_open_rule)
 
     # Every client assigned to exactly one facility
     def assign_one_rule(model, i):
         return sum(model.x[i, j] for j in J) == 1
+
     model.AssignOne = pyo.Constraint(model.I, rule=assign_one_rule)
 
     # Minimize the maximum transportation cost
-    # Large multiplicative constant helps ensure that the optimality gap estimates are on 
+    # Large multiplicative constant helps ensure that the optimality gap estimates are on
     # the order of magnitude we'd like for downstream analysis
-    model.obj = pyo.Objective(expr=MULT_CONSTANT*(model.L), sense=pyo.minimize)
+    model.obj = pyo.Objective(expr=MULT_CONSTANT * (model.L), sense=pyo.minimize)
 
     return model
 
@@ -291,21 +301,25 @@ def stochastic_reliable_pcenter_builder(data, args):
     # Tracking maximum transportation cost from the first stage decisions
     def first_stage_radius_rule(model, i):
         return model.L1 >= sum(c_stage1[i][j] * d_stage1[i] * model.x[i, j] for j in J)
+
     model.FirstStageRadius = pyo.Constraint(model.I, rule=first_stage_radius_rule)
 
     # Must open p facilities
     def open_p_rule(model):
         return sum(model.y[j] for j in J) == p
+
     model.OpenP = pyo.Constraint(rule=open_p_rule)
 
     # Can only assign a client to a facility if we've opened that facility
     def assign_open_rule(model, i, j):
         return model.x[i, j] <= model.y[j]
+
     model.AssignOpen = pyo.Constraint(model.I, model.J, rule=assign_open_rule)
 
     # Every client assigned to exactly one facility
     def assign_one_rule(model, i):
         return sum(model.x[i, j] for j in J) == 1
+
     model.AssignOne = pyo.Constraint(model.I, rule=assign_one_rule)
 
     ### Stage 2
@@ -313,28 +327,34 @@ def stochastic_reliable_pcenter_builder(data, args):
     # Tracking maximum transportation cost from the second stage decisions
     def second_stage_radius_rule(model, i):
         return model.L2 >= sum(c2[i][j] * d2[i] * model.w[i, j] for j in J)
+
     model.SecondStageRadius = pyo.Constraint(model.I, rule=second_stage_radius_rule)
 
     # Can only assign a client to a facility if we've opened that facility
     def recourse_open_rule(model, i, j):
         return model.w[i, j] <= model.y[j]
+
     model.RecourseOpen = pyo.Constraint(model.I, model.J, rule=recourse_open_rule)
 
     # Can only assign a client to a facility if that facility hasn't failed after disruption
     def recourse_available_rule(model, i, j):
         return model.w[i, j] <= 1 - a[j]
-    model.RecourseAvailable = pyo.Constraint(model.I, model.J, rule=recourse_available_rule)
+
+    model.RecourseAvailable = pyo.Constraint(
+        model.I, model.J, rule=recourse_available_rule
+    )
 
     # Every client assigned to exactly one facility
     def recourse_assign_one_rule(model, i):
         return sum(model.w[i, j] for j in J) == 1
+
     model.RecourseAssignOne = pyo.Constraint(model.I, rule=recourse_assign_one_rule)
 
     # Minimize the stage-weighted maximum transportation costs
-    # Large multiplicative constant helps ensure that the optimality gap estimates are on 
+    # Large multiplicative constant helps ensure that the optimality gap estimates are on
     # the order of magnitude we'd like for downstream analysis
     model.obj = pyo.Objective(
-        expr= MULT_CONSTANT*(alpha1 * model.L1 + alpha2 * model.L2),
+        expr=MULT_CONSTANT * (alpha1 * model.L1 + alpha2 * model.L2),
         sense=pyo.minimize,
     )
 
@@ -385,21 +405,25 @@ def robust_reliable_pcenter_builder(data, args):
     # Tracking maximum transportation cost from the first stage decisions
     def first_stage_radius_rule(model, i):
         return model.L1 >= sum(c_stage1[i][j] * d_stage1[i] * model.x[i, j] for j in J)
+
     model.FirstStageRadius = pyo.Constraint(model.I, rule=first_stage_radius_rule)
 
     # Must open p facilities
     def open_p_rule(model):
         return sum(model.y[j] for j in J) == p
+
     model.OpenP = pyo.Constraint(rule=open_p_rule)
 
     # Can only assign a client to a facility if we've opened that facility
     def assign_open_rule(model, i, j):
         return model.x[i, j] <= model.y[j]
+
     model.AssignOpen = pyo.Constraint(model.I, model.J, rule=assign_open_rule)
 
     # Every client assigned to exactly one facility
     def assign_one_rule(model, i):
         return sum(model.x[i, j] for j in J) == 1
+
     model.AssignOne = pyo.Constraint(model.I, rule=assign_one_rule)
 
     ### Stage 2
@@ -407,34 +431,42 @@ def robust_reliable_pcenter_builder(data, args):
     # Tracking maximum transportation cost from the second stage decisions
     def second_stage_radius_rule(model, i):
         return model.L2 >= sum(c2[i][j] * d2[i] * model.w[i, j] for j in J)
+
     model.SecondStageRadius = pyo.Constraint(model.I, rule=second_stage_radius_rule)
 
     # Can only assign a client to a facility if we've opened that facility
     def recourse_open_rule(model, i, j):
         return model.w[i, j] <= model.y[j]
+
     model.RecourseOpen = pyo.Constraint(model.I, model.J, rule=recourse_open_rule)
 
     # Can only assign a client to a facility if that facility hasn't failed after disruption
     def recourse_available_rule(model, i, j):
         return model.w[i, j] <= 1 - a[j]
-    model.RecourseAvailable = pyo.Constraint(model.I, model.J, rule=recourse_available_rule)
+
+    model.RecourseAvailable = pyo.Constraint(
+        model.I, model.J, rule=recourse_available_rule
+    )
 
     # Every client assigned to exactly one facility
     def recourse_assign_one_rule(model, i):
         return sum(model.w[i, j] for j in J) == 1
+
     model.RecourseAssignOne = pyo.Constraint(model.I, rule=recourse_assign_one_rule)
 
     # Slightly more conservative second-stage emphasis than LF stochastic
-    # Large multiplicative constant helps ensure that the optimality gap estimates are on 
+    # Large multiplicative constant helps ensure that the optimality gap estimates are on
     # the order of magnitude we'd like for downstream analysis
     model.obj = pyo.Objective(
-        expr=MULT_CONSTANT*(alpha1 * model.L1 + (alpha2 * 1.5) * model.L2),
+        expr=MULT_CONSTANT * (alpha1 * model.L1 + (alpha2 * 1.5) * model.L2),
         sense=pyo.minimize,
     )
 
     return model
 
+
 # ==== CI ADAPTER ==============================================================
+
 
 class ReliablePCenterCIAdapter(CIProblemAdapter):
     """
@@ -471,7 +503,9 @@ class ReliablePCenterCIAdapter(CIProblemAdapter):
         self.model_builder = model_builder
         self.app_data = {} if app_data is None else dict(app_data)
         self.first_stage_variables = (
-            ["x[*,*]", "y[*]"] if first_stage_variables is None else first_stage_variables
+            ["x[*,*]", "y[*]"]
+            if first_stage_variables is None
+            else first_stage_variables
         )
 
         if lf_model_type not in ("classic", "stochastic"):
@@ -559,6 +593,7 @@ class ReliablePCenterCIAdapter(CIProblemAdapter):
 # Core CI code expects exactly one standard factory name
 # =================================================================
 
+
 def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="classic"):
     """
     Standard factory function expected by the core CI code.
@@ -604,22 +639,29 @@ def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="cl
 # Write the scenario data to file for use in the CI tests
 # =================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Write the full reliable p-center scenario population to a file "
-                    "that sparow.ci.cli --scenario-file can read."
+        "that sparow.ci.cli --scenario-file can read."
     )
-    parser.add_argument("--output", required=True, help="Output file path ending in .json or .npy")
-    parser.add_argument("--num-data-points", type=int, default=5,
-                        help="Number of support points per client for second-stage uncertain demand")
-    # This argument doesn't actually affect anything right now... 
+    parser.add_argument(
+        "--output", required=True, help="Output file path ending in .json or .npy"
+    )
+    parser.add_argument(
+        "--num-data-points",
+        type=int,
+        default=5,
+        help="Number of support points per client for second-stage uncertain demand",
+    )
+    # This argument doesn't actually affect anything right now...
     # but need to instantiate an adapter in order to get & validate scenario population
     parser.add_argument(
         "--lf-model-type",
         choices=["classic", "stochastic"],
         default="classic",
         help="Select which concrete model should be used whenever ACV-MRP requests low fidelity",
-    ) 
+    )
     args = parser.parse_args()
 
     scenario_object = ReliablePCenterScenarioData(args.num_data_points)
@@ -638,7 +680,11 @@ def main():
     adapter.validate_scenario_population(scenarios)
 
     outpath = os.path.abspath(args.output)
-    os.makedirs(os.path.dirname(outpath), exist_ok=True) if os.path.dirname(outpath) else None
+    (
+        os.makedirs(os.path.dirname(outpath), exist_ok=True)
+        if os.path.dirname(outpath)
+        else None
+    )
 
     if outpath.endswith(".json"):
         with open(outpath, "w") as f:

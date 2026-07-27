@@ -4,23 +4,23 @@ The scenario distribution is the probability distribution over the space of all 
 
 FOR NOW: Assume the components of the scenario vector are independent.
 
-This script takes historical problem data as input and fits a distribution using Gaussian kernel density 
-estimation (KDE), without assuming a parametric form for the true underlying distribution. This means we fit a separate, 
-1D gaussian KDE to the historical data of each uncertain parameter. 
+This script takes historical problem data as input and fits a distribution using Gaussian kernel density
+estimation (KDE), without assuming a parametric form for the true underlying distribution. This means we fit a separate,
+1D gaussian KDE to the historical data of each uncertain parameter.
 
-We can then use these fitted marginal models to draw i.i.d samples of scenario vectors. 
-Each scenario vector is built by sampling each uncertain parameter independently from its own fitted KDE, 
+We can then use these fitted marginal models to draw i.i.d samples of scenario vectors.
+Each scenario vector is built by sampling each uncertain parameter independently from its own fitted KDE,
 so the approximating joint distribution is the product of the fitted marginals.
 
-When we assign each sampled scenario vector equal probability (1/n), we are treating the n sampled vectors 
-as an i.i.d. Monte Carlo sample from that approximating joint distribution and using the corresponding 
+When we assign each sampled scenario vector equal probability (1/n), we are treating the n sampled vectors
+as an i.i.d. Monte Carlo sample from that approximating joint distribution and using the corresponding
 empirical distribution.
 
-Alternatively, the script can assign non-equal scenario weights by approximating probability mass through 
+Alternatively, the script can assign non-equal scenario weights by approximating probability mass through
 bin-integration of the fitted KDEs.
 
 For example, in facility location with AMPL data:
-    If there are 4 cities, each scenario vector will have 4 components, 
+    If there are 4 cities, each scenario vector will have 4 components,
     where the first component is the demand for city 1, the second component is the demand for city 2, etc.
 """
 
@@ -31,20 +31,22 @@ from pathlib import Path
 from dataclasses import dataclass
 from scipy.integrate import quad
 
+
 @dataclass
 class FittedDistributionforUncertainParameter:
     """
     Class to hold the fitted distribution for a one uncertain, scenario-specific model parameter.
     """
+
     parameter_name: str  # name of the uncertain parameter (e.g., "Demand")
     kde: gaussian_kde  # the fitted gaussian KDE object: used to draw new samples of this uncertain parameter
-    nonnegative_flag: bool = False # whether the parameter has to be nonnegative
+    nonnegative_flag: bool = False  # whether the parameter has to be nonnegative
 
 
 class ScenarioDistribution:
     """
     General-purpose scenario distribution approximator.
-    FOR NOW: Each uncertain model parameter is fit separately with a 1D Gaussian KDE 
+    FOR NOW: Each uncertain model parameter is fit separately with a 1D Gaussian KDE
              (no modeling of correlations between the parameters yet)
 
     A single, sampled scenario is a dictionary of the form:
@@ -69,14 +71,16 @@ class ScenarioDistribution:
             self.rng = np.random.default_rng(1234)
 
         # Map parameter name to FittedDistributionforUncertainParameter object
-        self.uncertain_parameter_distributions = {} 
+        self.uncertain_parameter_distributions = {}
 
         # Keeps track of the order in which scenario-vector components (the uncertain parameters) should appear
         self.parameter_names_in_order = []
 
-    def fit_distribution_for_parameter(self, parameter_name: str, data, nonnegative_flag=False, save_plot=True):
+    def fit_distribution_for_parameter(
+        self, parameter_name: str, data, nonnegative_flag=False, save_plot=True
+    ):
         """
-        Fit a gaussian KDE to the input data for a given uncertain parameter, 
+        Fit a gaussian KDE to the input data for a given uncertain parameter,
         and store the fitted distribution in self.uncertain_parameter_distributions.
 
         Input data should be a 1d array of historical realizations of the uncertain parameter.
@@ -84,27 +88,35 @@ class ScenarioDistribution:
 
         data = np.asarray(data, dtype=float)
         if data.ndim != 1:
-            raise ValueError(f"Input data for parameter '{parameter_name}' must be 1D; got shape {data.shape}.")
-        
+            raise ValueError(
+                f"Input data for parameter '{parameter_name}' must be 1D; got shape {data.shape}."
+            )
+
         kde = gaussian_kde(data)
-        self.uncertain_parameter_distributions[parameter_name] = FittedDistributionforUncertainParameter(
-            parameter_name=parameter_name,
-            kde=kde,
-            nonnegative_flag=nonnegative_flag,
+        self.uncertain_parameter_distributions[parameter_name] = (
+            FittedDistributionforUncertainParameter(
+                parameter_name=parameter_name,
+                kde=kde,
+                nonnegative_flag=nonnegative_flag,
+            )
         )
         if parameter_name not in self.parameter_names_in_order:
             self.parameter_names_in_order.append(parameter_name)
 
         # Plot the fitted KDE along with a histogram of the orginal input data to visualize the fit
         if save_plot:
-            tails_of_distr = 0.02 * (max(data) - min(data))  # using 2% (more likely to be feasible)
+            tails_of_distr = 0.02 * (
+                max(data) - min(data)
+            )  # using 2% (more likely to be feasible)
             x_range = np.linspace(
                 min(data) - tails_of_distr, max(data) + tails_of_distr, 1000
             )
             kde_values = kde(x_range)
             plt.figure()
             plt.plot(x_range, kde_values, label="Gaussian KDE")
-            plt.hist(data, bins=20, density=True, label="Histogram")  # density=True to represent PDF
+            plt.hist(
+                data, bins=20, density=True, label="Histogram"
+            )  # density=True to represent PDF
             plt.xlabel("Data")
             plt.ylabel("Density")
             plt.title(f"Gaussian KDE of {parameter_name}")
@@ -119,14 +131,15 @@ class ScenarioDistribution:
         fitted_dist = self.uncertain_parameter_distributions[parameter_name]
         sampled_value = fitted_dist.kde.resample(1, seed=self.rng).item()
 
-        # TODO: is this statistically sound? 
+        # TODO: is this statistically sound?
         if fitted_dist.nonnegative_flag:
-            sampled_value = max(0.0, sampled_value) 
+            sampled_value = max(0.0, sampled_value)
 
         return float(sampled_value)
-    
 
-    def sample_scenarios(self, num_scenarios, parameter_names=None, assign_equal_probabilities=True):
+    def sample_scenarios(
+        self, num_scenarios, parameter_names=None, assign_equal_probabilities=True
+    ):
         """
         Sample new scenarios from the fitted distributions.
 
@@ -155,7 +168,9 @@ class ScenarioDistribution:
 
         for param_name in parameter_names:
             if param_name not in self.uncertain_parameter_distributions:
-                raise ValueError(f"No fitted distribution found for parameter '{param_name}'.")
+                raise ValueError(
+                    f"No fitted distribution found for parameter '{param_name}'."
+                )
 
         scenarios = []
 
@@ -180,7 +195,7 @@ class ScenarioDistribution:
 
         else:
             # We now want to assign approximate probabilities to each sampled value.
-            # gaussian KDE gives us a continuous distribution, so we have to estimate the probabilities associated with 
+            # gaussian KDE gives us a continuous distribution, so we have to estimate the probabilities associated with
             # each sample by integrating the PDFs
             num_bins = 8  # could make this a function argument later
 
@@ -190,8 +205,8 @@ class ScenarioDistribution:
             for parameter_name in parameter_names:
                 fitted_dist = self.uncertain_parameter_distributions[parameter_name]
 
-                # This is the array of sampled values for this parameter across all scenarios; 
-                # we use this to determine the bin edges for the histogram, 
+                # This is the array of sampled values for this parameter across all scenarios;
+                # we use this to determine the bin edges for the histogram,
                 # which we need to do the bin-integration of the KDE to get the bin probabilities
                 sampled_values = np.array(
                     [scenario_dict[parameter_name] for scenario_dict in scenarios],
@@ -206,7 +221,9 @@ class ScenarioDistribution:
                 bin_probs = []
                 for i in range(num_bins):
                     low, high = bin_edges[i], bin_edges[i + 1]
-                    prob, _ = quad(fitted_dist.kde, low, high) # this step does the integration
+                    prob, _ = quad(
+                        fitted_dist.kde, low, high
+                    )  # this step does the integration
                     bin_probs.append(prob)
 
                 # Normalize the bin probabilities so that they sum to 1
@@ -238,17 +255,19 @@ class ScenarioDistribution:
             weight_sum = sum(raw_weights)
 
             if weight_sum <= 0.0:
-                raise ValueError("All bin-integration-based scenario weights are zero; cannot normalize probabilities.")
+                raise ValueError(
+                    "All bin-integration-based scenario weights are zero; cannot normalize probabilities."
+                )
 
             for scenario_dict, weight in zip(scenarios, raw_weights):
                 scenario_dict["Probability"] = float(weight / weight_sum)
 
         return scenarios
-    
 
-# Helper function that estimates probability of a value sampled from the fitted distribution 
-# as the probability mass of the bin it falls into 
-# (i.e. - integrate the KDE over the bin edges to get the probability mass associated with that bin), 
+
+# Helper function that estimates probability of a value sampled from the fitted distribution
+# as the probability mass of the bin it falls into
+# (i.e. - integrate the KDE over the bin edges to get the probability mass associated with that bin),
 # where the bins are defined by the histogram of the original data used to fit the KDE.
 def probability_by_bin(bin_edges, bin_probs, value):
     ### THIS FUNCTION IS FROM SANDIA AI -RMA
@@ -268,7 +287,7 @@ def probability_by_bin(bin_edges, bin_probs, value):
     if bin_index < 0 or bin_index >= len(bin_probs):
         return 0.0
 
-    return bin_probs[bin_index]       
+    return bin_probs[bin_index]
 
 
 if __name__ == "__main__":
@@ -281,7 +300,7 @@ if __name__ == "__main__":
         "Birmingham_AL": [91, 113, 207],
     }
 
-    # HACK: Since this is a small number of data points per city, use np.linspace to add some more 
+    # HACK: Since this is a small number of data points per city, use np.linspace to add some more
     # PLEASE NOTE: This is not statistically sound at all, just doing it for toy example
     ampl_data = {}
     for key, val in ampl_data_original.items():
@@ -314,7 +333,7 @@ if __name__ == "__main__":
     raw_scenarios = scen_dist.sample_scenarios(
         num_scenarios=n,
         parameter_names=list(ampl_data.keys()),
-        assign_equal_probabilities=True,   # preffered for SAA 
+        assign_equal_probabilities=True,  # preffered for SAA
     )
 
     # Create scenario list in the format model_data expects
@@ -322,9 +341,9 @@ if __name__ == "__main__":
     for idx, scen in enumerate(raw_scenarios):
         scens_list.append(
             {
-                "ID": scen["ID"], 
-                "Demand": scen["Sampled_Vector"], 
-                "Probability": scen["Probability"]
+                "ID": scen["ID"],
+                "Demand": scen["Sampled_Vector"],
+                "Probability": scen["Probability"],
             }
         )
 

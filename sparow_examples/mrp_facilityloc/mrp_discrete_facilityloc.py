@@ -26,17 +26,24 @@ FACILITY LOCATION
 """
 
 app_data = {"n": 6, "t": 4}  # number of facilities & customers
-app_data["f"] = [260000, 275000, 270000, 285000, 320000, 340000]  # fixed costs for opening facilities
+app_data["f"] = [
+    260000,
+    275000,
+    270000,
+    285000,
+    320000,
+    340000,
+]  # fixed costs for opening facilities
 app_data["c"] = [
-    [4200.0, 5200.0, 12500.0, 18000.0],   # facility 0 good for cust 0,1
-    [4600.0, 4800.0, 11800.0, 17500.0],   # facility 1 also good for cust 0,1
-    [12800.0, 12000.0, 4100.0, 5600.0],   # facility 2 good for cust 2,3
-    [13500.0, 12600.0, 4500.0, 5100.0],   # facility 3 also good for cust 2,3
-    [7600.0, 7900.0, 7800.0, 8200.0],     # facility 4 compromise facility
-    [9000.0, 9400.0, 9100.0, 9600.0],     # facility 5 dominated-ish but feasible
-] # servicing costs
+    [4200.0, 5200.0, 12500.0, 18000.0],  # facility 0 good for cust 0,1
+    [4600.0, 4800.0, 11800.0, 17500.0],  # facility 1 also good for cust 0,1
+    [12800.0, 12000.0, 4100.0, 5600.0],  # facility 2 good for cust 2,3
+    [13500.0, 12600.0, 4500.0, 5100.0],  # facility 3 also good for cust 2,3
+    [7600.0, 7900.0, 7800.0, 8200.0],  # facility 4 compromise facility
+    [9000.0, 9400.0, 9100.0, 9600.0],  # facility 5 dominated-ish but feasible
+]  # servicing costs
 app_data["k"] = [2500, 2500, 2500, 2500, 2500, 2500]  # facility capacity
-app_data["s"] = [2, 2, 2, 2, 2, 2] # max number of customers each facility can service
+app_data["s"] = [2, 2, 2, 2, 2, 2]  # max number of customers each facility can service
 app_data["a"] = [
     [3900.0, 5000.0, 12000.0, 17000.0],
     [4300.0, 4700.0, 11400.0, 16800.0],
@@ -44,12 +51,12 @@ app_data["a"] = [
     [12900.0, 12100.0, 4300.0, 4800.0],
     [7000.0, 7300.0, 7100.0, 7600.0],
     [8600.0, 9000.0, 8700.0, 9200.0],
-] # transportation costs
+]  # transportation costs
 
-BASE_DIR = Path(__file__).resolve().parent # path to directory that contains this file
+BASE_DIR = Path(__file__).resolve().parent  # path to directory that contains this file
 
 bigM_path = BASE_DIR / "bigM.txt"
-with open(bigM_path, "r") as file: # read in big-M value from bigM.txt
+with open(bigM_path, "r") as file:  # read in big-M value from bigM.txt
     bigM_str = file.read()
 app_data["bigM"] = float(bigM_str)
 
@@ -59,6 +66,7 @@ app_data["bigM"] = float(bigM_str)
 # Define low and high demand values for each city (customer)
 low_demands = [180.0, 500.0, 140.0, 40.0]
 high_demands = [700.0, 1400.0, 650.0, 260.0]
+
 
 class FacilityLocationScenarioData(object):
     """
@@ -87,9 +95,9 @@ class FacilityLocationScenarioData(object):
         "Probability".
         """
         total_scens = self.num_data_points ** len(self.demand_supports)
-        scen_prob = 1.0 / total_scens # each scenario vector gets equal probability
+        scen_prob = 1.0 / total_scens  # each scenario vector gets equal probability
 
-        scen_id = 0 # naming convention: each scenario ID string ends in a number (population index)
+        scen_id = 0  # naming convention: each scenario ID string ends in a number (population index)
         scen_dict_list = []
 
         # Use itertools.product to get cartesian product
@@ -124,6 +132,7 @@ scenario_data_by_model = {
 
 # ==== MODEL BUILDERS ===========================================================
 
+
 def LF_builder(data, args):
     n = data["n"]
     t = data["t"]
@@ -145,7 +154,9 @@ def LF_builder(data, args):
 
     ### VARIABLES
     model.x = pyo.Var(model.N, within=pyo.Binary)  # x[i] == 1 if facility i is open
-    model.y = pyo.Var(model.N, model.T, domain=[0,1]) # y[i, j] in [0,1] if customer j's demand is met by facility i (RELAXED VAR)
+    model.y = pyo.Var(
+        model.N, model.T, domain=[0, 1]
+    )  # y[i, j] in [0,1] if customer j's demand is met by facility i (RELAXED VAR)
     model.z = pyo.Var(
         model.N, model.T, within=pyo.NonNegativeReals
     )  # z[i, j] = volume of customer j's demand met by facility i
@@ -154,32 +165,37 @@ def LF_builder(data, args):
     def MeetDemand_rule(model, j):
         return sum(model.z[i, j] for i in range(n)) >= d[j]
         # sum of demand met by all facilities for customer j is greater than demand from customer j
+
     model.MeetDemand = pyo.Constraint(model.T, rule=MeetDemand_rule)
 
     def SufficientProduction_rule(model):
         return sum(k[i] * model.x[i] for i in range(n)) >= sum(d[j] for j in range(t))
         # sum of production from all facilities is greater than sum of total demand from all customers
+
     model.SufficientProduction = pyo.Constraint(rule=SufficientProduction_rule)
 
     def Capacity_rule(model, i):
         return sum(model.z[i, j] for j in range(t)) <= k[i] * model.x[i]
         # volume of demand met is less than capacity for each facility. this constraint also ensures logic between x, z
+
     model.Capacity = pyo.Constraint(model.N, rule=Capacity_rule)
 
-    def OpenFacilities_rule(model, i, j): 
+    def OpenFacilities_rule(model, i, j):
         return model.y[i, j] <= model.x[i]
         # facility i needs to be open to fulfill customer j's demand w/ facility i
+
     model.OpenFacilities = pyo.Constraint(model.N, model.T, rule=OpenFacilities_rule)
 
     ### COMMENTING THIS OUT SO THAT y TAKES ON CONTINUOUS VALUES ###
-    #def LogicFacilities_rule(model, i, j):
+    # def LogicFacilities_rule(model, i, j):
     #    return model.z[i, j] <= bigM*model.y[i, j]
-        # if facility i doesn't meet customer j's demand, volume of demand met by i for j is 0
-    #model.LogicFacilities = pyo.Constraint(model.N, model.T, rule=LogicFacilities_rule)
+    # if facility i doesn't meet customer j's demand, volume of demand met by i for j is 0
+    # model.LogicFacilities = pyo.Constraint(model.N, model.T, rule=LogicFacilities_rule)
 
     def CustomersPerFacility_rule(model, i):
         return sum(model.y[i, j] for j in range(t)) <= s[i]
         # limit on the number of customers serviced by facility j
+
     model.CustomersPerFacility = pyo.Constraint(model.N, rule=CustomersPerFacility_rule)
 
     ### OBJECTIVE
@@ -218,7 +234,9 @@ def HF_builder(data, args):
 
     ### VARIABLES
     model.x = pyo.Var(model.N, within=pyo.Binary)  # x[i] == 1 if facility i is open
-    model.y = pyo.Var(model.N, model.T, within=pyo.Binary) # y[i, j] == 1 if customer j's demand is met by facility i
+    model.y = pyo.Var(
+        model.N, model.T, within=pyo.Binary
+    )  # y[i, j] == 1 if customer j's demand is met by facility i
     model.z = pyo.Var(
         model.N, model.T, within=pyo.NonNegativeReals
     )  # z[i, j] = volume of customer j's demand met by facility i
@@ -227,31 +245,37 @@ def HF_builder(data, args):
     def MeetDemand_rule(model, j):
         return sum(model.z[i, j] for i in range(n)) >= d[j]
         # sum of demand met by all facilities for customer j is greater than demand from customer j
+
     model.MeetDemand = pyo.Constraint(model.T, rule=MeetDemand_rule)
 
     def SufficientProduction_rule(model):
         return sum(k[i] * model.x[i] for i in range(n)) >= sum(d[j] for j in range(t))
         # sum of production from all facilities is greater than sum of total demand from all customers
+
     model.SufficientProduction = pyo.Constraint(rule=SufficientProduction_rule)
 
     def Capacity_rule(model, i):
         return sum(model.z[i, j] for j in range(t)) <= k[i] * model.x[i]
         # volume of demand met is less than capacity for each facility. this constraint also ensures logic between x, z
+
     model.Capacity = pyo.Constraint(model.N, rule=Capacity_rule)
 
-    def OpenFacilities_rule(model, i, j): 
+    def OpenFacilities_rule(model, i, j):
         return model.y[i, j] <= model.x[i]
         # facility i needs to be open to fulfill customer j's demand w/ facility i
+
     model.OpenFacilities = pyo.Constraint(model.N, model.T, rule=OpenFacilities_rule)
 
     def LogicFacilities_rule(model, i, j):
-        return model.z[i, j] <= bigM*model.y[i, j]
+        return model.z[i, j] <= bigM * model.y[i, j]
         # if facility i doesn't meet customer j's demand, volume of demand met by i for j is 0
+
     model.LogicFacilities = pyo.Constraint(model.N, model.T, rule=LogicFacilities_rule)
 
     def CustomersPerFacility_rule(model, i):
         return sum(model.y[i, j] for j in range(t)) <= s[i]
         # limit on the number of customers serviced by facility j
+
     model.CustomersPerFacility = pyo.Constraint(model.N, rule=CustomersPerFacility_rule)
 
     ### OBJECTIVE
@@ -270,6 +294,7 @@ def HF_builder(data, args):
 
 
 # ==== CI ADAPTER ==============================================================
+
 
 class FacilityLocCIAdapter(CIProblemAdapter):
     """
@@ -307,9 +332,7 @@ class FacilityLocCIAdapter(CIProblemAdapter):
             model_builder=model_builder,
             app_data=app_data,
             first_stage_variables=(
-                ["x"]
-                if first_stage_variables is None
-                else first_stage_variables
+                ["x"] if first_stage_variables is None else first_stage_variables
             ),
         )
         if model_name == "HF":
@@ -317,7 +340,9 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         elif model_name == "LF":
             self._active_fidelity = "low"
         else:
-            raise RuntimeError(f"Unrecognized model_name for discrete facilityloc: {model_name}")
+            raise RuntimeError(
+                f"Unrecognized model_name for discrete facilityloc: {model_name}"
+            )
 
     def get_scenario_population(self):
         """
@@ -368,7 +393,9 @@ class FacilityLocCIAdapter(CIProblemAdapter):
             - convert xhat dicts into vectors for sp.evaluate(...).
         """
         # Return the first-stage variables in order: x[0], x[1], x[2], ...
-        n = self.app_data.get("n", 3) # 3 is the default number of facilities if not specified in app_data
+        n = self.app_data.get(
+            "n", 3
+        )  # 3 is the default number of facilities if not specified in app_data
         return [f"x[{i}]" for i in range(n)]
 
     def required_scenario_keys(self):
@@ -380,7 +407,7 @@ class FacilityLocCIAdapter(CIProblemAdapter):
 
     def get_fidelity_levels(self):
         """Return list of supported fidelity levels."""
-        return ['high', 'low']
+        return ["high", "low"]
 
     def supports_acv(self):
         """
@@ -388,7 +415,7 @@ class FacilityLocCIAdapter(CIProblemAdapter):
         Returns True since we have both HF and LF models implemented.
         """
         return True
-    
+
     def set_active_fidelity(self, fidelity):
         """
         Set the active fidelity level used by build_stochastic_program().
@@ -404,6 +431,7 @@ class FacilityLocCIAdapter(CIProblemAdapter):
 # =================================================================
 # Core CI code expects exactly one standard factory name
 # =================================================================
+
 
 def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="classic"):
     """
@@ -444,17 +472,26 @@ def get_lf_ci_problem_adapter():
         first_stage_variables=["x"],
     )
 
+
 # =================================================================
 # Write the scenario data to file for use in the CI tests
 # =================================================================
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Write the full facility location scenario population to a file "
-                    "that sparow.ci.cli --scenario-file can read."
+        "that sparow.ci.cli --scenario-file can read."
     )
-    parser.add_argument("--output", required=True, help="Output file path ending in .json or .npy")
-    parser.add_argument("--num-data-points", type=int, default=10, help="Number of interpolated demand values per customer (default: 10)")
+    parser.add_argument(
+        "--output", required=True, help="Output file path ending in .json or .npy"
+    )
+    parser.add_argument(
+        "--num-data-points",
+        type=int,
+        default=10,
+        help="Number of interpolated demand values per customer (default: 10)",
+    )
     args = parser.parse_args()
 
     scenario_object = FacilityLocationScenarioData(args.num_data_points)
@@ -475,7 +512,11 @@ def main():
     adapter.validate_scenario_population(scenarios)
 
     outpath = os.path.abspath(args.output)
-    os.makedirs(os.path.dirname(outpath), exist_ok=True) if os.path.dirname(outpath) else None
+    (
+        os.makedirs(os.path.dirname(outpath), exist_ok=True)
+        if os.path.dirname(outpath)
+        else None
+    )
 
     if outpath.endswith(".json"):
         with open(outpath, "w") as f:
@@ -487,6 +528,7 @@ def main():
 
     print(f"Wrote {len(scenarios)} scenarios to: {outpath}")
     print(f"Use this with: --scenario-file {outpath}")
+
 
 if __name__ == "__main__":
     main()
