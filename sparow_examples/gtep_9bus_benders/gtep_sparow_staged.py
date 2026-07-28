@@ -15,10 +15,15 @@ before blaming Benders cuts.
 
 Residual discrete variables are handled by the official SPAROW utility
     from sparow.sp.util import relax_second_stage
-exactly as already used in aos_single_ef.py.  After registration, every
-non-first-stage Binary/Integer is relaxed to continuous so classical dual
-cuts remain valid while the declared investment first-stage variables stay
-discrete.
+exactly as already used in aos_single_ef.py.
+
+- EF path (Stage 5–6): sp.add_transformation(relax_second_stage)
+- Benders path (Stage 7–8): BendersSolver additional_transforms /
+  subproblem_transforms=[relax_second_stage] (new SPAROW hook). Master does
+  NOT receive residual relaxation so first-stage stay discrete.
+
+After the transform, every non-first-stage Binary/Integer is continuous so
+classical dual cuts remain valid.
 
 Stage map
 ---------
@@ -836,23 +841,30 @@ def stage6_solve_extensive_form(
 def stage7_peek_transforms(sp, max_print: int = 20):
     """
     Build master and subproblem once via the same transform path Benders will use.
-    Residual Binary / Integer count in the subproblem must be ~0 for classical dual cuts
-    (relax_second_stage should already have converted residual discretes).
+
+    Residual Binary / Integer count in the subproblem must be ~0 for classical dual
+    cuts.  We pass additional_transforms=[relax_second_stage] explicitly — the same
+    contract Stage 8 / BendersSolver.solve uses via subproblem_transforms.
     """
     _print("\n=== STAGE 7: Peek at SPAROW transforms + residual discrete gate ===")
     from sparow.benders import BendersSolver
+    from sparow.sp.util import relax_second_stage
 
     b0 = next(iter(sp.bundles))
     _print(f"  Using bundle {b0}")
+    _print("  Subproblem additional_transforms: [relax_second_stage]")
 
     residual_bin = None
+    residual_int = None
     try:
         sub = BendersSolver._transform_to_subproblem_model(
-            sp, b0,
+            sp,
+            b0,
             default_domain=pyo.Reals,
             remove_first_stage_only_cons=False,
             weight_obj_by_prob=True,
             remove_first_stage_objective_terms=True,
+            additional_transforms=[relax_second_stage],
         )
         _print(f"  Subproblem model created: {type(sub)}")
         objs = list(sub.component_data_objects(pyo.Objective, active=True))
@@ -862,26 +874,33 @@ def stage7_peek_transforms(sp, max_print: int = 20):
         residual_int = 0
         for v in sub.component_data_objects(pyo.Var, active=True, descend_into=True):
             dom = v.domain
-            if dom is pyo.Binary or (hasattr(dom, "name") and "binary" in str(dom).lower()):
+            if dom is pyo.Binary or (
+                hasattr(dom, "name") and "binary" in str(dom).lower()
+            ):
                 residual_bin += 1
-            elif dom is pyo.Integers or "integer" in str(dom).lower():
+            elif dom is pyo.Integers or (
+                hasattr(dom, "name") and "integer" in str(dom).lower()
+            ):
                 residual_int += 1
         _print(f"  Subproblem residual Binary vars:  {residual_bin}")
         _print(f"  Subproblem residual Integer vars: {residual_int}")
 
         if residual_bin > 0 or residual_int > 0:
             _print(
-                "  WARNING: residual discrete variables remain after transform.\n"
+                "  WARNING: residual discrete variables remain after "
+                "additional_transforms=[relax_second_stage].\n"
                 "  Classical dual cuts require an LP subproblem.\n"
-                "  Check that relax_second_stage was registered and is applied by\n"
-                "  the Benders path; if not, residual Binary must be relaxed inside\n"
-                "  the subproblem setup (see Stage 8 safety path)."
+                "  Inspect residual names and whether relax_second_stage saw the "
+                "post-bigM reformulation binaries."
             )
         else:
-            _print("  Residual discrete count = 0  → classical dual cuts are admissible")
+            _print(
+                "  Residual discrete count = 0  → classical dual cuts are admissible"
+            )
     except Exception as e:
         _print(f"  Subproblem transform raised (inspect carefully): {e}")
 
+    # Master: do NOT pass residual relaxation (first-stage must stay discrete)
     eta_bounds = {b: (-1e5, None) for b in sp.bundles}
     try:
         sp_upper = copy.deepcopy(sp)
@@ -891,6 +910,7 @@ def stage7_peek_transforms(sp, max_print: int = 20):
             eta_bounds_map=eta_bounds,
             lower_bounding_otherwise_enforced=False,
             fix_second_stage_vars=True,
+            additional_transforms=None,
         )
         _print(f"  Master model created: {type(master)}")
         if hasattr(master, "etas"):
@@ -903,7 +923,7 @@ def stage7_peek_transforms(sp, max_print: int = 20):
     _print("  Stage 7 finished (manual inspection of any warnings above)")
     return {
         "residual_binary": residual_bin,
-        "residual_integer": residual_int if residual_bin is not None else None,
+        "residual_integer": residual_int,
     }
 
 
@@ -922,16 +942,22 @@ def stage8_run_benders(
     """
     Run SPAROW BendersSolver and compare against the EF reference from Stage 6.
 
-    Required practices (carried from the EGRET ladder, adapted for GTEP):
-    - relax_second_stage already registered (Stage 5) → residual discrete should be 0
-    - remove_first_stage_only_cons=True
-    - allow_infeasible_subproblems=True
+    Residual second-stage discretes are handled by the public SPAROW transform
+    via the new BendersSolver.solve(subproblem_transforms=...) hook::
+
+        subproblem_transforms=[relax_second_stage]
+
+    Master does NOT receive residual relaxation (first-stage stay discrete).
+
+    Other practices carried from the EGRET ladder, adapted for GTEP:
     - finite eta lower bounds
     - seed / unfix any stage-1 indicators that were fixed from in_service
     - persistent solver for master and subproblem
+    - allow_infeasible_subproblems=True
     """
     _print("\n=== STAGE 8: SPAROW BendersSolver (+ EF comparison) ===")
     from sparow.benders import BendersSolver
+    from sparow.sp.util import relax_second_stage
 
     ef_obj = ef_reference["objective"]
     _print(f"  EF reference objective: {ef_obj:.6g}")
@@ -973,52 +999,6 @@ def stage8_run_benders(
                 n_seeded += 1
     _print(f"  Unfixed {n_unfixed} previously-fixed first-stage variables")
     _print(f"  Seeded numeric values on {n_seeded} first-stage variables")
-
-    # Safety: ensure residual discrete are continuous inside the subproblem
-    # even if the registered relax_second_stage is not automatically applied
-    # by the Benders path.  Prefer the public transform; this is a defensive
-    # mirror of it.
-    _orig_setup = BendersSolver._setup_topas_subproblem
-
-    def _setup_with_remove_fs_only_cons(
-        sp_lower, b_lower, sp_upper, b_upper, remove_first_stage_objective_terms
-    ):
-        model_lower = BendersSolver._transform_to_subproblem_model(
-            sp_lower,
-            b_lower,
-            default_domain=pyo.Reals,
-            remove_first_stage_objective_terms=remove_first_stage_objective_terms,
-            remove_first_stage_only_cons=True,
-        )
-        # Defensive residual discrete → continuous (should already be done by
-        # relax_second_stage; this is a safety net for the dual-cut path)
-        n_relaxed = 0
-        for v in model_lower.component_data_objects(pyo.Var, active=True, descend_into=True):
-            if v.domain is pyo.Binary or (
-                hasattr(v.domain, "name") and "binary" in str(v.domain).lower()
-            ):
-                v.domain = pyo.UnitInterval
-                n_relaxed += 1
-            elif str(v.domain).lower() in ("binary", "integers") or v.domain is pyo.Integers:
-                v.domain = pyo.UnitInterval
-                n_relaxed += 1
-        if n_relaxed:
-            _print(
-                f"  Subproblem setup: relaxed {n_relaxed} residual Binary/Integer "
-                "vars to continuous [0,1] for dual cuts (safety net)"
-            )
-
-        from pyomo.common.collections import ComponentMap
-        complicating_variable_map = ComponentMap()
-        for i, var_upper in sp_upper.int_to_FirstStageVar[b_upper].items():
-            complicating_variable_map[var_upper] = sp_lower.int_to_FirstStageVar[
-                b_lower
-            ][i]
-        return model_lower, complicating_variable_map
-
-    BendersSolver._setup_topas_subproblem = staticmethod(
-        _setup_with_remove_fs_only_cons
-    )
 
     solver = BendersSolver()
     solver.set_options(
@@ -1071,7 +1051,9 @@ def stage8_run_benders(
             if master_obj is not None:
                 parts.append(f"master_obj={master_obj:.6g}")
             if eta_vals is not None:
-                eta_str = ", ".join(f"{k}:{v:.4g}" for k, v in list(eta_vals.items())[:4])
+                eta_str = ", ".join(
+                    f"{k}:{v:.4g}" for k, v in list(eta_vals.items())[:4]
+                )
                 parts.append(f"eta=[{eta_str}]")
             if n_cuts == 0:
                 parts.append("CONVERGED (no cuts)")
@@ -1082,14 +1064,21 @@ def stage8_run_benders(
         _BendersCutGen.generate_cut = _generate_cut_with_progress
 
     _print(
-        "  Calling BendersSolver.solve "
-        "(remove_first_stage_only_cons=True, allow_infeasible=True, "
-        "relax_second_stage registered) ..."
+        "  Calling BendersSolver.solve(\n"
+        "      subproblem_transforms=[relax_second_stage],\n"
+        "      master_transforms=None,\n"
+        "      allow_infeasible_subproblems=True,\n"
+        "      persistent solvers ...\n"
+        "  )"
     )
     try:
-        results = solver.solve(sp, eta_bounds_map)
+        results = solver.solve(
+            sp,
+            eta_bounds_map,
+            subproblem_transforms=[relax_second_stage],
+            master_transforms=None,
+        )
     finally:
-        BendersSolver._setup_topas_subproblem = _orig_setup
         if _orig_generate_cut is not None:
             _BendersCutGen.generate_cut = _orig_generate_cut
 
@@ -1117,7 +1106,6 @@ def stage8_run_benders(
 
     _print(f"  Benders objective value: {benders_obj:.6g}")
     abs_diff = abs(benders_obj - ef_obj)
-    rel_diff = abs_diff / max(abs(ef_obj), 1e-12)
     tol = max(obj_tol, rel_tol * abs(ef_obj))
     _print(f"  |Benders - EF| = {abs_diff:.6g}  (tol = {tol:.6g})")
 
@@ -1240,12 +1228,15 @@ def run_staged_diagnostics(
             "residual": residual_info,
         }
 
-    # Hard gate: residual discrete should be ~0 after relax_second_stage
-    if residual_info.get("residual_binary", 0) and residual_info["residual_binary"] > 0:
+    # Hard gate: residual discrete should be ~0 after additional_transforms
+    rb = residual_info.get("residual_binary")
+    if rb is not None and rb > 0:
         _print(
-            "\n*** WARNING: residual Binary > 0 after transform. ***\n"
-            "*** Stage 8 will still run (safety net inside subproblem setup), ***\n"
-            "*** but investigate why relax_second_stage did not clear them. ***"
+            "\n*** WARNING: residual Binary > 0 after "
+            "additional_transforms=[relax_second_stage]. ***\n"
+            "*** Stage 8 will still run with the same transform list, ***\n"
+            "*** but dual cuts may be invalid if the subproblem is not LP. ***\n"
+            "*** Inspect Stage 7 residual names before trusting Stage 8. ***"
         )
 
     benders_out = stage8_run_benders(
