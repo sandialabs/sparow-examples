@@ -1,0 +1,8 @@
+case,n_periods,first_stage_mode,n_first_stage,solve_mode,aos_method,rel_gap,num_solutions_cap,time_limit_s,base_time_s,aos_time_s,total_time_s,n_candidates,n_true,obj_value,master_lb_or_eta,n_cuts,n_iterations,status,error_msg,solutions_summary
+tiny_uc_T4,4,UnitOn/Baseline,8,extensive,baseline,0.0,1,120.0,0.31143270898610353,0.0,0.31143270898610353,1,1,5886.4,5886.4,0,1,optimal,,obj=5886.4
+tiny_uc_T4,4,UnitOn,8,extensive,gurobi_pool,0.0,50,120.0,0.024126208038069308,0.0375859159976244,0.061712124035693705,1,1,5886.4,5886.4,0,1,optimal,,obj=5886.4;UnitOn=11110010
+tiny_uc_T4,4,UnitOn,8,benders,gurobi_pool,0.0,50,120.0,0.1986388749210164,0.025613625068217516,0.2242524999892339,1,1,5886.4,5886.4,nan,13,optimal,,obj=5886.4;UnitOn=11110010
+tiny_uc_T4,4,UnitOn,8,extensive,gurobi_pool,0.01,50,120.0,0.024126208038069308,0.02303012495394796,0.04715633299201727,1,1,5886.4,5886.4,0,1,optimal,,obj=5886.4;UnitOn=11110010
+tiny_uc_T4,4,UnitOn,8,benders,gurobi_pool,0.01,50,120.0,0.1986388749210164,0.024847458000294864,0.22348633292131126,1,1,5886.4,5886.4,nan,13,optimal,,obj=5886.4;UnitOn=11110010
+tiny_uc_T4,4,UnitOn,8,extensive,gurobi_pool,0.05,50,120.0,0.024126208038069308,0.03344233310781419,0.0575685411458835,7,7,5886.4,5886.4,0,1,optimal,,too_many (7)
+tiny_uc_T4,4,UnitOn,8,benders,gurobi_pool,0.05,50,120.0,0.1986388749210164,0.08853775006718934,0.28717662498820573,8,7,5886.4,5886.4,nan,13,optimal,,too_many (7)

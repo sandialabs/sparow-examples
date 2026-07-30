@@ -1120,7 +1120,9 @@ def stage8_run_benders(
     _orig_setup = BendersSolver._setup_topas_subproblem
 
     def _setup_with_remove_fs_only_cons(
-        sp_lower, b_lower, sp_upper, b_upper, remove_first_stage_objective_terms
+        sp_lower, b_lower, sp_upper, b_upper, remove_first_stage_objective_terms,
+        additional_transforms=None,
+        **kwargs,
     ):
         model_lower = BendersSolver._transform_to_subproblem_model(
             sp_lower,
