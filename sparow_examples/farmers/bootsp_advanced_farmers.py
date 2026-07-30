@@ -21,9 +21,10 @@ from sparow_examples.farmers.MRPfarmers import (
 # Internal helpers
 # ---------------------------------------------------------------------
 
+
 def _all_advanced_scenarios():
     """Return the full population of Advanced Farmers scenarios."""
-    # This is a list. It contains one dictionary per possible population scenario. 
+    # This is a list. It contains one dictionary per possible population scenario.
     # Each scenario's dictionary must contain "ID", set of yields, and "Probability".
     return Advanced_scendata["scenarios"]
 
@@ -44,7 +45,9 @@ def _slice_scenarios(num_scens, start=None):
     scenario_list = _all_advanced_scenarios()
     stop = start + num_scens
     if stop > len(scenario_list):
-        raise ValueError(f"Requested scenarios [{start}:{stop}] but only {len(scenario_list)} total scenarios are available.")
+        raise ValueError(
+            f"Requested scenarios [{start}:{stop}] but only {len(scenario_list)} total scenarios are available."
+        )
     return scenario_list[start:stop]
 
 
@@ -56,7 +59,9 @@ def _scenario_from_name(scenario_name):
     try:
         idx = sputils.extract_num(scenario_name)
     except Exception as exc:
-        raise ValueError(f"Could not parse scenario index from name {scenario_name}") from exc
+        raise ValueError(
+            f"Could not parse scenario index from name {scenario_name}"
+        ) from exc
 
     if idx < 0 or idx >= len(scenario_list):
         raise ValueError(f"Scenario index {idx} out of range for Advanced Farmers")
@@ -67,6 +72,7 @@ def _scenario_from_name(scenario_name):
 # ---------------------------------------------------------------------
 # mpi-sppy / boot-sp required interface
 # ---------------------------------------------------------------------
+
 
 def scenario_creator(scenario_name, **kwargs):
     """
@@ -193,7 +199,9 @@ def xhat_generator(scenario_names, solver_name=None, **kwargs):
     )
 
     solver = ExtensiveFormSolver()
-    solver.set_options(solver=solver_name if solver_name is not None else "gurobi_direct")
+    solver.set_options(
+        solver=solver_name if solver_name is not None else "gurobi_direct"
+    )
     results = solver.solve(sp).to_dict()
 
     variables = results["solutions"][0]["variables"]
