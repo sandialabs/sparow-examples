@@ -1,5 +1,6 @@
 Running UC Steps:
 
+0. TODO - Add logic to track max memory usage
 1. Be in sparow_examples/egret
 2. Run the egret single scenario tests: python egret_sparow_staged.py
 3. Run the egret multiple scenario tests: python egret_sparow_staged_multi.py \
