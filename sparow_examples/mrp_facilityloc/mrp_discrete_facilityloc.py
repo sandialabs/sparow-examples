@@ -6,7 +6,7 @@ import numpy as np
 from pathlib import Path
 
 from sparow.sp import stochastic_program
-from sparow.ci import CIProblemAdapter
+from sparow.conf_intervals import CIProblemAdapter
 
 import argparse
 import json

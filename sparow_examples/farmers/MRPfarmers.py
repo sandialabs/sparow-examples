@@ -20,7 +20,7 @@ import numpy as np
 from sparow.sp import stochastic_program
 
 # from sparow.ef import ExtensiveFormSolver
-from sparow.ci import CIProblemAdapter
+from sparow.conf_intervals import CIProblemAdapter
 
 import argparse
 import json
@@ -306,10 +306,10 @@ def Advanced_farmers():
 class FarmerCIAdapter(CIProblemAdapter):
     """
     Adapter that makes Basic_farmers and Advanced_farmers compatible with
-    generic sparow.ci MRP / true-gap evaluation code for estimating confidence intervals.
+    generic sparow.conf_intervals MRP / true-gap evaluation code for estimating confidence intervals.
 
     This class only implements the 4 abstract methods required by the
-    core sparow.ci CIProblemAdapter base class:
+    core sparow.conf_intervals CIProblemAdapter base class:
         1. get_scenario_population()
         2. build_model_data(scenarios)
         3. build_stochastic_program(model_data)
@@ -404,7 +404,7 @@ def get_ci_problem_adapter(
     model_name="Advanced", use_integer=False, lf_model_type="classic"
 ):
     """
-    Module-level factory function expected by the generic sparow.ci core code.
+    Module-level factory function expected by the generic sparow.conf_intervals core code.
 
     This function dispatches to the appropriate farmer-specific CI adapter
     (Basic or Advanced) based on `model_name`, while exposing one standard
@@ -444,14 +444,14 @@ def get_advanced_ci_problem_adapter(use_integer=False):
 
 
 # =================================================================
-# Write the scenario data to file for use in the CI tests
+# Write the scenario data to file for use in the confidence intervals tests
 # =================================================================
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Write the full Advanced Farmers scenario population to a file "
-        "that sparow.ci.cli --scenario-file can read."
+        "that sparow.conf_intervals.cli --scenario-file can read."
     )
     parser.add_argument(
         "--output",
