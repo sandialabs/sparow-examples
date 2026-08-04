@@ -3,3 +3,10 @@ __pycache__
 .coverage
 
 .DS_Store
+
+*.npy
+*.png
+
+# Ignore Python byte-compiled files
+__pycache__/
+*.py[cod]
