@@ -1,0 +1,109 @@
+--- Loading create_sp and building SP (Rung 2b) ---
+  SP built in 2.0s  bundles=['single']
+  first-stage: unfixed=0, seeded=0
+  eta_bounds_map: {'single': (-1000000.0, None)}
+--- Calling solve_and_return_model (TimeLimit=600.0s, convergence_tol=0.001) ---
+INFO - BendersSolver - START
+Did not find reserves.csv; assuming no reserves
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+Set parameter Username
+Set parameter LicenseID to value 2756878
+Academic license - for non-commercial use only - expires 2026-12-19
+Did not find reserves.csv; assuming no reserves
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+Set parameter InfUnbdInfo to value 1
+Set parameter DualReductions to value 0
+  --- Benders iteration 1  cuts_added=1 ---
+  --- Benders iteration 2  cuts_added=1 ---
+  --- Benders iteration 3  cuts_added=1 ---
+  --- Benders iteration 4  cuts_added=1 ---
+  --- Benders iteration 5  cuts_added=1 ---
+  --- Benders iteration 6  cuts_added=1 ---
+  --- Benders iteration 7  cuts_added=1 ---
+  --- Benders iteration 8  cuts_added=1 ---
+  --- Benders iteration 9  cuts_added=1 ---
+  --- Benders iteration 10  cuts_added=1 ---
+  --- Benders iteration 11  cuts_added=1 ---
+  --- Benders iteration 12  cuts_added=1 ---
+  --- Benders iteration 13  cuts_added=1 ---
+  --- Benders iteration 14  cuts_added=1 ---
+  --- Benders iteration 15  cuts_added=1 ---
+  --- Benders iteration 16  cuts_added=1 ---
+  --- Benders iteration 17  cuts_added=1 ---
+  --- Benders iteration 18  cuts_added=1 ---
+  --- Benders iteration 19  cuts_added=1 ---
+  --- Benders iteration 20  cuts_added=1 ---
+  --- Benders iteration 21  cuts_added=1 ---
+  --- Benders iteration 22  cuts_added=1 ---
+  --- Benders iteration 23  cuts_added=1 ---
+  --- Benders iteration 24  cuts_added=0 ---
+INFO - Termination: No Cuts Added
+INFO - 
+INFO - ----------------------------------------------------------------------
+INFO - BendersSolver - RESULTS
+INFO - Metadata context_name: Benders Iterations
+INFO - Metadata policy: keep_latest
+INFO - Metadata as_solution_source: sparow.solnpool.solnpool._sparow_as_solution
+INFO - Metadata solver: Benders Iteration Results
+INFO - Metadata solver_options: {'cached_model_generation': False, 'max_iterations': 50, 'convergence_tolerance': 0.001, 'solver_name': 'gurobi_persistent', 'solver_options': {'TimeLimit': 600.0, 'timelimit': 600.0}}
+INFO - Metadata iterations: 24
+INFO - Metadata termination_condition: Termination: No Cuts Added
+INFO - Metadata start_time: 2026-08-08 17:32:14.528313
+INFO - Metadata end_time: 2026-08-08 17:33:09.976025
+INFO - Metadata time_elapsed: 0:00:55.447712
+INFO - Objective Value: ObjectiveInfo(value=177380605.10627303, name=None, index=None, suffix=MyMunch({}))
+INFO - 
+INFO - ----------------------------------------------------------------------
+INFO - BendersSolver - STOP
+  Benders finished in 55.5s
+  Master recovered via solve_and_return_model (type=<class 'pyomo.core.base.PyomoModel.ConcreteModel'>)
+--- Snapshot Benders optimum (before generate_candidates) ---
+  _as_pyomo_solution from or_topas.benders.aos_benders
+  _as_pyomo_solution from or_topas.solnpool.solnpool
+  PyomoSolution(variables=22153, objectives=1)
+  benders_candidate objective = 177380605.10627303
+--- aos-benders: generate_candidates ---
+  Candidates from generate: 20  (10.1s)
+--- Inject Benders optimum into candidate pool ---
+  Pool size 20 → 21 (added Benders as_solution snapshot)
+--- aos-benders: filter (true solutions) ---
+Candidate Solution pool has 21 sols
+True Pool Inclusion Lower Bound: 177380605.10627303
+True Pool Inclusion Upper Bound: 179154411.15733677
+Sol 0 not added to true pool, infeasible
+Sol 1 not added to true pool, infeasible
+Sol 2 not added to true pool, infeasible
+Sol 3 not added to true pool, infeasible
+Sol 4 not added to true pool, infeasible
+Sol 5 not added to true pool, infeasible
+Sol 6 not added to true pool, infeasible
+Sol 7 not added to true pool, infeasible
+Sol 8 not added to true pool, infeasible
+Sol 9 not added to true pool, infeasible
+Sol 10 not added to true pool, infeasible
+Sol 11 not added to true pool, infeasible
+Sol 12 not added to true pool, infeasible
+Sol 13 not added to true pool, infeasible
+Sol 14 not added to true pool, infeasible
+Sol 15 not added to true pool, infeasible
+Sol 16 not added to true pool, infeasible
+Sol 17 not added to true pool, infeasible
+Sol 18 not added to true pool, infeasible
+Sol 19 not added to true pool, infeasible
+Sol 20 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 179154411.15733677
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 177380605.106273
+Diff in pre-eval and post-eval objectives: False
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: True
+  True solutions: 1  (39.1s)
+  Sol 0: objective = 177380605.106273
+
+*** Only the injected Benders optimum survived; generate pool still empty. ***
+Done.
+Phase times (s): wall=107.5 (see per-phase lines above)

@@ -1,30 +1,4 @@
-#
-# Setup a dummy gtep scale-tests example under aos_gtep_benders_minimal
-#
-# Note that this assumes that scenarios are copied into separate directories, each of which
-# can be imported to get a function to construct the GTEP model.
-#
 
-import os
-import shutil
-import string
-
-# The example name
-name = "scale_tests"
-# scenarios = ["low_alpha", "high_alpha"]
-scenarios = ["single"]
-
-if not os.path.exists(name):
-    os.mkdir(name)
-
-for scen in scenarios:
-    dirname = os.path.join(name, scen)
-    if os.path.exists(dirname):
-        shutil.rmtree(dirname)
-    shutil.copytree("model", dirname)
-
-
-module_root = string.Template("""
 # sparow_examples.aos_gtep_benders_minimal.scale_tests
 
 from sparow.sp import stochastic_program
@@ -51,7 +25,7 @@ def model_builder(data, args):
     alpha = data["alpha"]
 
     scenario = importlib.import_module(
-        "sparow_examples.aos_gtep_benders_minimal.$name." + data["ID"]
+        "sparow_examples.aos_gtep_benders_minimal.scale_tests." + data["ID"]
     )
     return scenario.create_gtep_model(
         num_stages=num_stages,
@@ -98,7 +72,3 @@ def create_sp(app_data=None, **size_overrides):
         model_data=model_data, model_builder=model_builder
     )
     return sp
-""").substitute(name=name)
-
-with open(os.path.join(name, "__init__.py"), "w") as OUTPUT:
-    OUTPUT.write(module_root)
