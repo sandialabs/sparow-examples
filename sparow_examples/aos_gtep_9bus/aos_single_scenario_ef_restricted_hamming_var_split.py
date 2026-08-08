@@ -3,8 +3,8 @@ import or_topas.aos
 from sparow_examples.aos_gtep_9bus.aos_single import create_sp
 from sparow.sp.util import relax_second_stage
 
-OUTPUT_FILE = "aos_single_scenario_ef_restricted_hamming_full_vars.json"
-FS_OUTPUT_FILE = "aos_single_scenario_ef_restricted_hamming_first_stage_vars.json"
+OUTPUT_FILE = "aos_single_scenario_ef_restricted_hamming_full_vars_rel_gap_1eMinus3.json"
+FS_OUTPUT_FILE = "aos_single_scenario_ef_restricted_hamming_first_stage_vars_rel_gap_1eMinus3.json"
 
 
 print("\n--- Creating model ---")
@@ -82,7 +82,7 @@ for v in sorted(variables, key=lambda x: x.name)[:8]:
 
 
 print("\n--- Running AOS ---")
-rel_opt_gap = 0.00001
+rel_opt_gap = 0.001
 sol_max = 3
 search_mode = "hamming"
 variables = None   # keep current behaviour; see remark below
