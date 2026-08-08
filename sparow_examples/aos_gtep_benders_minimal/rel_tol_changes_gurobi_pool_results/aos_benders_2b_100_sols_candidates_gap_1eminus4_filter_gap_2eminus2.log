@@ -1,0 +1,776 @@
+--- Loading create_sp and building SP (Rung 2b) ---
+  SP built in 2.1s  bundles=['single']
+  first-stage: unfixed=0, seeded=0
+  eta_bounds_map: {'single': (-1000000.0, None)}
+--- Calling solve_and_return_model (TimeLimit=600.0s, convergence_tol=0.001) ---
+INFO - BendersSolver - START
+Did not find reserves.csv; assuming no reserves
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+Set parameter Username
+Set parameter LicenseID to value 2756878
+Academic license - for non-commercial use only - expires 2026-12-19
+Did not find reserves.csv; assuming no reserves
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+Set parameter InfUnbdInfo to value 1
+Set parameter DualReductions to value 0
+  --- Benders iteration 1  cuts_added=1 ---
+  --- Benders iteration 2  cuts_added=1 ---
+  --- Benders iteration 3  cuts_added=1 ---
+  --- Benders iteration 4  cuts_added=1 ---
+  --- Benders iteration 5  cuts_added=1 ---
+  --- Benders iteration 6  cuts_added=1 ---
+  --- Benders iteration 7  cuts_added=1 ---
+  --- Benders iteration 8  cuts_added=1 ---
+  --- Benders iteration 9  cuts_added=1 ---
+  --- Benders iteration 10  cuts_added=1 ---
+  --- Benders iteration 11  cuts_added=1 ---
+  --- Benders iteration 12  cuts_added=1 ---
+  --- Benders iteration 13  cuts_added=1 ---
+  --- Benders iteration 14  cuts_added=1 ---
+  --- Benders iteration 15  cuts_added=1 ---
+  --- Benders iteration 16  cuts_added=1 ---
+  --- Benders iteration 17  cuts_added=1 ---
+  --- Benders iteration 18  cuts_added=1 ---
+  --- Benders iteration 19  cuts_added=1 ---
+  --- Benders iteration 20  cuts_added=1 ---
+  --- Benders iteration 21  cuts_added=1 ---
+  --- Benders iteration 22  cuts_added=1 ---
+  --- Benders iteration 23  cuts_added=1 ---
+  --- Benders iteration 24  cuts_added=0 ---
+INFO - Termination: No Cuts Added
+INFO - 
+INFO - ----------------------------------------------------------------------
+INFO - BendersSolver - RESULTS
+INFO - Metadata context_name: Benders Iterations
+INFO - Metadata policy: keep_latest
+INFO - Metadata as_solution_source: sparow.solnpool.solnpool._sparow_as_solution
+INFO - Metadata solver: Benders Iteration Results
+INFO - Metadata solver_options: {'cached_model_generation': False, 'max_iterations': 50, 'convergence_tolerance': 0.001, 'solver_name': 'gurobi_persistent', 'solver_options': {'TimeLimit': 600.0, 'timelimit': 600.0}}
+INFO - Metadata iterations: 24
+INFO - Metadata termination_condition: Termination: No Cuts Added
+INFO - Metadata start_time: 2026-08-08 17:58:41.876723
+INFO - Metadata end_time: 2026-08-08 17:59:37.314926
+INFO - Metadata time_elapsed: 0:00:55.438203
+INFO - Objective Value: ObjectiveInfo(value=177380605.10627303, name=None, index=None, suffix=MyMunch({}))
+INFO - 
+INFO - ----------------------------------------------------------------------
+INFO - BendersSolver - STOP
+  Benders finished in 55.5s
+  Master recovered via solve_and_return_model (type=<class 'pyomo.core.base.PyomoModel.ConcreteModel'>)
+--- Snapshot Benders optimum (before generate_candidates) ---
+  _as_pyomo_solution from or_topas.benders.aos_benders
+  _as_pyomo_solution from or_topas.solnpool.solnpool
+  PyomoSolution(variables=22153, objectives=1)
+  benders_candidate objective = 177380605.10627303
+--- aos-benders: generate_candidates ---
+  Candidates from generate: 100  (46.2s)
+--- Inject Benders optimum into candidate pool ---
+  Pool size 100 → 101 (added Benders as_solution snapshot)
+--- aos-benders: filter (true solutions) ---
+  generate rel_gap=0.0001; filter_rel_gap=0.02
+  inclusion LB=1.77381e+08; override UB=1.80928e+08 (data.upper_bound was 1.77398e+08)
+Candidate Solution pool has 101 sols
+True Pool Inclusion Lower Bound: 177380605.10627303
+True Pool Inclusion Upper Bound: 177398343.16678467
+Sol 0 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 1 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 2 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 3 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 4 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 5 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 6 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 7 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 8 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 9 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 10 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 11 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 12 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 13 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 14 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 15 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 16 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 17 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 18 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 19 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 20 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 21 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 22 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 23 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 24 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 25 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 26 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 27 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 28 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 29 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 30 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 31 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 32 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 33 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 34 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 35 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 36 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 37 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 38 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 39 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 40 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 41 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 42 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 43 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 44 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 45 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 46 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 47 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 48 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 49 not added to true pool, infeasible
+Sol 50 not added to true pool, infeasible
+Sol 51 not added to true pool, infeasible
+Sol 52 not added to true pool, infeasible
+Sol 53 not added to true pool, infeasible
+Sol 54 not added to true pool, infeasible
+Sol 55 not added to true pool, infeasible
+Sol 56 not added to true pool, infeasible
+Sol 57 not added to true pool, infeasible
+Sol 58 not added to true pool, infeasible
+Sol 59 not added to true pool, infeasible
+Sol 60 not added to true pool, infeasible
+Sol 61 not added to true pool, infeasible
+Sol 62 not added to true pool, infeasible
+Sol 63 not added to true pool, infeasible
+Sol 64 not added to true pool, infeasible
+Sol 65 not added to true pool, infeasible
+Sol 66 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 67 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 68 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 69 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 70 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 71 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 72 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 73 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 74 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 75 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 76 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 77 not added to true pool, infeasible
+Sol 78 not added to true pool, infeasible
+Sol 79 not added to true pool, infeasible
+Sol 80 not added to true pool, infeasible
+Sol 81 not added to true pool, infeasible
+Sol 82 not added to true pool, infeasible
+Sol 83 not added to true pool, infeasible
+Sol 84 not added to true pool, infeasible
+Sol 85 not added to true pool, infeasible
+Sol 86 not added to true pool, infeasible
+Sol 87 not added to true pool, infeasible
+Sol 88 not added to true pool, infeasible
+Sol 89 not added to true pool, infeasible
+Sol 90 not added to true pool, infeasible
+Sol 91 not added to true pool, infeasible
+Sol 92 not added to true pool, infeasible
+Sol 93 not added to true pool, infeasible
+Sol 94 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 95 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 96 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 97 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 98 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 179229565.48148027
+Diff in pre-eval and post-eval objectives: True
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: False
+Sol 99 not added to true pool, infeasible
+Sol 100 added to true pool
+After get model variables on updated model
+lower_bound = 177380605.10627303
+upper_bound = 177398343.16678467
+obj val based on pre-evaluate etas : 177380605.10627303
+obj val based on orig_objective: 177380605.106273
+Diff in pre-eval and post-eval objectives: False
+Post-eval objective < Pre-eval objective: False
+Sol likely a natural (non-level induced) vertex: True
+  True solutions: 66  (276.2s)
+  Sol 0: objective = 179229565.48148027
+  Sol 1: objective = 179229565.48148027
+  Sol 2: objective = 179229565.48148027
+  Sol 3: objective = 179229565.48148027
+  Sol 4: objective = 179229565.48148027
+  Sol 5: objective = 179229565.48148027
+  Sol 6: objective = 179229565.48148027
+  Sol 7: objective = 179229565.48148027
+  Sol 8: objective = 179229565.48148027
+  Sol 9: objective = 179229565.48148027
+  Sol 10: objective = 179229565.48148027
+  Sol 11: objective = 179229565.48148027
+  Sol 12: objective = 179229565.48148027
+  Sol 13: objective = 179229565.48148027
+  Sol 14: objective = 179229565.48148027
+  Sol 15: objective = 179229565.48148027
+  Sol 16: objective = 179229565.48148027
+  Sol 17: objective = 179229565.48148027
+  Sol 18: objective = 179229565.48148027
+  Sol 19: objective = 179229565.48148027
+  Sol 20: objective = 179229565.48148027
+  Sol 21: objective = 179229565.48148027
+  Sol 22: objective = 179229565.48148027
+  Sol 23: objective = 179229565.48148027
+  Sol 24: objective = 179229565.48148027
+  Sol 25: objective = 179229565.48148027
+  Sol 26: objective = 179229565.48148027
+  Sol 27: objective = 179229565.48148027
+  Sol 28: objective = 179229565.48148027
+  Sol 29: objective = 179229565.48148027
+  Sol 30: objective = 179229565.48148027
+  Sol 31: objective = 179229565.48148027
+  Sol 32: objective = 179229565.48148027
+  Sol 33: objective = 179229565.48148027
+  Sol 34: objective = 179229565.48148027
+  Sol 35: objective = 179229565.48148027
+  Sol 36: objective = 179229565.48148027
+  Sol 37: objective = 179229565.48148027
+  Sol 38: objective = 179229565.48148027
+  Sol 39: objective = 179229565.48148027
+  Sol 40: objective = 179229565.48148027
+  Sol 41: objective = 179229565.48148027
+  Sol 42: objective = 179229565.48148027
+  Sol 43: objective = 179229565.48148027
+  Sol 44: objective = 179229565.48148027
+  Sol 45: objective = 179229565.48148027
+  Sol 46: objective = 179229565.48148027
+  Sol 47: objective = 179229565.48148027
+  Sol 48: objective = 179229565.48148027
+  Sol 49: objective = 179229565.48148027
+  Sol 50: objective = 179229565.48148027
+  Sol 51: objective = 179229565.48148027
+  Sol 52: objective = 179229565.48148027
+  Sol 53: objective = 179229565.48148027
+  Sol 54: objective = 179229565.48148027
+  Sol 55: objective = 179229565.48148027
+  Sol 56: objective = 179229565.48148027
+  Sol 57: objective = 179229565.48148027
+  Sol 58: objective = 179229565.48148027
+  Sol 59: objective = 179229565.48148027
+  Sol 60: objective = 179229565.48148027
+  Sol 61: objective = 179229565.48148027
+  Sol 62: objective = 179229565.48148027
+  Sol 63: objective = 179229565.48148027
+  Sol 64: objective = 179229565.48148027
+  Sol 65: objective = 177380605.106273
+
+*** 66 true solutions (Benders opt + generate survivors). ***
+Done.
+Phase times (s): wall=380.7 (see per-phase lines above)
