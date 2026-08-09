@@ -1,0 +1,119 @@
+
+--- Creating multi-scenario SP (Rung 2b sizes) ---
+  bundles: ['load_0p95', 'load_1p05']
+Did not find reserves.csv; assuming no reserves
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+Did not find reserves.csv; assuming no reserves
+Setting default t0 state in RTS-GMLC parser
+[    0.00] Creating GTEP Model
+  EF built in 50.0s
+
+--- Running EF AOS ---
+  rel_opt_gap=0.01, num_solutions=100
+  AOS finished in 121.3s
+
+--- Results Summary ---
+Metadata: Max Sols 100, Rel_Opt_Gap 0.01
+Number of Solutions 100
+Sol 0: objective: 177380605.10627303
+Sol 1: objective: 177380605.10627303
+Sol 2: objective: 177380605.10627303
+Sol 3: objective: 177380605.10627303
+Sol 4: objective: 177380605.10627303
+Sol 5: objective: 177380605.10627303
+Sol 6: objective: 177380605.10627303
+Sol 7: objective: 177380605.10627303
+Sol 8: objective: 177380605.10627303
+Sol 9: objective: 177380605.10627303
+Sol 10: objective: 177380605.10627303
+Sol 11: objective: 177380605.10627303
+Sol 12: objective: 177380605.10627303
+Sol 13: objective: 177380605.10627303
+Sol 14: objective: 177380605.10627303
+Sol 15: objective: 177380605.10627303
+Sol 16: objective: 177380605.10627303
+Sol 17: objective: 177380605.10627303
+Sol 18: objective: 177380605.10627303
+Sol 19: objective: 177380605.10627303
+Sol 20: objective: 177380605.10627303
+Sol 21: objective: 177380605.10627303
+Sol 22: objective: 177380605.10627303
+Sol 23: objective: 177380605.10627303
+Sol 24: objective: 177380605.10627303
+Sol 25: objective: 177380605.10627303
+Sol 26: objective: 177380605.10627303
+Sol 27: objective: 177380605.10627303
+Sol 28: objective: 177380605.10627303
+Sol 29: objective: 177380605.10627303
+Sol 30: objective: 177380605.10627303
+Sol 31: objective: 177380605.10627303
+Sol 32: objective: 177380605.10627303
+Sol 33: objective: 177380605.10627303
+Sol 34: objective: 177380605.10627303
+Sol 35: objective: 177380605.10627303
+Sol 36: objective: 177380605.10627303
+Sol 37: objective: 177380605.10627303
+Sol 38: objective: 177380605.10627303
+Sol 39: objective: 177380605.10627303
+Sol 40: objective: 177380605.10627303
+Sol 41: objective: 177380605.10627303
+Sol 42: objective: 177380605.10627303
+Sol 43: objective: 177380605.10627303
+Sol 44: objective: 177380605.10627303
+Sol 45: objective: 177380605.10627303
+Sol 46: objective: 177380605.10627303
+Sol 47: objective: 177380605.10627303
+Sol 48: objective: 177380605.10627303
+Sol 49: objective: 177380605.10627303
+Sol 50: objective: 177380605.10627303
+Sol 51: objective: 177380605.10627303
+Sol 52: objective: 177380605.10627303
+Sol 53: objective: 177380605.10627303
+Sol 54: objective: 177380605.10627303
+Sol 55: objective: 177380605.10627303
+Sol 56: objective: 177380605.10627303
+Sol 57: objective: 177380605.10627303
+Sol 58: objective: 177380605.10627303
+Sol 59: objective: 177380605.10627303
+Sol 60: objective: 177380605.10627303
+Sol 61: objective: 177380605.10627303
+Sol 62: objective: 177380605.10627303
+Sol 63: objective: 177380605.10627303
+Sol 64: objective: 177380605.10627303
+Sol 65: objective: 177380605.10627303
+Sol 66: objective: 177380605.10627303
+Sol 67: objective: 177380605.10627303
+Sol 68: objective: 177380605.10627303
+Sol 69: objective: 177380605.10627303
+Sol 70: objective: 177380605.10627303
+Sol 71: objective: 177380605.10627303
+Sol 72: objective: 177380605.10627303
+Sol 73: objective: 177380605.10627303
+Sol 74: objective: 177380605.10627303
+Sol 75: objective: 177380605.10627303
+Sol 76: objective: 177380605.10627303
+Sol 77: objective: 177380605.10627303
+Sol 78: objective: 177380605.10627303
+Sol 79: objective: 177380605.10627303
+Sol 80: objective: 177380605.10627303
+Sol 81: objective: 177380605.10627303
+Sol 82: objective: 177380605.10627303
+Sol 83: objective: 177380605.10627303
+Sol 84: objective: 177380605.10627303
+Sol 85: objective: 177380605.10627303
+Sol 86: objective: 177380605.10627303
+Sol 87: objective: 177380605.10627303
+Sol 88: objective: 177380605.10627303
+Sol 89: objective: 177380605.10627303
+Sol 90: objective: 177380605.10627303
+Sol 91: objective: 177380605.10627303
+Sol 92: objective: 177380605.10627303
+Sol 93: objective: 177380605.10627303
+Sol 94: objective: 177380605.10627303
+Sol 95: objective: 177380605.10627303
+Sol 96: objective: 177380605.10627303
+Sol 97: objective: 177380605.10627303
+Sol 98: objective: 177380605.10627303
+Sol 99: objective: 177380605.10627303
+Done.

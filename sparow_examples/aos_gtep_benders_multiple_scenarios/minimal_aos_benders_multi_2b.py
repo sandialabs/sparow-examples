@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""Minimal GTEP + classical Benders + true AOS on scale_tests (Rung 2b).
+"""Minimal multi-scenario GTEP + classical Benders + true AOS (Rung 2b).
+
+Adapted from minimal_aos_benders_gtep.py for aos_gtep_benders_multiple_scenarios.
+
+Two scenarios:
+  load_0p95  → alpha=0.95, Probability=0.5
+  load_1p05  → alpha=1.05, Probability=0.5
 
 Uses SPAROW BendersSolver.solve_and_return_model (no master-capture patch).
-No CLI. Hard-coded Rung 2b sizes under aos_gtep_benders_minimal.scale_tests.
 
 Augmentation
 ------------
@@ -26,10 +31,10 @@ import pyomo.environ as pyo
 
 logging.getLogger("pyomo.core").setLevel(logging.ERROR)
 
-print("--- Loading create_sp and building SP (Rung 2b) ---", flush=True)
+print("--- Loading create_sp and building multi-scenario SP (Rung 2b) ---", flush=True)
 t_build = time.perf_counter()
 try:
-    from sparow_examples.aos_gtep_benders_minimal.scale_tests import create_sp
+    from sparow_examples.aos_gtep_benders_multiple_scenarios.scale_tests import create_sp
 except ImportError:
     from scale_tests import create_sp
 
@@ -203,9 +208,9 @@ try:
 except Exception as e:
     print(f"  (could not read benders_candidate objective: {e})", flush=True)
 
-NUM_SOLUTIONS = 100
-REL_GAP = 0.0001          # generate: tight on the master
-FILTER_REL_GAP = 0.02   # filter: looser true-cost window (~2%; observed η-gap ~1%)
+NUM_SOLUTIONS = 200
+REL_GAP = 0.00001          # generate: tight on the master
+FILTER_REL_GAP = 0.05   # filter: looser true-cost window (~2%; observed η-gap ~1%)
 
 print("--- aos-benders: generate_candidates ---", flush=True)
 t_gen = time.perf_counter()
@@ -311,7 +316,7 @@ else:
 # Project each true solution onto SPAROW first-stage names so the result is
 # compatible with sparow.sp.util.constrain_EF_model(..., first_stage_variables=...).
 # ---------------------------------------------------------------------------
-FS_OUTPUT_FILE = "aos_benders_2b_true_fs.json"
+FS_OUTPUT_FILE = "aos_benders_multi_2b_true_fs_candidate_gap_1eminus5_filter_gap_5eminus2.json"
 print(f"\n--- First-stage archive ---", flush=True)
 
 b0 = next(iter(sp.bundles))
@@ -381,9 +386,9 @@ fs_archive = {
     "metadata": {
         "description": (
             "First-stage projection of aos-benders true solutions "
-            "(investment indicators only)"
+            "(multi-scenario Rung 2b, investment indicators only)"
         ),
-        "source_script": "minimal_aos_benders_gtep.py",
+        "source_script": "minimal_aos_benders_multi_2b.py",
         "num_solutions": len(true_pool),
         "generate_rel_gap": REL_GAP,
         "filter_rel_gap": FILTER_REL_GAP,
@@ -395,6 +400,10 @@ fs_archive = {
             "num_commit": 8,
             "num_dispatch": 1,
         },
+        "scenarios": [
+            {"ID": "load_0p95", "alpha": 0.95, "Probability": 0.5},
+            {"ID": "load_1p05", "alpha": 1.05, "Probability": 0.5},
+        ],
     },
     "solutions": [extract_first_stage(s) for s in true_pool],
 }
