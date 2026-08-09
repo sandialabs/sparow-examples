@@ -3,7 +3,12 @@
 
 from sparow.sp import stochastic_program
 import importlib
+import os
 
+_cwd = os.path.abspath(__file__)
+_dir = os.path.basename(os.path.dirname(_cwd))
+_pdir = os.path.basename(os.path.dirname(os.path.dirname(_cwd)))
+assert _dir == "scale_tests" and _pdir == "aos_gtep_benders_minimal", f"Expected model import in directory aos_gtep_benders_minimal/scale_tests but import is in directory {_pdir}/{_dir}"
 
 DEFAULT_APP_DATA = {
     "stages": 3,
@@ -13,7 +18,6 @@ DEFAULT_APP_DATA = {
     "num_dispatch": 1,
 }
 model_data = {"scenarios": [{"ID": "single", "Demand": 1.0, "Probability": 1.0,"alpha":1.0}]}
-#model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90}]}
 
 
 def model_builder(data, args):
@@ -68,7 +72,6 @@ def create_sp(app_data=None, **size_overrides):
     )
     sp.initialize_application(app_data=updated_app_data)
     sp.initialize_model(
-        #name="model",
         model_data=model_data, model_builder=model_builder
     )
     return sp

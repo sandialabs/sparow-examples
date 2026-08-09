@@ -11,8 +11,14 @@ import string
 
 # The example name
 name = "scale_tests"
-# scenarios = ["low_alpha", "high_alpha"]
+# The list of scenarios
 scenarios = ["single"]
+
+cwd = os.path.basename(os.getcwd())
+
+##
+## START SCRIPT
+##
 
 if not os.path.exists(name):
     os.mkdir(name)
@@ -25,11 +31,16 @@ for scen in scenarios:
 
 
 module_root = string.Template("""
-# sparow_examples.aos_gtep_benders_minimal.scale_tests
+# sparow_examples.$cwd.scale_tests
 
 from sparow.sp import stochastic_program
 import importlib
+import os
 
+_cwd = os.path.abspath(__file__)
+_dir = os.path.basename(os.path.dirname(_cwd))
+_pdir = os.path.basename(os.path.dirname(os.path.dirname(_cwd)))
+assert _dir == "$name" and _pdir == "$cwd", f"Expected model import in directory $cwd/$name but import is in directory {_pdir}/{_dir}"
 
 DEFAULT_APP_DATA = {
     "stages": 3,
@@ -39,7 +50,6 @@ DEFAULT_APP_DATA = {
     "num_dispatch": 1,
 }
 model_data = {"scenarios": [{"ID": "single", "Demand": 1.0, "Probability": 1.0,"alpha":1.0}]}
-#model_data = {"scenarios": [{"ID": "low_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":1.0},{"ID": "high_alpha", "Demand": 1.0, "Probability": 0.5,"alpha":0.90}]}
 
 
 def model_builder(data, args):
@@ -51,7 +61,7 @@ def model_builder(data, args):
     alpha = data["alpha"]
 
     scenario = importlib.import_module(
-        "sparow_examples.aos_gtep_benders_minimal.$name." + data["ID"]
+        "sparow_examples.$cwd.$name." + data["ID"]
     )
     return scenario.create_gtep_model(
         num_stages=num_stages,
@@ -94,11 +104,10 @@ def create_sp(app_data=None, **size_overrides):
     )
     sp.initialize_application(app_data=updated_app_data)
     sp.initialize_model(
-        #name="model",
         model_data=model_data, model_builder=model_builder
     )
     return sp
-""").substitute(name=name)
+""").substitute(name=name, cwd=cwd)
 
 with open(os.path.join(name, "__init__.py"), "w") as OUTPUT:
     OUTPUT.write(module_root)
