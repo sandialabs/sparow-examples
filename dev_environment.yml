@@ -16,4 +16,4 @@ dependencies:
   - pip:
     - mpi-sppy
     - matplotlib
-    - highspys
+    - highspy
