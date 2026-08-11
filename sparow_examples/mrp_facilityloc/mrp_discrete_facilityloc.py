@@ -300,9 +300,11 @@ def HF_builder(data, args):
 
     return model
 
+
 # =====================================================================
 # Single-fidelity model-wrapper interface for confidence-interval code
 # =====================================================================
+
 
 def get_sp_model_for_uq(
     model_name="HF",
@@ -368,9 +370,11 @@ def get_sp_model_for_uq(
 
     return model
 
+
 # =====================================================================
 # Multifidelity ensemble interface for ACV-MRP and PyApprox
 # =====================================================================
+
 
 def get_model_ensemble_for_uq(
     model_name="HF",
@@ -384,9 +388,9 @@ def get_model_ensemble_for_uq(
 
     This is the standard entry point for ACV-MRP and PyApprox integration.
 
-    NOTE: model_name is included for interface consistency. 
+    NOTE: model_name is included for interface consistency.
     The ensemble always contains both the HF and LF facility-location models.
-    
+
     NOTE: lf_model_type is included for interface consistency.
     It is ignored here because facility location currently has only one option for the LF model.
 
@@ -421,9 +425,11 @@ def get_model_ensemble_for_uq(
 
     return ensemble
 
+
 # =================================================================
 # Write the scenario data to file for use in the CI tests
 # =================================================================
+
 
 def main():
     parser = argparse.ArgumentParser(

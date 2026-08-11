@@ -301,9 +301,11 @@ def Advanced_farmers():
     )
     return sp
 
+
 # =====================================================================
 # Single-fidelity model-wrapper interface for confidence-interval code
 # =====================================================================
+
 
 def get_sp_model_for_uq(
     model_name="Advanced",
