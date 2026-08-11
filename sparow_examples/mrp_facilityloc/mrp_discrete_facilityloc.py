@@ -6,7 +6,15 @@ import numpy as np
 from pathlib import Path
 
 from sparow.sp import stochastic_program
-from sparow.conf_intervals import CIProblemAdapter
+
+from sparow.conf_intervals.scenario_population import FiniteScenarioPopulation
+from sparow.conf_intervals.scenario_sampler import ScenarioSampler
+from sparow.conf_intervals.sp_model_wrapper_for_uq import SPModelWrapperforUQ
+from sparow.conf_intervals.model_ensemble import ModelEnsemble
+from sparow.conf_intervals.protocols import (
+    StochasticProgramModelProtocol,
+    ModelEnsembleProtocol,
+)
 
 import argparse
 import json
@@ -292,207 +300,130 @@ def HF_builder(data, args):
 
     return model
 
+# =====================================================================
+# Single-fidelity model-wrapper interface for confidence-interval code
+# =====================================================================
 
-# ==== CI ADAPTER ==============================================================
-
-
-class FacilityLocCIAdapter(CIProblemAdapter):
+def get_sp_model_for_uq(
+    model_name="HF",
+    use_integer=False,
+    seed=12345,
+    with_replacement=True,
+) -> StochasticProgramModelProtocol:
     """
-    Adapter that makes HF and LF facility location models compatible with
-    generic sparow.ci ACVMRP / true-gap evaluation code for estimating confidence intervals.
+    Build one confidence-interval-facing stochastic-program wrapper.
 
-    This class implements the 4 abstract methods required by the
-    core sparow.ci CIProblemAdapter base class:
-        1. get_scenario_population()
-        2. build_model_data(scenarios)
-        3. build_stochastic_program(model_data) [DEFAULTS TO HF MODEL]
-        4. first_stage_variable_order()
-
-    It also implements a required_scenario_keys() method that is specific to this problem's data.
-
-    Moreover, it overrides the following methods in order to support low-fidelity models for ACV-MRP:
-
-        - get_fidelity_levels()  # returns ["high", "low"]
-        - supports_acv()  # returns True
-        - set_active_fidelity
-        - get_active_fidelity
-    """
-
-    def __init__(
-        self,
-        model_name,
-        scenario_data,
-        model_builder,
-        app_data=None,
-        first_stage_variables=None,
-    ):
-        super().__init__(
-            model_name=model_name,
-            scenario_data=scenario_data,
-            model_builder=model_builder,
-            app_data=app_data,
-            first_stage_variables=(
-                ["x"] if first_stage_variables is None else first_stage_variables
-            ),
-        )
-        if model_name == "HF":
-            self._active_fidelity = "high"
-        elif model_name == "LF":
-            self._active_fidelity = "low"
-        else:
-            raise RuntimeError(
-                f"Unrecognized model_name for discrete facilityloc: {model_name}"
-            )
-
-    def get_scenario_population(self):
-        """
-        Return the full finite / historical scenario population as a list
-        of scenario dictionaries.
-        """
-        return self.scenario_data["scenarios"]
-
-    def build_model_data(self, scenarios):
-        """
-        Build the model_data dictionary expected by Sparow.
-        """
-        return {"data": {}, "scenarios": scenarios}
-
-    def build_stochastic_program(self, model_data):
-        """
-        Build and return the stochastic_program object for the currently active fidelity.
-        """
-        # print(f"Active fidelity state: {self._active_fidelity}")
-        sp = stochastic_program(first_stage_variables=self.first_stage_variables)
-        sp.initialize_application(app_data=self.app_data)
-
-        if self._active_fidelity == "high":
-            # print("Initializing HF model")
-            sp.initialize_model(
-                name="HF",
-                model_data=model_data,
-                model_builder=HF_builder,
-            )
-        elif self._active_fidelity == "low":
-            # print("Initializing LF model")
-            sp.initialize_model(
-                name="LF",
-                model_data=model_data,
-                model_builder=LF_builder,
-            )
-        else:
-            raise RuntimeError(f"Invalid active fidelity: {self._active_fidelity}")
-
-        return sp
-
-    def first_stage_variable_order(self):
-        """
-        Return the ordered list of first-stage variable names.
-
-        This order is used by the generic CI code to:
-            - extract xhat from solved EF results,
-            - convert xhat dicts into vectors for sp.evaluate(...).
-        """
-        # Return the first-stage variables in order: x[0], x[1], x[2], ...
-        n = self.app_data.get(
-            "n", 3
-        )  # 3 is the default number of facilities if not specified in app_data
-        return [f"x[{i}]" for i in range(n)]
-
-    def required_scenario_keys(self):
-        """
-        Facility location scenarios dictionaries must contain a Demand field in addition to the
-        always-required "ID" and "Probability" keys.
-        """
-        return ["Demand"]
-
-    def get_fidelity_levels(self):
-        """Return list of supported fidelity levels."""
-        return ["high", "low"]
-
-    def supports_acv(self):
-        """
-        Whether this adapter supports ACV-MRP.
-        Returns True since we have both HF and LF models implemented.
-        """
-        return True
-
-    def set_active_fidelity(self, fidelity):
-        """
-        Set the active fidelity level used by build_stochastic_program().
-        """
-        if fidelity not in ("high", "low"):
-            raise ValueError(f"Unknown fidelity level: {fidelity}")
-        self._active_fidelity = fidelity
-
-    def get_active_fidelity(self):
-        return self._active_fidelity
-
-    def scenario_vector_keys(self):
-        """
-        Return the scenario dictionary keys that correspond to uncertain problem data
-        """
-        return ["Demand"]
-
-    def decode_scenario_vector(self, vector, scenario_id: str):
-        """
-        Rebuild a facility-location scenario dictionary in the
-        correct format from a flat numeric vector.
-
-        NOTE: probability key and value is computed in the internal
-        PyApproxModelWrapper logic.
-        """
-        return {"ID": scenario_id, "Demand": [float(elem) for elem in vector]}
-
-
-# =================================================================
-# Core CI code expects exactly one standard factory name
-# =================================================================
-
-
-def get_ci_problem_adapter(model_name="HF", use_integer=False, lf_model_type="classic"):
-    """
-    Module-level factory function expected by the generic sparow.ci core code.
-
-    This function dispatches to the appropriate facility location-specific CI adapter
-    (HF or LF) based on "model_name" argument.
-
-    NOTE: lf_model_type is dummy argument here
+    Returns
+    -------
+    StochasticProgramModelProtocol
+        One model wrapper that owns its scenario population, sampler,
+        model builder, and first-stage metadata.
     """
     if model_name == "HF":
-        # print("Returning HF Problem Adapter")
-        return get_hf_ci_problem_adapter()
-    if model_name == "LF":
-        # print("Returning LF Problem Adapter")
-        return get_lf_ci_problem_adapter()
-    raise ValueError(f"Unknown facility location model_name: {model_name}")
+        scenario_data = scenario_data_by_model["HF"]
+        model_builder = HF_builder
+        fidelity = "high"
+    elif model_name == "LF":
+        scenario_data = scenario_data_by_model["LF"]
+        model_builder = LF_builder
+        fidelity = "low"
+    else:
+        raise ValueError(f"Unknown facility location model_name: {model_name}")
 
+    # The scenario population object stores the finite list of scenarios and
+    # validates their native SPAROW formatting.
+    scenario_population = FiniteScenarioPopulation(
+        scenarios=scenario_data["scenarios"],
+        required_scenario_keys=["Demand"],
+        scenario_vector_keys=["Demand"],
+    )
 
-def get_hf_ci_problem_adapter():
-    # print("\nBuilding HF Discrete FacilityLoc\n")
-    return FacilityLocCIAdapter(
+    # The sampler is kept separate from the model wrapper so that sampling
+    # logic remains reusable across different algorithms.
+    scenario_sampler = ScenarioSampler(
+        scenario_population=scenario_population,
+        seed=seed,
+        with_replacement=with_replacement,
+    )
+
+    first_stage_vars = ["x"]
+    first_stage_order = [f"x[{i}]" for i in range(app_data["n"])]
+
+    model = SPModelWrapperforUQ(
+        name=model_name,
+        fidelity=fidelity,
+        scenario_population=scenario_population,
+        scenario_sampler=scenario_sampler,
+        model_builder=model_builder,
+        app_data=app_data,
+        first_stage_variables=first_stage_vars,
+        first_stage_variable_order=first_stage_order,
+    )
+
+    if not isinstance(model, StochasticProgramModelProtocol):
+        raise RuntimeError(
+            f"Object returned by get_sp_model_for_uq(...) for model_name={model_name} "
+            "does not satisfy StochasticProgramModelProtocol."
+        )
+
+    return model
+
+# =====================================================================
+# Multifidelity ensemble interface for ACV-MRP and PyApprox
+# =====================================================================
+
+def get_model_ensemble_for_uq(
+    model_name="HF",
+    use_integer=False,
+    seed=12345,
+    with_replacement=True,
+    lf_model_type="classic",
+) -> ModelEnsembleProtocol:
+    """
+    Build a two-model HF/LF ensemble for multifidelity workflows.
+
+    This is the standard entry point for ACV-MRP and PyApprox integration.
+
+    NOTE: model_name is included for interface consistency. 
+    The ensemble always contains both the HF and LF facility-location models.
+    
+    NOTE: lf_model_type is included for interface consistency.
+    It is ignored here because facility location currently has only one option for the LF model.
+
+    Returns
+    -------
+    ModelEnsembleProtocol
+        Ensemble with:
+          - model 0 = HF facility-location model
+          - model 1 = LF facility-location model
+    """
+    hf_model = get_sp_model_for_uq(
         model_name="HF",
-        scenario_data=scenario_data_by_model["HF"],
-        model_builder=HF_builder,
-        app_data=app_data,
-        first_stage_variables=["x"],
+        use_integer=use_integer,
+        seed=seed,
+        with_replacement=with_replacement,
     )
 
-
-def get_lf_ci_problem_adapter():
-    # print("\nBuilding LF Discrete FacilityLoc\n")
-    return FacilityLocCIAdapter(
+    lf_model = get_sp_model_for_uq(
         model_name="LF",
-        scenario_data=scenario_data_by_model["LF"],
-        model_builder=LF_builder,
-        app_data=app_data,
-        first_stage_variables=["x"],
+        use_integer=use_integer,
+        seed=seed,
+        with_replacement=with_replacement,
     )
 
+    ensemble = ModelEnsemble([hf_model, lf_model])
+
+    if not isinstance(ensemble, ModelEnsembleProtocol):
+        raise RuntimeError(
+            "Object returned by get_model_ensemble_for_uq(...) does not satisfy "
+            "ModelEnsembleProtocol."
+        )
+
+    return ensemble
 
 # =================================================================
 # Write the scenario data to file for use in the CI tests
 # =================================================================
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -516,16 +447,14 @@ def main():
     print(f"\n ==== Number of population scenarios: {len(scen_dict_list)} === \n")
 
     # Scenarios are the same for the LF and HF models
-    adapter = FacilityLocCIAdapter(
-        model_name="HF",
-        scenario_data=scenario_data,
-        model_builder=HF_builder,
-        app_data=app_data,
-        first_stage_variables=["x"],
+    scenario_population = FiniteScenarioPopulation(
+        scenarios=scenario_data["scenarios"],
+        required_scenario_keys=["Demand"],
+        scenario_vector_keys=["Demand"],
     )
 
-    scenarios = adapter.get_scenario_population()
-    adapter.validate_scenario_population(scenarios)
+    scenario_population.validate()
+    scenarios = scenario_population.scenarios()
 
     outpath = os.path.abspath(args.output)
     (

@@ -19,8 +19,10 @@ import pyomo.environ as pyo
 import numpy as np
 from sparow.sp import stochastic_program
 
-# from sparow.ef import ExtensiveFormSolver
-from sparow.conf_intervals import CIProblemAdapter
+from sparow.conf_intervals.scenario_population import FiniteScenarioPopulation
+from sparow.conf_intervals.scenario_sampler import ScenarioSampler
+from sparow.conf_intervals.sp_model_wrapper_for_uq import SPModelWrapperforUQ
+from sparow.conf_intervals.protocols import StochasticProgramModelProtocol
 
 import argparse
 import json
@@ -299,152 +301,90 @@ def Advanced_farmers():
     )
     return sp
 
+# =====================================================================
+# Single-fidelity model-wrapper interface for confidence-interval code
+# =====================================================================
 
-# ==== CI ADAPTER ==============================================================
-
-
-class FarmerCIAdapter(CIProblemAdapter):
+def get_sp_model_for_uq(
+    model_name="Advanced",
+    use_integer=False,
+    seed=12345,
+    with_replacement=True,
+) -> StochasticProgramModelProtocol:
     """
-    Adapter that makes Basic_farmers and Advanced_farmers compatible with
-    generic sparow.conf_intervals MRP / true-gap evaluation code for estimating confidence intervals.
+    Build one single-fidelity stochastic-program model wrapper for
+    uncertainty quantification (UQ).
 
-    This class only implements the 4 abstract methods required by the
-    core sparow.conf_intervals CIProblemAdapter base class:
-        1. get_scenario_population()
-        2. build_model_data(scenarios)
-        3. build_stochastic_program(model_data)
-        4. first_stage_variable_order()
+    This is the single-model entry point for StandardMRP algorithm.
 
-    It also implements a required_scenario_keys() method that is specific to this problem's data.
-    """
-
-    def __init__(
-        self,
-        model_name,
-        scenario_data,
-        model_builder,
-        app_data=None,
-        first_stage_variables=None,
-        use_integer=False,
-    ):
-        super().__init__(
-            model_name=model_name,
-            scenario_data=scenario_data,
-            model_builder=model_builder,
-            app_data=app_data,
-            first_stage_variables=(
-                ["DevotedAcreage[*]"]
-                if first_stage_variables is None
-                else first_stage_variables
-            ),
-        )
-        self.use_integer = use_integer
-
-    def get_scenario_population(self):
-        """
-        Return the full finite / historical scenario population as a list
-        of scenario dictionaries.
-        """
-        return self.scenario_data["scenarios"]
-
-    def build_model_data(self, scenarios):
-        """
-        Build the model_data dictionary expected by Sparow.
-        """
-        return {
-            "data": {},
-            "scenarios": scenarios,
-        }
-
-    def build_stochastic_program(self, model_data):
-        """
-        Build and return the Sparow stochastic_program object for this
-        farmer model instance.
-        """
-        local_app_data = dict(self.app_data)
-        local_app_data["use_integer"] = self.use_integer
-
-        sp = stochastic_program(first_stage_variables=self.first_stage_variables)
-        sp.initialize_application(app_data=local_app_data)
-        sp.initialize_model(
-            name=self.model_name,
-            model_data=model_data,
-            model_builder=self.model_builder,
-        )
-        return sp
-
-    def first_stage_variable_order(self):
-        """
-        Return the ordered list of first-stage variable names.
-
-        This order is used by the generic CI code to:
-            - extract xhat from solved EF results,
-            - convert xhat dicts into vectors for sp.evaluate(...).
-        """
-        return [
-            "DevotedAcreage[WHEAT]",
-            "DevotedAcreage[CORN]",
-            "DevotedAcreage[SUGAR_BEETS]",
-        ]
-
-    def required_scenario_keys(self):
-        """
-        Farmer scenarios dictionaries must contain a Yield field in addition to the
-        always-required "ID" and "Probability" keys.
-        """
-        return ["Yield"]
-
-
-# =================================================================
-# Core CI code expects exactly one standard factory name
-# =================================================================
-
-
-def get_ci_problem_adapter(
-    model_name="Advanced", use_integer=False, lf_model_type="classic"
-):
-    """
-    Module-level factory function expected by the generic sparow.conf_intervals core code.
-
-    This function dispatches to the appropriate farmer-specific CI adapter
-    (Basic or Advanced) based on `model_name`, while exposing one standard
-    factory name that the core CI logic expects to call.
-
-    NOTE: lf_model_type is dummy argument here
+    Returns
+    -------
+    StochasticProgramModelProtocol
+        A model wrapper that owns:
+          - the finite scenario population,
+          - the scenario sampler,
+          - the model builder,
+          - the first-stage variable metadata,
+          - and the replication-level solve/evaluate logic.
     """
     if model_name == "Basic":
-        return get_basic_ci_problem_adapter(use_integer=use_integer)
-    if model_name == "Advanced":
-        return get_advanced_ci_problem_adapter(use_integer=use_integer)
-    raise ValueError(f"Unknown farmer model_name: {model_name}")
+        scenario_data = Basic_scendata
+    elif model_name == "Advanced":
+        scenario_data = Advanced_scendata
+    else:
+        raise ValueError(f"Unknown farmer model_name: {model_name}")
 
-
-def get_basic_ci_problem_adapter(use_integer=False):
-    # print(f"Basic farmers (3 scenarios) with use_integer = {use_integer}")
-    return FarmerCIAdapter(
-        model_name="Basic",
-        scenario_data=Basic_scendata,
-        model_builder=model_builder,
-        app_data=app_data,
-        first_stage_variables=["DevotedAcreage[*]"],
-        use_integer=use_integer,
+    # The scenario population object owns the full finite set of scenarios
+    # and validation logic. We do not need vector encoding yet for StandardMRP.
+    scenario_population = FiniteScenarioPopulation(
+        scenarios=scenario_data["scenarios"],
+        required_scenario_keys=["Yield"],
+        scenario_vector_keys=[],
     )
 
-
-def get_advanced_ci_problem_adapter(use_integer=False):
-    # print(f"Advanced farmers (num_data_points^3 scenarios) with use_integer = {use_integer}")
-    return FarmerCIAdapter(
-        model_name="Advanced",
-        scenario_data=Advanced_scendata,
-        model_builder=model_builder,
-        app_data=app_data,
-        first_stage_variables=["DevotedAcreage[*]"],
-        use_integer=use_integer,
+    # The sampler is separate from the model wrapper, so sampling logic
+    # stays reusable across different models and algorithms.
+    scenario_sampler = ScenarioSampler(
+        scenario_population=scenario_population,
+        seed=seed,
+        with_replacement=with_replacement,
     )
+
+    # The underlying farmer model can optionally use integer first-stage variables.
+    local_app_data = dict(app_data)
+    local_app_data["use_integer"] = use_integer
+
+    first_stage_vars = ["DevotedAcreage[*]"]
+    first_stage_order = [
+        "DevotedAcreage[WHEAT]",
+        "DevotedAcreage[CORN]",
+        "DevotedAcreage[SUGAR_BEETS]",
+    ]
+
+    model = SPModelWrapperforUQ(
+        name=model_name,
+        fidelity="high",  # single-fidelity case, so treat this as the primary model
+        scenario_population=scenario_population,
+        scenario_sampler=scenario_sampler,
+        model_builder=model_builder,
+        app_data=local_app_data,
+        first_stage_variables=first_stage_vars,
+        first_stage_variable_order=first_stage_order,
+    )
+
+    # Runtime-check the returned object against the protocol
+    if not isinstance(model, StochasticProgramModelProtocol):
+        raise RuntimeError(
+            f"Object returned by get_sp_model_for_uq(...) for model_name={model_name} "
+            "does not satisfy StochasticProgramModelProtocol."
+        )
+
+    return model
 
 
 # =================================================================
-# Write the scenario data to file for use in the confidence intervals tests
+# Write the scenario data to file for use in the confidence interval
+# estimation command-line interface (sparow.conf_intervals.cli)
 # =================================================================
 
 
@@ -460,9 +400,16 @@ def main():
     )
     args = parser.parse_args()
 
-    adapter = get_advanced_ci_problem_adapter()
-    scenarios = adapter.get_scenario_population()
-    adapter.validate_scenario_population(scenarios)
+    # For writing the scenario file, we only need the finite scenario list.
+    model = get_sp_model_for_uq(
+        model_name="Advanced",
+        use_integer=False,
+        seed=12345,
+        with_replacement=True,
+    )
+
+    scenarios = model.scenario_population().scenarios()
+    model.scenario_population().validate(scenarios)
 
     outpath = os.path.abspath(args.output)
     (
@@ -473,8 +420,10 @@ def main():
 
     if outpath.endswith(".json"):
         with open(outpath, "w") as f:
+            print(f"Writing population scenarios to file: {outpath}")
             json.dump({"scenarios": scenarios}, f, indent=2)
     elif outpath.endswith(".npy"):
+        print(f"Writing population scenarios to file: {outpath}")
         np.save(outpath, {"scenarios": scenarios}, allow_pickle=True)
     else:
         raise ValueError("Output file must end with .json or .npy")
