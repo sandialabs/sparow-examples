@@ -23,6 +23,30 @@ if GlobalData.num_scens < 3:
     raise RuntimeError(f"Number of scenarios must be >= 3")
 
 #
+# List of possible scenarios for basic farmers problem
+# No notion of seperate plots... use this to compare against mpisppy code outputs
+#
+Basic_scendata = {
+    "scenarios": [
+        {
+            "ID": "scen_0",
+            "Yield": {"WHEAT": 2.0, "CORN": 2.4, "SUGAR_BEETS": 16.0},
+            "Probability": 1.0 / 3.0,
+        },
+        {
+            "ID": "scen_1",
+            "Yield": {"WHEAT": 2.5, "CORN": 3.0, "SUGAR_BEETS": 20.0},
+            "Probability": 1.0 / 3.0,
+        },
+        {
+            "ID": "scen_2",
+            "Yield": {"WHEAT": 3.0, "CORN": 3.6, "SUGAR_BEETS": 24.0},
+            "Probability": 1.0 / 3.0,
+        },
+    ]
+}
+
+#
 # list of possible per-plot scenarios for LF model:
 #
 LF_scendata = {
@@ -317,8 +341,150 @@ HFScen_object = HFScenario_dict(HF_scendata)
 HF_data = HFScen_object.scenario_generator(GlobalData.num_plots, GlobalData.num_scens)
 
 app_data = {"num_plots": GlobalData.num_plots}
-model_data = {"LF": LF_scendata, "HF": HF_data}
+model_data = {"Basic": Basic_scendata, "LF": LF_scendata, "HF": HF_data}
 # print(HF_data)
+
+
+#
+# Construct Basic farmers problem model:
+#
+def Basic_model_builder(data, args):
+    model = pyo.ConcreteModel(data["ID"])
+
+    ### PARAMETERS
+    model.TOTAL_ACREAGE = 500.0
+
+    def crops_init(m):
+        return ["WHEAT", "CORN", "SUGAR_BEETS"]
+
+    model.CROPS = pyo.Set(initialize=crops_init)
+
+    def _data(indict):
+        return {crop: indict[crop] for crop in ["WHEAT", "CORN", "SUGAR_BEETS"]}
+
+    model.PriceQuota = _data(
+        {"WHEAT": 100000.0, "CORN": 100000.0, "SUGAR_BEETS": 6000.0}
+    )
+
+    model.SubQuotaSellingPrice = _data(  # favorable selling prices
+        {"WHEAT": 170.0, "CORN": 150.0, "SUGAR_BEETS": 36.0}
+    )
+
+    model.SuperQuotaSellingPrice = _data(  # unfavorable selling prices
+        {"WHEAT": 0.0, "CORN": 0.0, "SUGAR_BEETS": 10.0}
+    )
+
+    model.CattleFeedRequirement = _data(  # right hand sides of demand constraints
+        {"WHEAT": 200.0, "CORN": 240.0, "SUGAR_BEETS": 0.0}
+    )
+
+    model.PurchasePrice = (
+        _data(  # purchasing costs.... cannot purchase sugar beets, so use dummy value
+            {"WHEAT": 238.0, "CORN": 210.0, "SUGAR_BEETS": 100000.0}
+        )
+    )
+
+    model.PlantingCostPerAcre = _data(  # planting costs
+        {"WHEAT": 150.0, "CORN": 230.0, "SUGAR_BEETS": 260.0}
+    )
+
+    ### STOCHASTIC DATA
+    def Yield_init(m, cropname):
+        return data["Yield"][cropname]
+
+    model.Yield = pyo.Param(
+        model.CROPS,
+        within=pyo.NonNegativeReals,
+        initialize=Yield_init,
+        mutable=True,
+    )
+
+    ### VARIABLES
+    if args.get("use_integer", False):  # stage-1 vars integer
+        model.DevotedAcreage = pyo.Var(
+            model.CROPS,
+            within=pyo.NonNegativeIntegers,
+            bounds=(0.0, model.TOTAL_ACREAGE),
+        )
+    else:
+        model.DevotedAcreage = pyo.Var(  # stage-1 vars continuous
+            model.CROPS,
+            bounds=(0.0, model.TOTAL_ACREAGE),
+        )
+
+    model.QuantitySubQuotaSold = pyo.Var(
+        model.CROPS, bounds=(0.0, None)
+    )  # qnty sold at favorable price
+    model.QuantitySuperQuotaSold = pyo.Var(
+        model.CROPS, bounds=(0.0, None)
+    )  # qnty sold at unfavorable price
+    model.QuantityPurchased = pyo.Var(model.CROPS, bounds=(0.0, None))  # qnty purchased
+
+    ### CONSTRAINTS
+    def ConstrainTotalAcreage_rule(model):
+        return sum(model.DevotedAcreage[c] for c in model.CROPS) <= model.TOTAL_ACREAGE
+
+    model.ConstrainTotalAcreage = pyo.Constraint(rule=ConstrainTotalAcreage_rule)
+
+    def EnforceCattleFeedRequirement_rule(model, c):
+        return model.CattleFeedRequirement[c] <= (
+            model.Yield[c] * model.DevotedAcreage[c]
+            + model.QuantityPurchased[c]
+            - model.QuantitySubQuotaSold[c]
+            - model.QuantitySuperQuotaSold[c]
+        )
+
+    model.EnforceCattleFeedRequirement = pyo.Constraint(
+        model.CROPS, rule=EnforceCattleFeedRequirement_rule
+    )
+
+    def LimitAmountSold_rule(model, c):
+        return (
+            model.QuantitySubQuotaSold[c]
+            + model.QuantitySuperQuotaSold[c]
+            - model.Yield[c] * model.DevotedAcreage[c]
+        ) <= 0.0
+
+    model.LimitAmountSold = pyo.Constraint(model.CROPS, rule=LimitAmountSold_rule)
+
+    def EnforceQuotas_rule(model, c):
+        return (0.0, model.QuantitySubQuotaSold[c], model.PriceQuota[c])
+
+    model.EnforceQuotas = pyo.Constraint(model.CROPS, rule=EnforceQuotas_rule)
+
+    ### OBJECTIVE
+    def ComputeFirstStageCost_rule(model):
+        return sum(
+            model.PlantingCostPerAcre[c] * model.DevotedAcreage[c] for c in model.CROPS
+        )
+
+    model.FirstStageCost = pyo.Expression(rule=ComputeFirstStageCost_rule)
+
+    def ComputeSecondStageCost_rule(model):
+        expr = sum(
+            model.PurchasePrice[c] * model.QuantityPurchased[c] for c in model.CROPS
+        )
+        expr -= sum(
+            model.SubQuotaSellingPrice[c] * model.QuantitySubQuotaSold[c]
+            for c in model.CROPS
+        )
+        expr -= sum(
+            model.SuperQuotaSellingPrice[c] * model.QuantitySuperQuotaSold[c]
+            for c in model.CROPS
+        )
+        return expr
+
+    model.SecondStageCost = pyo.Expression(rule=ComputeSecondStageCost_rule)
+
+    def total_cost_rule(model):
+        return model.FirstStageCost + model.SecondStageCost
+
+    model.Total_Cost_Objective = pyo.Objective(
+        rule=total_cost_rule,
+        sense=pyo.minimize,
+    )
+
+    return model
 
 
 #
@@ -647,6 +813,17 @@ def model_builder(data, args):
 #
 # options to solve, LF, HF, or MF models with PH or EF:
 #
+
+
+def Basic_farmers():
+    sp = stochastic_program(first_stage_variables=["DevotedAcreage[*]"])
+    sp.initialize_application(app_data=app_data)
+    sp.initialize_model(
+        name="Basic",
+        model_data=model_data["Basic"],
+        model_builder=Basic_model_builder,
+    )
+    return sp
 
 
 def HF_farmers():
