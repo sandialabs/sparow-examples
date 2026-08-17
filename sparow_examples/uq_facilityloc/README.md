@@ -1,4 +1,4 @@
-# `mrp_facilityloc`
+# `uq_facilityloc`
 
 This directory contains small facility-location examples for demonstrating different multifidelity workflows and uncertainty quantification capabilities in SPAROW.
 
