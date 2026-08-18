@@ -47,16 +47,24 @@ def create_gtep_model(
     mod_object = ExpansionPlanningModel(
         data=data_object,
     )
-
-    mod_object.config["include_commitment"] = include_commitment
-    #mod_object.config["alpha_scaler"] = alpha
-    mod_object.config["flow_model"] = flow_model
-    mod_object.config["storage"] = True
+    mod_object.config["include_investment"] = True
+    mod_object.config["include_commitment"] = True
+    mod_object.config["include_redispatch"] = True
+    mod_object.config["scale_loads"] = True
     mod_object.config["transmission"] = True
-    mod_object.config["thermal_generation"] = True
-    mod_object.config["renewable_generation"] = True
-    mod_object.config["scale_loads"] = False
-    mod_object.config["scale_texas_loads"] = False
+    mod_object.config["storage"] = False
+    mod_object.config["flow_model"] = "DC"
+    mod_object.config["advanced_hydro"] = False
+    
+    # mod_object.config["include_commitment"] = include_commitment
+    # #mod_object.config["alpha_scaler"] = alpha
+    # mod_object.config["flow_model"] = flow_model
+    # mod_object.config["storage"] = True
+    # mod_object.config["transmission"] = True
+    # mod_object.config["thermal_generation"] = True
+    # mod_object.config["renewable_generation"] = True
+    # mod_object.config["scale_loads"] = False
+    # mod_object.config["scale_texas_loads"] = False
 
     mod_object.create_model()
     TransformationFactory("gdp.bound_pretransformation").apply_to(mod_object.model)

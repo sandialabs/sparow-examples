@@ -1,0 +1,389 @@
+nohup: ignoring input
+Starting HF at Mon Aug 17 19:16:47 MDT 2026
+[    0.00] Initializing mpi-sppy
+Alternative solutions package from or_topas is available.
+Alternative solutions package from or_topas is available.
+Alternative solutions package from or_topas is available.
+Alternative solutions package from or_topas is available.
+------------------------------------------------------------
+Running HF_PH
+------------------------------------------------------------
+------------------------------------------------------------
+Running HF_PH
+------------------------------------------------------------
+------------------------------------------------------------
+Running HF_PH
+------------------------------------------------------------
+------------------------------------------------------------
+Running HF_PH
+------------------------------------------------------------
+INFO - ProgressiveHedgingSolver_MPISPPY - START
+loading data
+loading data
+[    0.33] Using cylinders PHHub, LagrangianOuterBound, XhatShuffleInnerBound and XhatXbarInnerBound to solve a problem with 8 scenarios using 4 MPI ranks.
+[    0.33] Initializing SPBase
+loading data
+loading data
+building model
+building model
+building model
+building model
+loading data
+loading data
+building model
+loading data
+building model
+building model
+loading data
+building model
+loading data
+building model
+loading data
+loading data
+building model
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+loading data
+building model
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+[sisu3.sandia.gov:1668812] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[sisu3.sandia.gov:1668813] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[sisu3.sandia.gov:1668811] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[   12.90] Initializing PHBase
+[sisu3.sandia.gov:1668810] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[   13.01] Starting spcomm.main()
+[   13.37] Creating solvers
+[   13.39] Entering solve loop in PHBase.Iter0
+
+After PH Iteration 0
+Trivial bound = 1572448.4604263885
+PHBase Convergence Metric = None
+Elapsed time: 569.70
+[  570.04] Iter.           Best Bound  Best Incumbent      Rel. Gap        Abs. Gap
+[  570.04]     0  *      1572448.4604             inf           inf%             inf
+[  570.04] Initiating PH Iteration 1
+
+[ 1507.67]     1    X    1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 1
+Scaled PHBase Convergence Metric= 0.02108304794520548
+Iteration time: 937.64
+Elapsed time:   1507.34
+[ 1507.67] Initiating PH Iteration 2
+
+[ 2603.94]     2         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 2
+Scaled PHBase Convergence Metric= 0.021083047953517033
+Iteration time: 1096.26
+Elapsed time:   2603.60
+[ 2603.94] Initiating PH Iteration 3
+
+[ 3582.11]     3         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 3
+Scaled PHBase Convergence Metric= 0.0201912100456621
+Iteration time: 978.17
+Elapsed time:   3581.78
+[ 3582.11] Initiating PH Iteration 4
+
+[ 4512.74]     4         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 4
+Scaled PHBase Convergence Metric= 0.020298230593607306
+Iteration time: 930.63
+Elapsed time:   4512.40
+[ 4512.74] Initiating PH Iteration 5
+
+[ 5247.15]     5         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 5
+Scaled PHBase Convergence Metric= 0.019852311643835618
+Iteration time: 734.42
+Elapsed time:   5246.82
+[ 5247.15] Initiating PH Iteration 6
+
+[ 6370.26]     6         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 6
+Scaled PHBase Convergence Metric= 0.02470390979658696
+Iteration time: 1123.11
+Elapsed time:   6369.93
+[ 6370.26] Initiating PH Iteration 7
+
+[ 7458.94]     7         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 7
+Scaled PHBase Convergence Metric= 0.020102026255707763
+Iteration time: 1088.68
+Elapsed time:   7458.61
+[ 7458.95] Initiating PH Iteration 8
+
+[ 8401.20]     8         1572448.4604   12711774.4059        87.630%   11139325.9454
+
+After PH Iteration 8
+Scaled PHBase Convergence Metric= 0.018835616393938062
+Iteration time: 942.25
+Elapsed time:   8400.86
+[ 8401.20] Initiating PH Iteration 9
+
+Starting LF at Mon Aug 17 21:44:19 MDT 2026
+[    0.00] Initializing mpi-sppy
+Alternative solutions package from or_topas is available.
+Alternative solutions package from or_topas is available.
+Alternative solutions package from or_topas is available.
+Alternative solutions package from or_topas is available.
+------------------------------------------------------------
+Running LF_PH
+------------------------------------------------------------
+------------------------------------------------------------
+Running LF_PH
+------------------------------------------------------------
+------------------------------------------------------------
+Running LF_PH
+------------------------------------------------------------
+------------------------------------------------------------
+Running LF_PH
+------------------------------------------------------------
+INFO - ProgressiveHedgingSolver_MPISPPY - START
+loading data
+loading data
+loading data
+[    0.34] Using cylinders PHHub, LagrangianOuterBound, XhatShuffleInnerBound and XhatXbarInnerBound to solve a problem with 8 scenarios using 4 MPI ranks.
+[    0.34] Initializing SPBase
+loading data
+building model
+building model
+building model
+building model
+loading data
+building model
+loading data
+building model
+loading data
+loading data
+building model
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+building model
+loading data
+loading data
+building model
+building model
+loading data
+building model
+[sisu3.sandia.gov:1679487] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[    8.97] Initializing PHBase
+[sisu3.sandia.gov:1679485] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[sisu3.sandia.gov:1679486] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[sisu3.sandia.gov:1679484] /openmpi-5.0.10/ompi/mca/osc/ucx/osc_ucx_component.c:375  Error: OSC UCX component priority set inside component query failed 
+ 
+[    9.08] Starting spcomm.main()
+[   11.36] Creating solvers
+[   11.37] Entering solve loop in PHBase.Iter0
+
+After PH Iteration 0
+Trivial bound = 1006023.0928799678
+PHBase Convergence Metric = None
+Elapsed time: 1113.03
+[ 1113.37] Iter.           Best Bound  Best Incumbent      Rel. Gap        Abs. Gap
+[ 1113.37]     0  *      1006023.0929             inf           inf%             inf
+[ 1113.37] Initiating PH Iteration 1
+
+[ 3053.77]     1         1006023.0929             inf           inf%             inf
+
+After PH Iteration 1
+Scaled PHBase Convergence Metric= 0.02954658974121028
+Iteration time: 1940.40
+Elapsed time:   3053.43
+[ 3053.77] Initiating PH Iteration 2
+
+[ 5233.20]     2         1006023.0929             inf           inf%             inf
+
+After PH Iteration 2
+Scaled PHBase Convergence Metric= 0.02992116151710012
+Iteration time: 2179.43
+Elapsed time:   5232.86
+[ 5233.20] Initiating PH Iteration 3
+
+[ 7274.81]     3         1006023.0929             inf           inf%             inf
+
+After PH Iteration 3
+Scaled PHBase Convergence Metric= 0.02852097592715154
+Iteration time: 2041.61
+Elapsed time:   7274.46
+[ 7274.81] Initiating PH Iteration 4
+
+[ 9714.31]     4         1006023.0929             inf           inf%             inf
+
+After PH Iteration 4
+Scaled PHBase Convergence Metric= 0.02795019935036129
+Iteration time: 2439.51
+Elapsed time:   9713.97
+[ 9714.31] Initiating PH Iteration 5
+
+[12210.05]     5         1006023.0929             inf           inf%             inf
+
+After PH Iteration 5
+Scaled PHBase Convergence Metric= 0.026121931737847895
+Iteration time: 2495.74
+Elapsed time:   12209.71
+[12210.05] Initiating PH Iteration 6
+
+[14574.95]     6         1006023.0929             inf           inf%             inf
+
+After PH Iteration 6
+Scaled PHBase Convergence Metric= 0.025934645670737312
+Iteration time: 2364.89
+Elapsed time:   14574.60
+[14574.95] Initiating PH Iteration 7
+
+[16717.17]     7         1006023.0929             inf           inf%             inf
+
+After PH Iteration 7
+Scaled PHBase Convergence Metric= 0.025649257037076736
+Iteration time: 2142.23
+Elapsed time:   16716.83
+[16717.17] Initiating PH Iteration 8
+
+[19059.92]     8         1006023.0929             inf           inf%             inf
+
+After PH Iteration 8
+Scaled PHBase Convergence Metric= 0.024570133925632457
+Iteration time: 2342.75
+Elapsed time:   19059.58
+[19059.92] Initiating PH Iteration 9
+
+[22062.01]     9         1006023.0929             inf           inf%             inf
+
+After PH Iteration 9
+Scaled PHBase Convergence Metric= 0.02641623853471764
+Iteration time: 3002.08
+Elapsed time:   22061.66
+[22062.01] Initiating PH Iteration 10
+
+[25230.10]    10         1006023.0929             inf           inf%             inf
+
+After PH Iteration 10
+Scaled PHBase Convergence Metric= 0.026960259552426674
+Iteration time: 3168.10
+Elapsed time:   25229.76
+[25230.10] Initiating PH Iteration 11
+
+[29048.47]    11         1006023.0929             inf           inf%             inf
+
+After PH Iteration 11
+Scaled PHBase Convergence Metric= 0.026567850047030654
+Iteration time: 3818.36
+Elapsed time:   29048.12
+[29048.47] Initiating PH Iteration 12
+
+[32396.51]    12         1006023.0929             inf           inf%             inf
+
+After PH Iteration 12
+Scaled PHBase Convergence Metric= 0.02465932097652474
+Iteration time: 3348.05
+Elapsed time:   32396.17
+[32396.51] Initiating PH Iteration 13
+
+[36472.85]    13         1006023.0929             inf           inf%             inf
+
+After PH Iteration 13
+Scaled PHBase Convergence Metric= 0.02441851991655682
+Iteration time: 4076.33
+Elapsed time:   36472.50
+[36472.85] Initiating PH Iteration 14
+
+[41140.06]    14         1006023.0929             inf           inf%             inf
+
+After PH Iteration 14
+Scaled PHBase Convergence Metric= 0.026282462548944972
+Iteration time: 4667.21
+Elapsed time:   41139.72
+[41140.06] Initiating PH Iteration 15
+

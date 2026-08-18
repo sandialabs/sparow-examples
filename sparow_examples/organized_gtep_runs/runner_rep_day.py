@@ -12,7 +12,7 @@ logger = logging.getLogger("gtep.driver_esr")
 logger.setLevel(logging.INFO)
 
 # Add data
-data_path = "/home/zakilwe/GTEP/idaes-gtep/gtep/data/5bus"
+data_path = "/home/zakilwe/GTEP/idaes-gtep/gtep/data/9bus"
 data_object = ExpansionPlanningData(
     stages=2,
     num_reps=4,

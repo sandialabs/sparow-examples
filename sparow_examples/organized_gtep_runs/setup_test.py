@@ -211,6 +211,11 @@ def create_sp():
             "investmentStage[*].branchRetired[*].binary_indicator_var",
             "investmentStage[*].branchDisabled[*].binary_indicator_var",
             "investmentStage[*].branchExtended[*].binary_indicator_var",
+            "investmentStage[*].storOperational[*].binary_indicator_var",
+            "investmentStage[*].storInstalled[*].binary_indicator_var",
+            "investmentStage[*].storRetired[*].binary_indicator_var",
+            "investmentStage[*].storDisabled[*].binary_indicator_var",
+            "investmentStage[*].storExtended[*].binary_indicator_var",
         ]
     )
     sp.initialize_application(app_data=app_data)

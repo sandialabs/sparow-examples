@@ -59,7 +59,7 @@ def create_gtep_model(
     mod_object.config["scale_texas_loads"] = False
 
     mod_object.create_model()
-    TransformationFactory("gdp.bound_pretransformation").apply_to(mod_object.model)
+    #TransformationFactory("gdp.bound_pretransformation").apply_to(mod_object.model)
     TransformationFactory("gdp.bigm").apply_to(mod_object.model)
 
     return mod_object.model
