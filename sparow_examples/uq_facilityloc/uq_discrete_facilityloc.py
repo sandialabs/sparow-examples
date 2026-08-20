@@ -308,7 +308,7 @@ def HF_builder(data, args):
 
 def get_sp_model_for_uq(
     model_name="HF",
-    use_integer=False,
+    use_integer=False, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
     seed=12345,
     with_replacement=True,
 ) -> StochasticProgramModelProtocol:

@@ -8,13 +8,13 @@ from typing import List, Optional
 
 from egret.parsers.matpower_parser import create_ModelData
 
-from model_builders import (
+from sparow_examples.uq_opf.model_builders import (
     LF_builder_multitime_period,  # copperplate
     HF_builder_multitime_period,  # DCOPF
     uHF_builder_multitime_period, # ACOPF
 )
-from config import ExperimentConfig
-from scenarios import build_model_data_time
+from sparow_examples.uq_opf.config import ExperimentConfig
+from sparow_examples.uq_opf.scenarios import build_model_data_time
 
 from sparow.conf_intervals.scenario_population import FiniteScenarioPopulation
 from sparow.conf_intervals.scenario_sampler import ScenarioSampler
@@ -160,6 +160,7 @@ def _select_low_fidelity_builder(lf_model_type: str):
 
 def get_sp_model_for_uq(
         model_name: str = "HF",
+        use_integer: bool = False, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
         seed: int = 12345,
         with_replacement: bool = True,
         lf_model_type: str = "dcopf",
@@ -175,6 +176,7 @@ def get_sp_model_for_uq(
         Fidelity/model label. Supported values:
           - "HF" : high-fidelity ACOPF
           - "LF" : lower-fidelity DCOPF or copperplate
+    use_integer: bool, optional
     seed : int, optional
         Seed for the scenario sampler.
     with_replacement : bool, optional
@@ -239,6 +241,7 @@ def get_sp_model_for_uq(
 
 def get_model_ensemble_for_uq(
         model_name: str = "HF",
+        use_integer: bool = False, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
         seed: int = 12345,
         with_replacement: bool = True,
         lf_model_type: str = "dcopf",
@@ -258,6 +261,7 @@ def get_model_ensemble_for_uq(
 
     hf_model = get_sp_model_for_uq(
         model_name="HF",
+        use_integer=use_integer, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
         seed=seed,
         with_replacement=with_replacement,
         lf_model_type=lf_model_type,
@@ -267,6 +271,7 @@ def get_model_ensemble_for_uq(
 
     lf_model = get_sp_model_for_uq(
         model_name="LF",
+        use_integer=use_integer, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
         seed=seed,
         with_replacement=with_replacement,
         lf_model_type=lf_model_type,
