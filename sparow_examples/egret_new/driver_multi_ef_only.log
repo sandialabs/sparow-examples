@@ -1,0 +1,489 @@
+Intensity 3 → rel_gaps = [0.0, 0.01, 0.05]
+case = synthetic_T4_S3
+scenarios = [{'ID': 'low', 'Probability': 0.25, 'load_scale': 0.85}, {'ID': 'med', 'Probability': 0.5, 'load_scale': 1.0}, {'ID': 'high', 'Probability': 0.25, 'load_scale': 1.15}]
+Mode: create_EF → gurobi_generate_solutions (no prior EF solve)
+
+===== first_stage_mode = UnitOn =====
+
+=== STAGE 0: Environment ===
+  EGRET OK  (egret at /Users/matthewviens/Optimization/Egret/egret/__init__.py)
+  SPAROW OK (sparow at /Users/matthewviens/Optimization/sparow/sparow/__init__.py)
+  OR-Topas OK
+  Stage 0 PASSED
+
+=== STAGE 1: Build EGRET model (tiny_uc_tc) ===
+  force_synthetic=True → 2-gen copperplate UC, T=4
+  ModelData source: synthetic(T=4)
+  system keys: ['time_keys', 'time_period_length_minutes', 'baseMVA', 'load_mismatch_cost', 'reserve_shortfall_cost']
+  element types: ['bus', 'load', 'generator']
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  network_constraints: copperplate_power_flow
+  Model type: <class 'pyomo.core.base.PyomoModel.ConcreteModel'>
+  Model name: UnitCommitment
+  Active objectives: ['TotalCostObjective']
+  Set ThermalGenerators: length 2
+  Set TimePeriods: length 4
+  Set Buses: length 1
+  Stage 1 PASSED
+
+=== STAGE 2: Inspect binary / integer variables ===
+  Binary components:
+    UnitOn                                    n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStart                                 n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStop                                  n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+  Integer (non-binary) components:
+    (none)
+  Continuous sample (first few):
+    PowerGeneratedAboveMinimum                n=    8
+    PiecewiseProduction                       n=   16
+    ProductionCost                            n=    8
+    StartupCost                               n=    8
+    posLoadGenerateMismatch                   n=    4
+
+  Suggested first_stage_variables (heuristic): ['UnitOn', 'UnitStart', 'UnitStop']
+  Stage 2 PASSED – inspect the list above before continuing
+
+=== STAGE 3: Verify first-stage name list ===
+  Candidate names: ['UnitOn']
+  'UnitOn': found, n=8, domain=Binary
+  Total first-stage VarData objects: 8
+  Stage 3 PASSED
+  first_stage_names = ['UnitOn']
+  scenarios = [{'ID': 'low', 'Probability': 0.25, 'load_scale': 0.85}, {'ID': 'med', 'Probability': 0.5, 'load_scale': 1.0}, {'ID': 'high', 'Probability': 0.25, 'load_scale': 1.15}]
+
+=== STAGE 5: Multi-scenario SPAROW SP with EGRET model_builder ===
+  default_model: None
+  bundles: ['low', 'med', 'high']
+  bundle 'low': probability=0.25
+  bundle 'med': probability=0.5
+  bundle 'high': probability=0.25
+  Probability sum = 1.0000000000  (OK)
+  Building EF for bundle low ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Building EF for bundle med ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Building EF for bundle high ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Reference bundle 'low': 8 first-stage variables
+    [0] s[None,low].UnitOn[G1,1]  (local=UnitOn[G1,1])  domain=Binary
+    [1] s[None,low].UnitOn[G1,2]  (local=UnitOn[G1,2])  domain=Binary
+    [2] s[None,low].UnitOn[G1,3]  (local=UnitOn[G1,3])  domain=Binary
+    [3] s[None,low].UnitOn[G1,4]  (local=UnitOn[G1,4])  domain=Binary
+    [4] s[None,low].UnitOn[G2,1]  (local=UnitOn[G2,1])  domain=Binary
+  Cross-bundle first-stage structural check PASSED (8 vars, identical local names/domains across 3 bundles)
+  Stage 5 PASSED
+  n_first_stage = 8, names = ['UnitOn']
+INFO - Using single_bundle scheme (extensive form solve).
+INFO | Using single_bundle scheme (extensive form solve).
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  create_EF(compact_repn=True) failed: RuntimeError: No transformation handler registered for modeling components of type '{obj.ctype}'.
+  Retrying create_EF(compact_repn=False) ...
+INFO - Using single_bundle scheme (extensive form solve).
+INFO | Using single_bundle scheme (extensive form solve).
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  create_EF(compact_repn=False) OK → ConcreteModel
+  EF build time = 0.080s  compact=False
+  EF AOS  method=gurobi_pool gap=0.0
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | 
+INFO | Non-default parameters:
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0
+INFO | PoolGap  0
+INFO | 
+INFO | 
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | Model fingerprint: 0x5f40c515
+INFO | Model has 120 linear objective coefficients
+INFO | Model fingerprint: 0x5f40c515
+INFO | Model has 120 linear objective coefficients
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Coefficient statistics:
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 231 rows and 156 columns
+INFO | Presolve time: 0.03s
+INFO | Presolve removed 231 rows and 156 columns
+INFO | Presolve time: 0.03s
+INFO | Presolved: 129 rows, 92 columns, 450 nonzeros
+INFO | Presolved: 129 rows, 92 columns, 450 nonzeros
+INFO | Variable types: 72 continuous, 20 integer (20 binary)
+INFO | Variable types: 72 continuous, 20 integer (20 binary)
+INFO | 
+INFO | 
+INFO | Root relaxation: objective 5.907286e+03, 44 iterations, 0.01 seconds (0.00 work units)
+INFO | Root relaxation: objective 5.907286e+03, 44 iterations, 0.01 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO | 
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO |      0     0          -    0      6005.34625 6005.34625  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO |      0     0          -    0      6005.34625 6005.34625  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0     cutoff    0               - 6005.34625      -     -    0s
+INFO |      0     0     cutoff    0               - 6005.34625      -     -    0s
+INFO | 
+INFO | Explored 1 nodes (54 simplex iterations) in 0.15 seconds (0.00 work units)
+INFO | 
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Explored 1 nodes (54 simplex iterations) in 0.15 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 1: 6005.35 
+INFO | 
+INFO | Solution count 1: 6005.35 
+INFO | No other solutions better than 6005.35
+INFO | No other solutions better than 6005.35
+INFO | 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+  baseline obj (from gap=0.0 pool) = 6005.3462500000005
+  EF AOS  method=gurobi_pool gap=0.01
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.01
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | Set parameter PoolGap to value 0.01
+INFO | 
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | 
+INFO | Non-default parameters:
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.01
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.01
+INFO | 
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | Model fingerprint: 0x5f40c515
+INFO | Model has 120 linear objective coefficients
+INFO | 
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO | Model fingerprint: 0x5f40c515
+INFO | Model has 120 linear objective coefficients
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 231 rows and 156 columns
+INFO | Presolve time: 0.00s
+INFO | Presolve removed 231 rows and 156 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 129 rows, 92 columns, 450 nonzeros
+INFO | Presolved: 129 rows, 92 columns, 450 nonzeros
+INFO | Variable types: 72 continuous, 20 integer (20 binary)
+INFO | Variable types: 72 continuous, 20 integer (20 binary)
+INFO | 
+INFO | Root relaxation: objective 5.907286e+03, 44 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO | Root relaxation: objective 5.907286e+03, 44 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO |      0     0          -    0      6005.34625 6005.34625  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO |      0     0          -    0      6005.34625 6005.34625  0.00%     -    0s
+INFO | 
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0     cutoff    0               - 6005.34625      -     -    0s
+INFO |      0     0     cutoff    0               - 6005.34625      -     -    0s
+INFO | 
+INFO | 
+INFO | Explored 1 nodes (54 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Explored 1 nodes (54 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 1: 6005.35 
+INFO | No other solutions better than 6005.35
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+INFO | 
+INFO | Solution count 1: 6005.35 
+INFO | No other solutions better than 6005.35
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+  EF AOS  method=gurobi_pool gap=0.05
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.05
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.05
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.05
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.05
+INFO | 
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | 
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | Model fingerprint: 0x5f40c515
+INFO | Model has 120 linear objective coefficients
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Model fingerprint: 0x5f40c515
+INFO | Model has 120 linear objective coefficients
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO | Coefficient statistics:
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 231 rows and 156 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 129 rows, 92 columns, 450 nonzeros
+INFO | Presolve removed 231 rows and 156 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 129 rows, 92 columns, 450 nonzeros
+INFO | Variable types: 72 continuous, 20 integer (20 binary)
+INFO | Variable types: 72 continuous, 20 integer (20 binary)
+INFO | 
+INFO | Root relaxation: objective 5.907286e+03, 44 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO | Root relaxation: objective 5.907286e+03, 44 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO |      0     0          -    0      6005.34625 6005.34625  0.00%     -    0s
+INFO | 
+INFO |      0     0          -    0      6005.34625 6005.34625  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     0          -    0               - 6005.34625      -     -    0s
+INFO |      0     2          -    0               - 6005.34625      -     -    0s
+INFO |      0     2          -    0               - 6005.34625      -     -    0s
+INFO | 
+INFO | 
+INFO | Explored 7 nodes (64 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Explored 7 nodes (64 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 6005.35 6103.99 6104.15 6202.79 
+INFO | 
+INFO | Solution count 4: 6005.35 6103.99 6104.15 6202.79 
+INFO | No other solutions better than 6202.79
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | No other solutions better than 6202.79
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+
+Wrote 4 rows → results_ef_multi/egret_aos_multi_ef_only_synthetic_T4_S3.csv
+
+=== Summary ===
+  UnitOn           extensive  baseline     gap=0.0   status=optimal  obj=6005.3462500000005 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.0   status=optimal  obj=6005.3462500000005 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.01  status=optimal  obj=6005.3462500000005 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.05  status=optimal  obj=6005.3462500000005 n_true=4  

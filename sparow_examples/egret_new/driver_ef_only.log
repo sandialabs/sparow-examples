@@ -1,0 +1,452 @@
+Intensity 3 → rel_gaps = [0.0, 0.01, 0.05]
+case = synthetic_T4
+Mode: create_EF → gurobi_generate_solutions (no prior EF solve)
+
+===== first_stage_mode = UnitOn =====
+
+=== STAGE 0: Environment ===
+  EGRET OK  (egret at /Users/matthewviens/Optimization/Egret/egret/__init__.py)
+  SPAROW OK (sparow at /Users/matthewviens/Optimization/sparow/sparow/__init__.py)
+  OR-Topas OK
+  Stage 0 PASSED
+
+=== STAGE 1: Build EGRET model (tiny_uc_tc) ===
+  force_synthetic=True → 2-gen copperplate UC, T=4
+  ModelData source: synthetic(T=4)
+  system keys: ['time_keys', 'time_period_length_minutes', 'baseMVA', 'load_mismatch_cost', 'reserve_shortfall_cost']
+  element types: ['bus', 'load', 'generator']
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  network_constraints: copperplate_power_flow
+  Model type: <class 'pyomo.core.base.PyomoModel.ConcreteModel'>
+  Model name: UnitCommitment
+  Active objectives: ['TotalCostObjective']
+  Set ThermalGenerators: length 2
+  Set TimePeriods: length 4
+  Set Buses: length 1
+  Stage 1 PASSED
+
+=== STAGE 2: Inspect binary / integer variables ===
+  Binary components:
+    UnitOn                                    n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStart                                 n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStop                                  n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+  Integer (non-binary) components:
+    (none)
+  Continuous sample (first few):
+    PowerGeneratedAboveMinimum                n=    8
+    PiecewiseProduction                       n=   16
+    ProductionCost                            n=    8
+    StartupCost                               n=    8
+    posLoadGenerateMismatch                   n=    4
+
+  Suggested first_stage_variables (heuristic): ['UnitOn', 'UnitStart', 'UnitStop']
+  Stage 2 PASSED – inspect the list above before continuing
+
+=== STAGE 3: Verify first-stage name list ===
+  Candidate names: ['UnitOn']
+  'UnitOn': found, n=8, domain=Binary
+  Total first-stage VarData objects: 8
+  Stage 3 PASSED
+  first_stage_names = ['UnitOn']
+
+=== STAGE 5: SPAROW SP with EGRET model_builder ===
+  default_model: None
+  bundles: ['base']
+  Building EF for bundle base ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  int_to_FirstStageVar[base]: 8 variables
+    [0] s[None,base].UnitOn[G1,1]  domain=Binary
+    [1] s[None,base].UnitOn[G1,2]  domain=Binary
+    [2] s[None,base].UnitOn[G1,3]  domain=Binary
+    [3] s[None,base].UnitOn[G1,4]  domain=Binary
+    [4] s[None,base].UnitOn[G2,1]  domain=Binary
+  Stage 5 PASSED
+  n_first_stage = 8, names = ['UnitOn']
+INFO - Using single_bundle scheme (extensive form solve).
+INFO | Using single_bundle scheme (extensive form solve).
+/Users/matthewviens/Optimization/sparow/sparow/sp/bundling/bundling_helper_functions.py:123: UserWarning: No scenario probabilities are given; assuming uniform distribution.
+  warnings.warn(
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  create_EF(compact_repn=True) OK → ConcreteModel
+  EF build time = 0.013s  compact=True
+  EF AOS  method=gurobi_pool gap=0.0
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0
+INFO | 
+INFO | Optimize a model with 112 rows, 80 columns and 286 nonzeros (Min)
+INFO | 
+INFO | Optimize a model with 112 rows, 80 columns and 286 nonzeros (Min)
+INFO | Model fingerprint: 0x0071da04
+INFO | Model has 40 linear objective coefficients
+INFO | Model fingerprint: 0x0071da04
+INFO | Model has 40 linear objective coefficients
+INFO | Variable types: 56 continuous, 24 integer (24 binary)
+INFO | Variable types: 56 continuous, 24 integer (24 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [1e+00, 4e+06]
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [1e+00, 4e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [7e-01, 1e+00]
+INFO |   RHS range        [7e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 57 rows and 36 columns
+INFO | Presolve time: 0.03s
+INFO | Presolve removed 57 rows and 36 columns
+INFO | Presolve time: 0.03s
+INFO | Presolved: 55 rows, 44 columns, 182 nonzeros
+INFO | Presolved: 55 rows, 44 columns, 182 nonzeros
+INFO | Variable types: 24 continuous, 20 integer (20 binary)
+INFO | Variable types: 24 continuous, 20 integer (20 binary)
+INFO | 
+INFO | Root relaxation: objective 5.819717e+03, 19 iterations, 0.01 seconds (0.00 work units)
+INFO | 
+INFO | Root relaxation: objective 5.819717e+03, 19 iterations, 0.01 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5819.71667    0    5 1.4200e+07 5819.71667   100%     -    0s
+INFO |      0     0 5819.71667    0    5 1.4200e+07 5819.71667   100%     -    0s
+INFO | H    0     0                    5886.4000000 5819.71667  1.13%     -    0s
+INFO | H    0     0                    5886.4000000 5819.71667  1.13%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO | 
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0     cutoff    0               - 5886.40000      -     -    0s
+INFO |      0     0     cutoff    0               - 5886.40000      -     -    0s
+INFO | 
+INFO | 
+INFO | Explored 1 nodes (22 simplex iterations) in 0.14 seconds (0.00 work units)
+INFO | Explored 1 nodes (22 simplex iterations) in 0.14 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | 
+INFO | Solution count 1: 5886.4 
+INFO | Solution count 1: 5886.4 
+INFO | No other solutions better than 5886.4
+INFO | 
+INFO | No other solutions better than 5886.4
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 5.886400000000e+03, best bound 5.886400000000e+03, gap 0.0000%
+INFO | Best objective 5.886400000000e+03, best bound 5.886400000000e+03, gap 0.0000%
+  baseline obj (from gap=0.0 pool) = 5886.4
+  EF AOS  method=gurobi_pool gap=0.01
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.01
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.01
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.01
+INFO | PoolGap  0.01
+INFO | 
+INFO | Optimize a model with 112 rows, 80 columns and 286 nonzeros (Min)
+INFO | Model fingerprint: 0x0071da04
+INFO | Model has 40 linear objective coefficients
+INFO | Variable types: 56 continuous, 24 integer (24 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO | 
+INFO | Optimize a model with 112 rows, 80 columns and 286 nonzeros (Min)
+INFO | Model fingerprint: 0x0071da04
+INFO | Model has 40 linear objective coefficients
+INFO | Variable types: 56 continuous, 24 integer (24 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [1e+00, 4e+06]
+INFO |   Objective range  [1e+00, 4e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [7e-01, 1e+00]
+INFO |   RHS range        [7e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 57 rows and 36 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 55 rows, 44 columns, 182 nonzeros
+INFO | Presolve removed 57 rows and 36 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 55 rows, 44 columns, 182 nonzeros
+INFO | Variable types: 24 continuous, 20 integer (20 binary)
+INFO | Variable types: 24 continuous, 20 integer (20 binary)
+INFO | 
+INFO | Root relaxation: objective 5.819717e+03, 19 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO | Root relaxation: objective 5.819717e+03, 19 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5819.71667    0    5 1.4200e+07 5819.71667   100%     -    0s
+INFO |      0     0 5819.71667    0    5 1.4200e+07 5819.71667   100%     -    0s
+INFO | H    0     0                    5886.4000000 5819.71667  1.13%     -    0s
+INFO | H    0     0                    5886.4000000 5819.71667  1.13%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0     cutoff    0               - 5886.40000      -     -    0s
+INFO |      0     0     cutoff    0               - 5886.40000      -     -    0s
+INFO | 
+INFO | Explored 1 nodes (22 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | 
+INFO | Explored 1 nodes (22 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 1: 5886.4 
+INFO | Solution count 1: 5886.4 
+INFO | No other solutions better than 5886.4
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | No other solutions better than 5886.4
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 5.886400000000e+03, best bound 5.886400000000e+03, gap 0.0000%
+INFO | Best objective 5.886400000000e+03, best bound 5.886400000000e+03, gap 0.0000%
+  EF AOS  method=gurobi_pool gap=0.05
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 12
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.05
+INFO | Set parameter PoolGap to value 0.05
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.05
+INFO | Non-default parameters:
+INFO | PoolSolutions  12
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.05
+INFO | 
+INFO | Optimize a model with 112 rows, 80 columns and 286 nonzeros (Min)
+INFO | Model fingerprint: 0x0071da04
+INFO | Model has 40 linear objective coefficients
+INFO | 
+INFO | Optimize a model with 112 rows, 80 columns and 286 nonzeros (Min)
+INFO | Model fingerprint: 0x0071da04
+INFO | Model has 40 linear objective coefficients
+INFO | Variable types: 56 continuous, 24 integer (24 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [1e+00, 4e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [7e-01, 1e+00]
+INFO | Variable types: 56 continuous, 24 integer (24 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [1e+00, 4e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [7e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 57 rows and 36 columns
+INFO | Presolve removed 57 rows and 36 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 55 rows, 44 columns, 182 nonzeros
+INFO | Presolve time: 0.00s
+INFO | Presolved: 55 rows, 44 columns, 182 nonzeros
+INFO | Variable types: 24 continuous, 20 integer (20 binary)
+INFO | Variable types: 24 continuous, 20 integer (20 binary)
+INFO | 
+INFO | Root relaxation: objective 5.819717e+03, 19 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO | Root relaxation: objective 5.819717e+03, 19 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5819.71667    0    5 1.4200e+07 5819.71667   100%     -    0s
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5819.71667    0    5 1.4200e+07 5819.71667   100%     -    0s
+INFO | H    0     0                    5886.4000000 5819.71667  1.13%     -    0s
+INFO | H    0     0                    5886.4000000 5819.71667  1.13%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO |      0     0          -    0      5886.40000 5886.40000  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     0          -    0               - 5886.40000      -     -    0s
+INFO |      0     2          -    0               - 5886.40000      -     -    0s
+INFO |      0     2          -    0               - 5886.40000      -     -    0s
+INFO | 
+INFO | 
+INFO | Explored 13 nodes (27 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Explored 13 nodes (27 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 7: 5886.4 5985 5985 ... 6113.6
+INFO | No other solutions better than 6113.6
+INFO | 
+INFO | Solution count 7: 5886.4 5985 5985 ... 6113.6
+INFO | No other solutions better than 6113.6
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 5.886400000000e+03, best bound 5.886400000000e+03, gap 0.0000%
+INFO | Best objective 5.886400000000e+03, best bound 5.886400000000e+03, gap 0.0000%
+
+Wrote 4 rows → results_ef/egret_aos_ef_only_synthetic_T4.csv
+
+=== Summary ===
+  UnitOn           extensive  baseline     gap=0.0   status=optimal  obj=5886.4 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.0   status=optimal  obj=5886.4 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.01  status=optimal  obj=5886.4 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.05  status=optimal  obj=5886.4 n_true=7  

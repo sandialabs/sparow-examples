@@ -1,0 +1,1772 @@
+
+=== STAGE 0: Environment ===
+  EGRET OK  (egret at /Users/matthewviens/Optimization/Egret/egret/__init__.py)
+  SPAROW OK (sparow at /Users/matthewviens/Optimization/sparow/sparow/__init__.py)
+  OR-Topas OK
+  Stage 0 PASSED
+
+=== STAGE 1: Build EGRET model (tiny_uc_tc) ===
+  force_synthetic=True → 2-gen copperplate UC, T=4
+  ModelData source: synthetic(T=4)
+  system keys: ['time_keys', 'time_period_length_minutes', 'baseMVA', 'load_mismatch_cost', 'reserve_shortfall_cost']
+  element types: ['bus', 'load', 'generator']
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  network_constraints: copperplate_power_flow
+  Model type: <class 'pyomo.core.base.PyomoModel.ConcreteModel'>
+  Model name: UnitCommitment
+  Active objectives: ['TotalCostObjective']
+  Set ThermalGenerators: length 2
+  Set TimePeriods: length 4
+  Set Buses: length 1
+  Stage 1 PASSED
+
+=== STAGE 2: Inspect binary / integer variables ===
+  Binary components:
+    UnitOn                                    n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStart                                 n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStop                                  n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+  Integer (non-binary) components:
+    (none)
+  Continuous sample (first few):
+    PowerGeneratedAboveMinimum                n=    8
+    PiecewiseProduction                       n=   16
+    ProductionCost                            n=    8
+    StartupCost                               n=    8
+    posLoadGenerateMismatch                   n=    4
+
+  Suggested first_stage_variables (heuristic): ['UnitOn', 'UnitStart', 'UnitStop']
+  Stage 2 PASSED – inspect the list above before continuing
+
+=== STAGE 3: Verify first-stage name list ===
+  Candidate names: ['UnitOn']
+  'UnitOn': found, n=8, domain=Binary
+  Total first-stage VarData objects: 8
+  Stage 3 PASSED
+
+  Using scenarios: [{'ID': 'low', 'Probability': 0.25, 'load_scale': 0.85}, {'ID': 'med', 'Probability': 0.5, 'load_scale': 1.0}, {'ID': 'high', 'Probability': 0.25, 'load_scale': 1.15}]
+  first_stage_names = ['UnitOn']
+
+=== STAGE 5: Multi-scenario SPAROW SP with EGRET model_builder ===
+  default_model: None
+  bundles: ['low', 'med', 'high']
+  bundle 'low': probability=0.25
+  bundle 'med': probability=0.5
+  bundle 'high': probability=0.25
+  Probability sum = 1.0000000000  (OK)
+  Building EF for bundle low ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Building EF for bundle med ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Building EF for bundle high ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Reference bundle 'low': 8 first-stage variables
+    [0] s[None,low].UnitOn[G1,1]  (local=UnitOn[G1,1])  domain=Binary
+    [1] s[None,low].UnitOn[G1,2]  (local=UnitOn[G1,2])  domain=Binary
+    [2] s[None,low].UnitOn[G1,3]  (local=UnitOn[G1,3])  domain=Binary
+    [3] s[None,low].UnitOn[G1,4]  (local=UnitOn[G1,4])  domain=Binary
+    [4] s[None,low].UnitOn[G2,1]  (local=UnitOn[G2,1])  domain=Binary
+  Cross-bundle first-stage structural check PASSED (8 vars, identical local names/domains across 3 bundles)
+  Stage 5 PASSED
+
+=== STAGE 6: Multi-scenario Extensive Form solve (reference) ===
+  Solver: gurobi
+  Bundles / scenarios: ['low', 'med', 'high']
+  Building and solving multi-scenario extensive form ...
+INFO - 
+INFO | 
+INFO - ----------------------------------------------------------------------
+INFO | ----------------------------------------------------------------------
+INFO - ExtensiveFormSolver - START
+INFO | ExtensiveFormSolver - START
+INFO - Using single_bundle scheme (extensive form solve).
+INFO | Using single_bundle scheme (extensive form solve).
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  compact_repn=True failed inside SPAROW replace-variables transform:
+    No transformation handler registered for modeling components of type '{obj.ctype}'.
+  Falling back to compact_repn=False (non-compact multi-scenario EF) ...
+INFO - Using single_bundle scheme (extensive form solve).
+INFO | Using single_bundle scheme (extensive form solve).
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+INFO | Read LP format model from file /var/folders/n2/cpw5cst11dz704mw_b3h928w0000gn/T/tmpg0l1isdh.pyomo.lp
+INFO | Reading time = 0.01 seconds
+INFO | x1: 360 rows, 248 columns, 906 nonzeros
+INFO | Set parameter TimeLimit to value 300
+INFO | Set parameter TimeLimit to value 300
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | TimeLimit  300
+INFO | 
+INFO | Optimize a model with 360 rows, 248 columns and 906 nonzeros (Min)
+INFO | Model fingerprint: 0x0140a9d4
+INFO | Model has 120 linear objective coefficients
+INFO | Variable types: 176 continuous, 72 integer (72 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 2e+06]
+INFO |   Bounds range     [2e-01, 1e+00]
+INFO |   RHS range        [6e-01, 1e+00]
+INFO | Found heuristic solution: objective 1.420000e+07
+INFO | Presolve removed 231 rows and 168 columns
+INFO | Presolve time: 0.04s
+INFO | Presolved: 129 rows, 80 columns, 438 nonzeros
+INFO | Variable types: 60 continuous, 20 integer (20 binary)
+INFO | 
+INFO | Root relaxation: objective 5.907286e+03, 45 iterations, 0.01 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 5907.28625    0    5 1.4200e+07 5907.28625   100%     -    0s
+INFO | H    0     0                    6104.1462500 5907.28625  3.23%     -    0s
+INFO | H    0     0                    6005.3462500 5907.28625  1.63%     -    0s
+INFO | 
+INFO | Explored 1 nodes (45 simplex iterations) in 0.16 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 3: 6005.35 6104.15 1.42e+07 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 6.005346250000e+03, best bound 6.005346250000e+03, gap 0.0000%
+  EF representation used: non-compact
+  Multi-scenario EF objective value: 6005.35
+  Sample first-stage values (post-EF, shared under compact_repn):
+    first_stage_variables[0] = 1.0
+    first_stage_variables[1] = 1.0
+    first_stage_variables[2] = 1.0
+    first_stage_variables[3] = 1.0
+    first_stage_variables[4] = 0.0
+    first_stage_variables[5] = 1.0
+    first_stage_variables[6] = 1.0
+    first_stage_variables[7] = 0.0
+  Stage 6 PASSED – multi-scenario reference objective recorded
+
+  Multi-scenario EF reference objective = 6005.35
+
+  Rebuilding multi-scenario SP for Benders (EF may have altered bundles) ...
+
+=== STAGE 5: Multi-scenario SPAROW SP with EGRET model_builder ===
+  default_model: None
+  bundles: ['low', 'med', 'high']
+  bundle 'low': probability=0.25
+  bundle 'med': probability=0.5
+  bundle 'high': probability=0.25
+  Probability sum = 1.0000000000  (OK)
+  Building EF for bundle low ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Building EF for bundle med ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Building EF for bundle high ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  Reference bundle 'low': 8 first-stage variables
+    [0] s[None,low].UnitOn[G1,1]  (local=UnitOn[G1,1])  domain=Binary
+    [1] s[None,low].UnitOn[G1,2]  (local=UnitOn[G1,2])  domain=Binary
+    [2] s[None,low].UnitOn[G1,3]  (local=UnitOn[G1,3])  domain=Binary
+    [3] s[None,low].UnitOn[G1,4]  (local=UnitOn[G1,4])  domain=Binary
+    [4] s[None,low].UnitOn[G2,1]  (local=UnitOn[G2,1])  domain=Binary
+  Cross-bundle first-stage structural check PASSED (8 vars, identical local names/domains across 3 bundles)
+  Stage 5 PASSED
+
+=== STAGE 8 (multi, new paradigm): SPAROW BendersSolver + EF comparison ===
+  Multi-scenario EF reference objective: 6005.35
+  eta_bounds_map keys: ['low', 'med', 'high']
+  Unfixed 0 previously-fixed first-stage variables
+  Seeded numeric values on 24 first-stage variables
+  Calling BendersSolver.solve_and_return_model (public residual transform, no monkey-patches, multi-scenario) ...
+INFO - BendersSolver - START
+INFO | BendersSolver - START
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+ERROR | Unable to clone Pyomo component attribute.
+Component 's[None,low].Contingencies' contains an uncopyable field '_init_values' (<class 'pyomo.core.base.set.TuplizeValuesInitializer'>).  Setting field to `None` on new object
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | Implicitly replacing the Component attribute obj (type=<class 'pyomo.core.base.objective.ScalarObjective'>) on block unknown with a new Component (type=<class 'pyomo.core.base.objective.AbstractScalarObjective'>).
+This is usually indicative of a modelling error.
+To avoid this warning, use block.del_component() and block.add_component().
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | Implicitly replacing the Component attribute obj (type=<class 'pyomo.core.base.objective.ScalarObjective'>) on block unknown with a new Component (type=<class 'pyomo.core.base.objective.AbstractScalarObjective'>).
+This is usually indicative of a modelling error.
+To avoid this warning, use block.del_component() and block.add_component().
+  egret_uc_subproblem_transform: relaxed 16 residual Binary/Integer vars → UnitInterval
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | Implicitly replacing the Component attribute obj (type=<class 'pyomo.core.base.objective.ScalarObjective'>) on block unknown with a new Component (type=<class 'pyomo.core.base.objective.AbstractScalarObjective'>).
+This is usually indicative of a modelling error.
+To avoid this warning, use block.del_component() and block.add_component().
+  egret_uc_subproblem_transform: relaxed 16 residual Binary/Integer vars → UnitInterval
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | Implicitly replacing the Component attribute obj (type=<class 'pyomo.core.base.objective.ScalarObjective'>) on block unknown with a new Component (type=<class 'pyomo.core.base.objective.AbstractScalarObjective'>).
+This is usually indicative of a modelling error.
+To avoid this warning, use block.del_component() and block.add_component().
+  egret_uc_subproblem_transform: relaxed 16 residual Binary/Integer vars → UnitInterval
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 0 rows, 83 columns and 0 nonzeros (Min)
+INFO | Model fingerprint: 0x3dd2ea5a
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [0e+00, 0e+00]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [0e+00, 0e+00]
+INFO | Found heuristic solution: objective 0.0000000
+INFO | 
+INFO | Explored 0 nodes (0 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 1 (of 10 available processors)
+INFO | 
+INFO | Solution count 1: 0 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 0.000000000000e+00, best bound 0.000000000000e+00, gap 0.0000%
+Set parameter InfUnbdInfo to value 1
+INFO | Set parameter InfUnbdInfo to value 1
+Set parameter DualReductions to value 0
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x9fc40052
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 8 columns, 8 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    3.0175000e+06   0.000000e+00   0.000000e+00      0s
+INFO |        0    3.0175000e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 0 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  3.017500000e+06
+Set parameter InfUnbdInfo to value 1
+INFO | Set parameter InfUnbdInfo to value 1
+Set parameter DualReductions to value 0
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xa25ed6a7
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 8 columns, 8 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.1000000e+06   0.000000e+00   0.000000e+00      0s
+INFO |        0    7.1000000e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 0 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  7.100000000e+06
+Set parameter InfUnbdInfo to value 1
+INFO | Set parameter InfUnbdInfo to value 1
+Set parameter DualReductions to value 0
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xc0cb88a1
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 8 columns, 8 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    4.0825000e+06   0.000000e+00   0.000000e+00      0s
+INFO |        0    4.0825000e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 0 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  4.082500000e+06
+  --- Benders iteration 1  cuts_added=3  cuts_total=3  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 3 rows, 83 columns and 27 nonzeros (Min)
+INFO | Model fingerprint: 0x7102b332
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 2e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [3e+06, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 1.42e+07 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 1.42e+07
+INFO | 
+INFO | Presolve removed 1 rows and 77 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 2 rows, 6 columns, 8 nonzeros
+INFO | Variable types: 3 continuous, 3 integer (0 binary)
+INFO | 
+INFO | Root relaxation: objective 1.636002e+03, 1 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 1636.00250    0    1 1.4200e+07 1636.00250   100%     -    0s
+INFO | H    0     0                    84101.600000 1636.00250  98.1%     -    0s
+INFO | H    0     0                    1851.8000000 1636.00250  11.7%     -    0s
+INFO | H    0     0                    1801.6000000 1636.00250  9.19%     -    0s
+INFO | H    0     0                    1701.6000000 1636.00250  3.86%     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   MIR: 1
+INFO | 
+INFO | Explored 1 nodes (1 simplex iterations) in 0.02 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 5: 1701.6 1801.6 1851.8 ... 1.42e+07
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 1.701600000000e+03, best bound 1.701600000000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xb27f2096
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    9.1396147e+05   9.037350e-01   0.000000e+00      0s
+INFO |        3    9.1549896e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  9.154989575e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x841b6302
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    2.3975931e+06   1.151400e+00   0.000000e+00      0s
+INFO |        3    2.4011851e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  2.401185100e+06
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x5df091d3
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.4836316e+06   1.399065e+00   0.000000e+00      0s
+INFO |        3    1.4856864e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.485686353e+06
+  --- Benders iteration 2  cuts_added=3  cuts_total=6  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 6 rows, 83 columns and 54 nonzeros (Min)
+INFO | Model fingerprint: 0x60b940db
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+06, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 4.80407e+06 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 4.80407e+06
+INFO | 
+INFO | Presolve removed 0 rows and 73 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 6 rows, 10 columns, 48 nonzeros
+INFO | Variable types: 3 continuous, 7 integer (6 binary)
+INFO | 
+INFO | Root relaxation: objective 1.637719e+03, 3 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 1637.71854    0    2 4804072.01 1637.71854   100%     -    0s
+INFO | H    0     0                    2201201.2000 1637.71854   100%     -    0s
+INFO | H    0     0                    2102.0000000 1637.71854  22.1%     -    0s
+INFO | H    0     0                    1851.8000000 1637.71854  11.6%     -    0s
+INFO | H    0     0                    1701.6000000 1637.71854  3.75%     -    0s
+INFO |      0     0 1644.59300    0    1 1701.60000 1644.59300  3.35%     -    0s
+INFO |      0     0 1672.10750    0    2 1701.60000 1672.10750  1.73%     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   Gomory: 1
+INFO |   MIR: 1
+INFO | 
+INFO | Explored 1 nodes (8 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 5: 1701.6 1851.8 2102 ... 4.80407e+06
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 1.701600000000e+03, best bound 1.701600000000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xacef4588
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.0160142e+05   1.116108e+00   0.000000e+00      0s
+INFO |        3    7.0309182e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  7.030918250e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x80b07b05
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.8979179e+06   1.401250e+00   0.000000e+00      0s
+INFO |        3    1.9013996e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.901399600e+06
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x358612b5
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.1963165e+06   1.686392e+00   0.000000e+00      0s
+INFO |        3    1.1983282e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.198328151e+06
+  --- Benders iteration 3  cuts_added=3  cuts_total=9  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 9 rows, 83 columns and 81 nonzeros (Min)
+INFO | Model fingerprint: 0xccdd1a29
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+06, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 3.80452e+06 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 3.80452e+06
+INFO | 
+INFO | Presolve removed 0 rows and 72 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 9 rows, 11 columns, 81 nonzeros
+INFO | Variable types: 3 continuous, 8 integer (8 binary)
+INFO | 
+INFO | Root relaxation: objective 1.637719e+03, 3 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 1637.71854    0    3 3804521.18 1637.71854   100%     -    0s
+INFO | H    0     0                    2352.2000000 1637.71854  30.4%     -    0s
+INFO | H    0     0                    1851.8000000 1637.71854  11.6%     -    0s
+INFO | H    0     0                    1701.6000000 1637.71854  3.75%     -    0s
+INFO |      0     0 1647.88628    0    1 1701.60000 1647.88628  3.16%     -    0s
+INFO |      0     0 1657.47875    0    2 1701.60000 1657.47875  2.59%     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   Cover: 2
+INFO |   MIR: 2
+INFO |   RLT: 1
+INFO | 
+INFO | Explored 1 nodes (9 simplex iterations) in 0.01 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 1701.6 1851.8 2352.2 3.80452e+06 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 1.701600000000e+03, best bound 1.701600000000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x3b01918d
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    8.0752750e+05   1.410000e+00   0.000000e+00      0s
+INFO |        3    8.0807634e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  8.080763387e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x66f60e0a
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.9000550e+06   1.800000e+00   0.000000e+00      0s
+INFO |        3    1.9014888e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.901488800e+06
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xe380a042
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.2566645e+06   1.626165e+00   0.000000e+00      0s
+INFO |        3    1.2583303e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 3 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.258330291e+06
+  --- Benders iteration 4  cuts_added=3  cuts_total=12  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 12 rows, 83 columns and 108 nonzeros (Min)
+INFO | Model fingerprint: 0x466a10d1
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [8e+05, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 3.9696e+06 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 3.9696e+06
+INFO | 
+INFO | Presolve removed 0 rows and 72 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 12 rows, 11 columns, 108 nonzeros
+INFO | Variable types: 3 continuous, 8 integer (8 binary)
+INFO | 
+INFO | Root relaxation: objective 1.638914e+03, 5 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 1638.91385    0    4 3969597.03 1638.91385   100%     -    0s
+INFO | H    0     0                    2352.2000000 1638.91385  30.3%     -    0s
+INFO | H    0     0                    1851.8000000 1638.91385  11.5%     -    0s
+INFO | H    0     0                    1701.6000000 1638.91385  3.68%     -    0s
+INFO |      0     0     cutoff    0      1701.60000 1701.60000  0.00%     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   Gomory: 1
+INFO |   Cover: 3
+INFO | 
+INFO | Explored 1 nodes (10 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 1701.6 1851.8 2352.2 3.9696e+06 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 1.701600000000e+03, best bound 1.701600000000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xe643837f
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    5.3363645e+05   1.434035e+00   0.000000e+00      0s
+INFO |        4    5.3569330e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  5.356933019e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x1e252c5d
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.5951209e+06   1.302800e+00   0.000000e+00      0s
+INFO |        4    1.6016245e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.601624475e+06
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xd3bd94ba
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.0822756e+06   1.550585e+00   0.000000e+00      0s
+INFO |        4    1.0859237e+06   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.085923709e+06
+  --- Benders iteration 5  cuts_added=3  cuts_total=15  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 15 rows, 83 columns and 135 nonzeros (Min)
+INFO | Model fingerprint: 0x1cff69f6
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [7e+05, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 3.22494e+06 (0.00s)
+INFO | MIP start from previous solve produced solution with objective 3.22494e+06 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 3.22494e+06
+INFO | 
+INFO | Presolve removed 0 rows and 72 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 15 rows, 11 columns, 135 nonzeros
+INFO | Variable types: 3 continuous, 8 integer (8 binary)
+INFO | 
+INFO | Root relaxation: objective 1.638914e+03, 5 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 1638.91385    0    4 3224943.09 1638.91385   100%     -    0s
+INFO | H    0     0                    2352.2000000 1638.91385  30.3%     -    0s
+INFO | H    0     0                    1851.8000000 1638.91385  11.5%     -    0s
+INFO |      0     0     cutoff    0      1851.80000 1851.80000  0.00%     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   Cover: 3
+INFO | 
+INFO | Explored 1 nodes (9 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 3: 1851.8 2352.2 3.22494e+06 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 1.851800000000e+03, best bound 1.851800000000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xe49cd3a0
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   2.117500e+00   0.000000e+00      0s
+INFO |        4    8.0684250e+02   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  8.068425000e+02
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x3ef4d79a
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.5000000e+01   2.650000e+00   0.000000e+00      0s
+INFO |        4    2.0173000e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  2.017300000e+03
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xa3e99804
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 18 columns, 18 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    9.1717012e+04   2.691092e+00   0.000000e+00      0s
+INFO |        4    9.3695746e+04   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  9.369574625e+04
+  --- Benders iteration 6  cuts_added=3  cuts_total=18  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 18 rows, 83 columns and 162 nonzeros (Min)
+INFO | Model fingerprint: 0xbf6bac71
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+03, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 98371.7 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 98371.7
+INFO | 
+INFO | Presolve removed 3 rows and 75 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 15 rows, 8 columns, 76 nonzeros
+INFO | Variable types: 3 continuous, 5 integer (5 binary)
+INFO | 
+INFO | Root relaxation: objective 3.050892e+03, 6 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | *    0     0               0    3050.8925000 3050.89250  0.00%     -    0s
+INFO | 
+INFO | Explored 1 nodes (6 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 2: 3050.89 98371.7 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 3.050892499999e+03, best bound 3.050892499999e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x057eb046
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.9398378e+05   1.673695e+00   0.000000e+00      0s
+INFO |        4    1.9579179e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.957917919e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x0a2f059e
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.9616169e+05   1.602400e+00   0.000000e+00      0s
+INFO |        4    8.0186688e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  8.018668750e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x0be29921
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    6.6781096e+05   1.865170e+00   0.000000e+00      0s
+INFO |        4    6.7105059e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  6.710505944e+05
+  --- Benders iteration 7  cuts_added=3  cuts_total=21  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 21 rows, 83 columns and 189 nonzeros (Min)
+INFO | Model fingerprint: 0xa8272543
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+03, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 1.67066e+06 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 1.67066e+06
+INFO | 
+INFO | Presolve removed 0 rows and 72 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 21 rows, 11 columns, 159 nonzeros
+INFO | Variable types: 3 continuous, 8 integer (8 binary)
+INFO | 
+INFO | Root relaxation: objective 3.103475e+03, 14 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 3103.47509    0    3 1670661.06 3103.47509   100%     -    0s
+INFO | H    0     0                    3229.6304120 3103.47509  3.91%     -    0s
+INFO | 
+INFO | Warning: cleanup yields a better solution due to numeric instability
+INFO | 
+INFO | Explored 1 nodes (14 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 3: 3224.29 3229.63 1.67066e+06 
+INFO | No other solutions better than 3229.63
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 3.224292500000e+03, best bound 3.224292500000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xfb0b01a2
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 22 columns, 22 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.5000000e+01   1.917500e+00   0.000000e+00      0s
+INFO |        4    7.3878250e+02   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  7.387825000e+02
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x9adc18ea
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 22 columns, 22 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.9843403e+05   1.951100e+00   0.000000e+00      0s
+INFO |        4    2.0180490e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  2.018049000e+05
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xfc1fcde7
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 22 columns, 22 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    2.6405208e+05   2.318765e+00   0.000000e+00      0s
+INFO |        4    2.6604173e+05   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  2.660417325e+05
+  --- Benders iteration 8  cuts_added=3  cuts_total=24  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 24 rows, 83 columns and 216 nonzeros (Min)
+INFO | Model fingerprint: 0x69e945cb
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+03, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 470938 (0.00s)
+INFO | MIP start from previous solve produced solution with objective 470938 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 470938
+INFO | 
+INFO | Presolve removed 1 rows and 74 columns
+INFO | Presolve time: 0.00s
+INFO | Presolved: 23 rows, 9 columns, 129 nonzeros
+INFO | Variable types: 3 continuous, 6 integer (6 binary)
+INFO | 
+INFO | Root relaxation: objective 3.741953e+03, 11 iterations, 0.00 seconds (0.00 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 3741.95334    0    1 470937.615 3741.95334  99.2%     -    0s
+INFO | H    0     0                    289652.73500 3741.95334  98.7%     -    0s
+INFO | H    0     0                    3744.3380527 3741.95334  0.06%     -    0s
+INFO | 
+INFO | Cleanup yields a better solution
+INFO | 
+INFO | Explored 1 nodes (11 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 3744.18 3744.34 289653 470938 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 3.744182500000e+03, best bound 3.744182500000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x2fa2dd08
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 24 columns, 24 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   1.817500e+00   0.000000e+00      0s
+INFO |        4    6.9338250e+02   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  6.933825000e+02
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xa5424f1c
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 24 columns, 24 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.5000000e+01   2.350000e+00   0.000000e+00      0s
+INFO |        4    1.7899000e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.789900000e+03
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x2dbbf213
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 24 columns, 24 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   2.882500e+00   0.000000e+00      0s
+INFO |        4    1.1171037e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.117103750e+03
+  --- Benders iteration 9  cuts_added=3  cuts_total=27  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 27 rows, 83 columns and 243 nonzeros (Min)
+INFO | Model fingerprint: 0xecc49f68
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+03, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 6202.79 (0.00s)
+INFO | MIP start from previous solve produced solution with objective 6202.79 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 6202.79
+INFO | 
+INFO | Presolve removed 27 rows and 83 columns
+INFO | Presolve time: 0.00s
+INFO | Presolve: All rows and columns removed
+INFO | 
+INFO | Explored 0 nodes (0 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 1 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 5974.79 5974.79 6202.79 6202.79 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 5.974786250000e+03, best bound 5.974786250000e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xcd468911
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   2.017500e+00   0.000000e+00      0s
+INFO |        4    7.6894250e+02   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  7.689425000e+02
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x02b5b4fe
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.5000000e+01   2.550000e+00   0.000000e+00      0s
+INFO |        4    1.9415000e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.941500000e+03
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x4ad59ec6
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   3.082500e+00   0.000000e+00      0s
+INFO |        4    1.1929037e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.192903750e+03
+  --- Benders iteration 10  cuts_added=3  cuts_total=30  ---
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | LogToConsole  0
+INFO | 
+INFO | Optimize a model with 30 rows, 83 columns and 270 nonzeros (Min)
+INFO | Model fingerprint: 0xcfb3f70b
+INFO | Model has 11 linear objective coefficients
+INFO | Variable types: 75 continuous, 8 integer (8 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 3e+06]
+INFO |   Objective range  [1e+00, 4e+02]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [1e+03, 7e+06]
+INFO | 
+INFO | MIP start from previous solve produced solution with objective 6005.35 (0.00s)
+INFO | MIP start from previous solve produced solution with objective 6005.35 (0.00s)
+INFO | Loaded MIP start from previous solve with objective 6005.35
+INFO | 
+INFO | Presolve removed 30 rows and 83 columns
+INFO | Presolve time: 0.00s
+INFO | Presolve: All rows and columns removed
+INFO | 
+INFO | Explored 0 nodes (0 simplex iterations) in 0.00 seconds (0.00 work units)
+INFO | Thread count was 1 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 6005.35 6005.35 6005.35 6005.35 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 6.005346249993e+03, best bound 6.005346249993e+03, gap 0.0000%
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0xcd468911
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   2.017500e+00   0.000000e+00      0s
+INFO |        4    7.6894250e+02   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  7.689425000e+02
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x02b5b4fe
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [5e-01, 2e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    1.5000000e+01   2.550000e+00   0.000000e+00      0s
+INFO |        4    1.9415000e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.941500000e+03
+INFO | Set parameter InfUnbdInfo to value 1
+INFO | Set parameter DualReductions to value 0
+INFO | Set parameter QCPDual to value 1
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | DualReductions  0
+INFO | InfUnbdInfo  1
+INFO | LogToConsole  0
+INFO | QCPDual  1
+INFO | 
+INFO | Optimize a model with 208 rows, 80 columns and 382 nonzeros (Min)
+INFO | Model fingerprint: 0x4ad59ec6
+INFO | Model has 32 linear objective coefficients
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e-01, 2e+03]
+INFO |   Objective range  [2e-01, 1e+06]
+INFO |   Bounds range     [1e+00, 1e+00]
+INFO |   RHS range        [2e-01, 1e+00]
+INFO | Presolve time: 0.00s
+INFO | Presolved: 4 rows, 20 columns, 20 nonzeros
+INFO | 
+INFO | Iteration    Objective       Primal Inf.    Dual Inf.      Time
+INFO |        0    7.5000000e+00   3.082500e+00   0.000000e+00      0s
+INFO |        4    1.1929037e+03   0.000000e+00   0.000000e+00      0s
+INFO | 
+INFO | Solved in 4 iterations and 0.00 seconds (0.00 work units)
+INFO | Optimal objective  1.192903750e+03
+  --- Benders iteration 11  cuts_added=0  cuts_total=30  CONVERGED (no cuts)  ---
+INFO - Termination: No Cuts Added
+INFO | Termination: No Cuts Added
+INFO - 
+INFO | 
+INFO - ----------------------------------------------------------------------
+INFO | ----------------------------------------------------------------------
+INFO - BendersSolver - RESULTS
+INFO | BendersSolver - RESULTS
+INFO - Metadata context_name: Benders Iterations
+INFO | Metadata context_name: Benders Iterations
+INFO - Metadata policy: keep_latest
+INFO | Metadata policy: keep_latest
+INFO - Metadata as_solution_source: sparow.solnpool.solnpool._sparow_as_solution
+INFO | Metadata as_solution_source: sparow.solnpool.solnpool._sparow_as_solution
+INFO - Metadata solver: Benders Iteration Results
+INFO | Metadata solver: Benders Iteration Results
+INFO - Metadata solver_options: {'cached_model_generation': False, 'max_iterations': 80, 'convergence_tolerance': 0.001, 'solver_name': 'gurobi_persistent', 'solver_options': {}}
+INFO | Metadata solver_options: {'cached_model_generation': False, 'max_iterations': 80, 'convergence_tolerance': 0.001, 'solver_name': 'gurobi_persistent', 'solver_options': {}}
+INFO - Metadata iterations: 11
+INFO | Metadata iterations: 11
+INFO - Metadata termination_condition: Termination: No Cuts Added
+INFO | Metadata termination_condition: Termination: No Cuts Added
+INFO - Metadata start_time: 2026-08-09 20:30:35.602686
+INFO | Metadata start_time: 2026-08-09 20:30:35.602686
+INFO - Metadata end_time: 2026-08-09 20:30:35.921250
+INFO | Metadata end_time: 2026-08-09 20:30:35.921250
+INFO - Metadata time_elapsed: 0:00:00.318564
+INFO | Metadata time_elapsed: 0:00:00.318564
+INFO - Objective Value: ObjectiveInfo(value=6005.346249993146, name=None, index=None, suffix=MyMunch({}))
+INFO | Objective Value: ObjectiveInfo(value=6005.346249993146, name=None, index=None, suffix=MyMunch({}))
+INFO - 
+INFO | 
+INFO - ----------------------------------------------------------------------
+INFO | ----------------------------------------------------------------------
+INFO - BendersSolver - STOP
+INFO | BendersSolver - STOP
+  Solve returned after 11 Benders iteration(s), 30 cut(s) total.
+  Benders objective value: 6005.35
+  |Benders - EF| = 6.85486e-09  (tol = 0.600535)
+  Stage 8 PASSED – multi-scenario Benders matches EF within tolerance
+
+Self-test finished (multi-scenario, new paradigm).
+  EF      = 6005.35
+  Benders = 6005.35
+  |diff|  = 6.85486e-09
+  upper_model type = <class 'pyomo.core.base.PyomoModel.ConcreteModel'>

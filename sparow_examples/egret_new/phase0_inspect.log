@@ -1,0 +1,1083 @@
+=== Phase-0 environment inspection ===
+Python: 3.13.2 | packaged by conda-forge | (main, Feb 17 2025, 14:01:04) [Clang 18.1.8 ]
+sparow     : /Users/matthewviens/Optimization/sparow/sparow/__init__.py
+egret      : /Users/matthewviens/Optimization/Egret/egret/__init__.py
+or_topas   : /Users/matthewviens/Optimization/or_topas/or_topas/__init__.py
+pyomo      : /opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/__init__.py
+gurobipy   : /opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/gurobipy/__init__.py
+
+--- BendersSolver signatures ---
+_setup_topas_subproblem: (sp_lower, b_lower, sp_upper, b_upper, remove_first_stage_objective_terms, additional_transforms)
+_transform_to_subproblem_model: (sp_lower, b, default_domain=<pyomo.core.base.set.DeclareGlobalSet.<locals>.GlobalSet object at 0x11d045010>, remove_first_stage_only_cons=False, weight_obj_by_prob=True, remove_first_stage_objective_terms=False, additional_transforms=None)
+solve_and_return_model present: True
+solve_and_return_model signature: (self, sp_lower, eta_bounds_map, error_on_initialized_root_vars=False, convergence_tol=1e-08, subproblem_transforms=None, master_transforms=None, on_iteration=None, **options)
+
+--- relax_second_stage ---
+FOUND
+def relax_second_stage(sp, M, *, relax_dict=None, quiet=True):
+    for b in M.s.index_set():
+        key = b[-1] if isinstance(b, tuple) else b
+        if relax_dict is None or relax_dict[key]:
+            if not quiet:
+                print(
+                    "------------------Relaxing Noncontinuous Variables----------------------"
+                )
+            block = M.s[b]
+            var_data_obj = {v.name: v for name, v in sp._first_stage_variables(M=block)}
+
+            for v in block.component_objects(pyo.Var, active=True):
+                if not isinstance(v, pyomo.core.base.var.IndexedVar):
+                    if v.name in var_data_obj:
+                        pass
+                    else:
+                        if not isinstance(v, pyomo.core.base.var.IndexedVar):
+                            if v.domain is pyo.Binary:
+                                v.domain = pyo.Reals
+                                v.bounds = (0, 1)
+                            elif v.domain is pyo.Integers:
+                                v.domain = pyo.Reals
+                            elif v.domain is pyo.Boolean:
+                                v.domain = pyo.Reals
+                                v.bounds = (0, 1)
+                            elif v.domain is pyo.NonNegativeIntegers:
+                                v.domain = pyo.NonNegativeReals
+                            elif v.domain is pyo.NegativeIntegers:
+                                v.domain = pyo.NegativeReals
+                 ...
+
+--- or_topas Benders_Serial ---
+Benders_Serial imported OK, has add_subproblem: True
+
+--- Contingencies deepcopy smoke test (synthetic tiny UC) ---
+
+=== STAGE 0: Environment ===
+  EGRET OK  (egret at /Users/matthewviens/Optimization/Egret/egret/__init__.py)
+  SPAROW OK (sparow at /Users/matthewviens/Optimization/sparow/sparow/__init__.py)
+  OR-Topas OK
+  Stage 0 PASSED
+
+=== STAGE 1: Build EGRET model (tiny_uc_tc) ===
+  force_synthetic=True → 2-gen copperplate UC, T=4
+  ModelData source: synthetic(T=4)
+  system keys: ['time_keys', 'time_period_length_minutes', 'baseMVA', 'load_mismatch_cost', 'reserve_shortfall_cost']
+  element types: ['bus', 'load', 'generator']
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  network_constraints: copperplate_power_flow
+  Model type: <class 'pyomo.core.base.PyomoModel.ConcreteModel'>
+  Model name: UnitCommitment
+  Active objectives: ['TotalCostObjective']
+  Set ThermalGenerators: length 2
+  Set TimePeriods: length 4
+  Set Buses: length 1
+  Stage 1 PASSED
+
+=== STAGE 2: Inspect binary / integer variables ===
+  Binary components:
+    UnitOn                                    n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStart                                 n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+    UnitStop                                  n=    8  sample_idx=[('G1', 1), ('G1', 2), ('G1', 3)]
+  Integer (non-binary) components:
+    (none)
+  Continuous sample (first few):
+    PowerGeneratedAboveMinimum                n=    8
+    PiecewiseProduction                       n=   16
+    ProductionCost                            n=    8
+    StartupCost                               n=    8
+    posLoadGenerateMismatch                   n=    4
+
+  Suggested first_stage_variables (heuristic): ['UnitOn', 'UnitStart', 'UnitStop']
+  Stage 2 PASSED – inspect the list above before continuing
+
+=== STAGE 3: Verify first-stage name list ===
+  Candidate names: ['UnitOn']
+  'UnitOn': found, n=8, domain=Binary
+  Total first-stage VarData objects: 8
+  Stage 3 PASSED
+
+=== STAGE 5: SPAROW SP with EGRET model_builder ===
+  default_model: None
+  bundles: ['base']
+  Building EF for bundle base ...
+WARNING: Polynomial cost curves will be approximated using piecewise segments
+WARNING | WARNING: Polynomial cost curves will be approximated using piecewise segments
+  int_to_FirstStageVar[base]: 8 variables
+    [0] s[None,base].UnitOn[G1,1]  domain=Binary
+    [1] s[None,base].UnitOn[G1,2]  domain=Binary
+    [2] s[None,base].UnitOn[G1,3]  domain=Binary
+    [3] s[None,base].UnitOn[G1,4]  domain=Binary
+    [4] s[None,base].UnitOn[G2,1]  domain=Binary
+  Stage 5 PASSED
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+WARNING | Uncopyable field encountered when deep copying Pyomo components outside the scope of Block.clone().  There is a distinct possibility that the new copy is not complete.  To avoid this situation, please use Block.clone()
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 61, in _deepcopy_dict
+    _setter(fast_deepcopy(key, memo), fast_deepcopy(val, memo))
+                                      ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 61, in _deepcopy_dict
+    _setter(fast_deepcopy(key, memo), fast_deepcopy(val, memo))
+                                      ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 407, in __deepcopy_state__
+    slot: _copier(value, memo, slot)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 819, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 61, in _deepcopy_dict
+    _setter(fast_deepcopy(key, memo), fast_deepcopy(val, memo))
+                                      ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 407, in __deepcopy_state__
+    slot: _copier(value, memo, slot)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 819, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 407, in __deepcopy_state__
+    slot: _copier(value, memo, slot)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 560, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 61, in _deepcopy_dict
+    _setter(fast_deepcopy(key, memo), fast_deepcopy(val, memo))
+                                      ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 61, in _deepcopy_dict
+    _setter(fast_deepcopy(key, memo), fast_deepcopy(val, memo))
+                                      ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 407, in __deepcopy_state__
+    slot: _copier(value, memo, slot)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 819, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 61, in _deepcopy_dict
+    _setter(fast_deepcopy(key, memo), fast_deepcopy(val, memo))
+                                      ~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 381, in __deepcopy_state__
+    new_state = [fast_deepcopy(field, memo) for field in state]
+                 ~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 316, in __deepcopy__
+    self.__deepcopy_state__(memo, ans)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 71, in _deepcopy
+    return deepcopy(obj, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 152, in deepcopy
+    rv = reductor(4)
+TypeError: cannot pickle 'dict_keys' object
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 407, in __deepcopy_state__
+    slot: _copier(value, memo, slot)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 819, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 221, in __deepcopy_field__
+    return fast_deepcopy(value, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 140, in fast_deepcopy
+    return _deepcopy_dispatcher[obj.__class__](obj, memo, _id)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 66, in _deepcopy_dunder_deepcopy
+    ans = memo[_id] = obj.__deepcopy__(memo)
+                      ~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 407, in __deepcopy_state__
+    slot: _copier(value, memo, slot)
+          ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 560, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/matthewviens/Optimization/sparow_examples/sparow_examples/egret_new/phase0_inspect.py", line 123, in main
+    sp2 = copy.deepcopy(sp)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 163, in deepcopy
+    y = _reconstruct(x, memo, *rv)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 260, in _reconstruct
+    state = deepcopy(state, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 137, in deepcopy
+    y = copier(x, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 222, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+                             ~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 137, in deepcopy
+    y = copier(x, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 222, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+                             ~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 137, in deepcopy
+    y = copier(x, memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 222, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+                             ~~~~~~~~^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/copy.py", line 144, in deepcopy
+    y = copier(memo)
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 208, in __deepcopy__
+    comp.__deepcopy_state__(memo, new)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/common/autoslots.py", line 401, in __deepcopy_state__
+    _copier(value, memo, slot)
+    ~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 237, in __deepcopy_field__
+    if self.model() is self:
+       ~~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 819, in model
+    return ans.model()
+           ~~~~~~~~~^^
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/block.py", line 893, in model
+    ans = self.parent_block()
+  File "/opt/miniconda3/envs/egret_experiments/lib/python3.13/site-packages/pyomo/core/base/component.py", line 805, in parent_block
+    if comp._parent is None:
+       ^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute '_parent'
+SP built: bundles=['base']
+Bundles with Contingencies-like components: 0
+deepcopy / build FAILED:
+
+=== Phase-0 inspection complete – please paste the entire output back ===

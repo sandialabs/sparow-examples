@@ -1,0 +1,9 @@
+﻿Solver,Candidate Rel Gap,Filter Rel Gap,Candidates,TRUE,Scenarios
+Benders,1.00E-05,5.00E-02,100,66,Single
+Benders,1.00E-03,5.00E-02,100,0,Single
+Extensive Form,1.00E-05,N/A,100,100,Single
+Extensive Form,1.00E-05,N/A,100,100,Single
+,,,,,
+Benders,1.00E-03,5.00E-02,200,2,Multiple
+Extensive Form,1.00E-05,N/A,100,100,Multiple
+Extensive Form,1.00E-05,N/A,100,100,Multiple

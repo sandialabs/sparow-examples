@@ -1,0 +1,5 @@
+case,n_periods,n_scenarios,first_stage_mode,solve_mode,aos_method,rel_gap,num_solutions_cap,time_limit_s,base_time_s,aos_time_s,total_time_s,n_candidates,n_true,obj_value,master_lb_or_eta,n_cuts,n_iterations,n_first_stage,status,error_msg,solutions_summary
+synthetic_T4_S3,4,3,UnitOn,extensive,baseline,0.0,12,300.0,0.38925200000812765,0.0,0.38925200000812765,1,1,6005.3462500000005,6005.3462500000005,nan,nan,8,optimal,,baseline
+synthetic_T4_S3,4,3,UnitOn,benders,baseline,0.0,12,300.0,0.3120725000044331,0.0,0.3120725000044331,1,1,6005.346249993146,6005.346249993146,nan,nan,8,optimal,,baseline
+synthetic_T4_S3,4,3,UnitOn,extensive,gurobi_pool,0.0,12,300.0,0.38925200000812765,0.0,0.38925200000812765,nan,nan,6005.3462500000005,6005.3462500000005,nan,nan,8,skipped,multi EF AOS not yet ported in new-paradigm driver,
+synthetic_T4_S3,4,3,UnitOn,benders,gurobi_pool,0.0,12,300.0,0.3120725000044331,0.04226825000660028,0.3543407500110334,1,1,6005.346249993146,6005.346249993146,nan,nan,8,optimal,,"[0:obj=6005.34625 UnitOn=(1, 0, 1, 1, 1, 1, 1, 0)]"

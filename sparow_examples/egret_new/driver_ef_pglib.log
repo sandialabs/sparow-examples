@@ -1,0 +1,714 @@
+Intensity 3 → rel_gaps = [0.0, 0.01, 0.05]
+case = egret:2020-01-27_T4
+Mode: create_EF → gurobi_generate_solutions (no prior EF solve)
+
+===== first_stage_mode = UnitOn =====
+
+=== STAGE 0: Environment ===
+  EGRET OK  (egret at /Users/matthewviens/Optimization/Egret/egret/__init__.py)
+  SPAROW OK (sparow at /Users/matthewviens/Optimization/sparow/sparow/__init__.py)
+  OR-Topas OK
+  Stage 0 PASSED
+  WARNING: truncating horizon of EGRET JSON '/Users/matthewviens/Optimization/pglib-uc/rts_gmlc/2020-01-27.json' to first 4 periods
+
+=== STAGE 1: Build EGRET model (tiny_uc_tc) ===
+  Trying explicit path: /Users/matthewviens/Optimization/pglib-uc/rts_gmlc/2020-01-27.json
+  Detected PGLIB-UC format → ModelData.read(..., file_type='pglib-uc')
+  Truncating time horizon to first 4 periods
+  ModelData source: /Users/matthewviens/Optimization/pglib-uc/rts_gmlc/2020-01-27.json|T=4
+  system keys: ['reserve_requirement', 'time_keys', 'baseMVA', 'time_period_length_minutes', 'load_mismatch_cost', 'reserve_shortfall_cost', 'reference_bus', 'reference_bus_angle']
+  element types: ['bus', 'load', 'branch', 'zone', 'generator']
+  network_constraints: copperplate_power_flow
+  Model type: <class 'pyomo.core.base.PyomoModel.ConcreteModel'>
+  Model name: UnitCommitment
+  Active objectives: ['TotalCostObjective']
+  Set ThermalGenerators: length 73
+  Set TimePeriods: length 4
+  Set Buses: length 1
+  Stage 1 PASSED
+
+=== STAGE 2: Inspect binary / integer variables ===
+  Binary components:
+    UnitOn                                    n=  292  sample_idx=[('115_STEAM_1_T', 1), ('115_STEAM_1_T', 2), ('115_STEAM_1_T', 3)]
+    UnitStart                                 n=  292  sample_idx=[('115_STEAM_1_T', 1), ('115_STEAM_1_T', 2), ('115_STEAM_1_T', 3)]
+    UnitStop                                  n=  292  sample_idx=[('115_STEAM_1_T', 1), ('115_STEAM_1_T', 2), ('115_STEAM_1_T', 3)]
+    StartupIndicator                          n=   21  sample_idx=[('115_STEAM_1_T', 1, 3), ('115_STEAM_1_T', 1, 4), ('115_STEAM_1_T', 2, 4)]
+  Integer (non-binary) components:
+    (none)
+  Continuous sample (first few):
+    PowerGeneratedAboveMinimum                n=  292
+    MaximumPowerAvailableAboveMinimum         n=  292
+    NondispatchablePowerUsed                  n=  324
+    PiecewiseProduction                       n=  876
+    ProductionCost                            n=  292
+
+  Suggested first_stage_variables (heuristic): ['UnitOn', 'UnitStart', 'UnitStop', 'StartupIndicator']
+  Stage 2 PASSED – inspect the list above before continuing
+
+=== STAGE 3: Verify first-stage name list ===
+  Candidate names: ['UnitOn']
+  'UnitOn': found, n=292, domain=Binary
+  Total first-stage VarData objects: 292
+  Stage 3 PASSED
+  first_stage_names = ['UnitOn']
+
+=== STAGE 5: SPAROW SP with EGRET model_builder ===
+  default_model: None
+  bundles: ['base']
+  Building EF for bundle base ...
+  int_to_FirstStageVar[base]: 292 variables
+    [0] s[None,base].UnitOn[115_STEAM_1_T,1]  domain=Binary
+    [1] s[None,base].UnitOn[115_STEAM_1_T,2]  domain=Binary
+    [2] s[None,base].UnitOn[115_STEAM_1_T,3]  domain=Binary
+    [3] s[None,base].UnitOn[115_STEAM_1_T,4]  domain=Binary
+    [4] s[None,base].UnitOn[101_CT_1_T,1]  domain=Binary
+  Stage 5 PASSED
+  n_first_stage = 292, names = ['UnitOn']
+INFO - Using single_bundle scheme (extensive form solve).
+INFO | Using single_bundle scheme (extensive form solve).
+/Users/matthewviens/Optimization/sparow/sparow/sp/bundling/bundling_helper_functions.py:123: UserWarning: No scenario probabilities are given; assuming uniform distribution.
+  warnings.warn(
+  create_EF(compact_repn=True) OK → ConcreteModel
+  EF build time = 0.186s  compact=True
+  EF AOS  method=gurobi_pool gap=0.0
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 50
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 50
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  50
+INFO | PoolSearchMode  2
+INFO | PoolGap  0
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  50
+INFO | PoolSearchMode  2
+INFO | PoolGap  0
+INFO | 
+INFO | Optimize a model with 3982 rows, 3569 columns and 13824 nonzeros (Min)
+INFO | Optimize a model with 3982 rows, 3569 columns and 13824 nonzeros (Min)
+INFO | Model fingerprint: 0xdc07726c
+INFO | Model fingerprint: 0xdc07726c
+INFO | Model has 1176 linear objective coefficients and an objective constant of 12835.96
+INFO | Model has 1176 linear objective coefficients and an objective constant of 12835.96
+INFO | Variable types: 2672 continuous, 897 integer (897 binary)
+INFO | Variable types: 2672 continuous, 897 integer (897 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 6e+04]
+INFO |   Objective range  [1e+00, 4e+04]
+INFO | Coefficient statistics:
+INFO |   Bounds range     [1e+00, 8e+02]
+INFO |   Matrix range     [1e+00, 6e+04]
+INFO |   Objective range  [1e+00, 4e+04]
+INFO |   RHS range        [1e+00, 3e+03]
+INFO |   Bounds range     [1e+00, 8e+02]
+INFO |   RHS range        [1e+00, 3e+03]
+INFO | Found heuristic solution: objective 2.504523e+07
+INFO | Found heuristic solution: objective 2.504523e+07
+INFO | Presolve removed 2049 rows and 1928 columns
+INFO | Presolve time: 0.06s
+INFO | Presolve removed 2049 rows and 1928 columns
+INFO | Presolve time: 0.06s
+INFO | Presolved: 1933 rows, 1641 columns, 7162 nonzeros
+INFO | Presolved: 1933 rows, 1641 columns, 7162 nonzeros
+INFO | Variable types: 1101 continuous, 540 integer (540 binary)
+INFO | Variable types: 1101 continuous, 540 integer (540 binary)
+INFO | 
+INFO | Root relaxation: objective 3.061676e+04, 886 iterations, 0.02 seconds (0.02 work units)
+INFO | 
+INFO | Root relaxation: objective 3.061676e+04, 886 iterations, 0.02 seconds (0.02 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30616.7616    0    9 2.5045e+07 30616.7616   100%     -    0s
+INFO |      0     0 30616.7616    0    9 2.5045e+07 30616.7616   100%     -    0s
+INFO | H    0     0                    34492.752616 30616.7616  11.2%     -    0s
+INFO | H    0     0                    34492.752616 30616.7616  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0    9 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0    9 34492.7526 30619.1540  11.2%     -    0s
+INFO | H    0     0                    33935.357944 30619.1540  9.77%     -    0s
+INFO | H    0     0                    33935.357944 30619.1540  9.77%     -    0s
+INFO | H    0     0                    33210.655932 30619.1540  7.80%     -    0s
+INFO | H    0     0                    33210.655932 30619.1540  7.80%     -    0s
+INFO | H    0     0                    31881.959320 30619.1540  3.96%     -    0s
+INFO | H    0     0                    31881.959320 30619.1540  3.96%     -    0s
+INFO |      0     0 30619.2556    0   13 31881.9593 30619.2556  3.96%     -    0s
+INFO |      0     0 30619.2556    0   13 31881.9593 30619.2556  3.96%     -    0s
+INFO |      0     0 30625.5403    0   17 31881.9593 30625.5403  3.94%     -    0s
+INFO |      0     0 30625.5403    0   17 31881.9593 30625.5403  3.94%     -    0s
+INFO |      0     0 30626.7244    0   17 31881.9593 30626.7244  3.94%     -    0s
+INFO |      0     0 30626.7244    0   17 31881.9593 30626.7244  3.94%     -    0s
+INFO | H    0     0                    30818.099704 30626.7244  0.62%     -    0s
+INFO | H    0     0                    30818.099704 30626.7244  0.62%     -    0s
+INFO |      0     0 30648.1316    0   24 30818.0997 30648.1316  0.55%     -    0s
+INFO |      0     0 30648.1316    0   24 30818.0997 30648.1316  0.55%     -    0s
+INFO |      0     0 30648.1316    0    6 30818.0997 30648.1316  0.55%     -    0s
+INFO |      0     0 30648.1316    0    6 30818.0997 30648.1316  0.55%     -    0s
+INFO |      0     0 30696.5068    0    9 30818.0997 30696.5068  0.39%     -    0s
+INFO |      0     0 30696.5068    0    9 30818.0997 30696.5068  0.39%     -    0s
+INFO |      0     0 30697.6467    0   11 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   11 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   13 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   13 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30707.8384    0   10 30818.0997 30707.8384  0.36%     -    0s
+INFO |      0     0 30707.8384    0   10 30818.0997 30707.8384  0.36%     -    0s
+INFO |      0     0 30708.1177    0   11 30818.0997 30708.1177  0.36%     -    0s
+INFO |      0     0 30708.1177    0   11 30818.0997 30708.1177  0.36%     -    0s
+INFO |      0     0 30708.5686    0   13 30818.0997 30708.5686  0.36%     -    0s
+INFO |      0     0 30708.5686    0   13 30818.0997 30708.5686  0.36%     -    0s
+INFO |      0     0 30708.5686    0   13 30818.0997 30708.5686  0.36%     -    0s
+INFO |      0     0 30708.5686    0   13 30818.0997 30708.5686  0.36%     -    0s
+INFO |      0     0 30708.5686    0   11 30818.0997 30708.5686  0.36%     -    0s
+INFO |      0     0 30708.5686    0   11 30818.0997 30708.5686  0.36%     -    0s
+INFO |      0     0 30739.1297    0   10 30818.0997 30739.1297  0.26%     -    0s
+INFO |      0     0 30739.1297    0   10 30818.0997 30739.1297  0.26%     -    0s
+INFO |      0     0 30739.6637    0    9 30818.0997 30739.6637  0.25%     -    0s
+INFO |      0     0 30739.6637    0    9 30818.0997 30739.6637  0.25%     -    0s
+INFO |      0     0 30739.6839    0   11 30818.0997 30739.6839  0.25%     -    0s
+INFO |      0     0 30739.6839    0   11 30818.0997 30739.6839  0.25%     -    0s
+INFO |      0     0 30741.9826    0   15 30818.0997 30741.9826  0.25%     -    0s
+INFO |      0     0 30741.9826    0   15 30818.0997 30741.9826  0.25%     -    0s
+INFO |      0     0 30742.1147    0   15 30818.0997 30742.1147  0.25%     -    0s
+INFO |      0     0 30742.1147    0   15 30818.0997 30742.1147  0.25%     -    0s
+INFO |      0     0 30818.0997    0   16 30818.0997 30818.0997  0.00%     -    0s
+INFO |      0     0 30818.0997    0   16 30818.0997 30818.0997  0.00%     -    0s
+INFO | 
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   15          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   15          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   11          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   11          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   14          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   14          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   11          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   11          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   12          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    6          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    6          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    6          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    6          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    6          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    6          - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    3          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    3          - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    3          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    3          - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     0          -    0               - 30818.0997      -     -    0s
+INFO |      0     2          -    0               - 30818.0997      -     -    0s
+INFO |      0     2          -    0               - 30818.0997      -     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   Cover: 2
+INFO | 
+INFO | Cutting planes:
+INFO |   Cover: 2
+INFO | 
+INFO | 
+INFO | Explored 13 nodes (1941 simplex iterations) in 0.38 seconds (0.14 work units)
+INFO | Explored 13 nodes (1941 simplex iterations) in 0.38 seconds (0.14 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Solution count 4: 30818.1 30818.1 30818.1 30818.1 
+INFO | 
+INFO | Solution count 4: 30818.1 30818.1 30818.1 30818.1 
+INFO | No other solutions better than 30818.1
+INFO | 
+INFO | No other solutions better than 30818.1
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 3.081809970426e+04, best bound 3.081809970426e+04, gap 0.0000%
+INFO | Best objective 3.081809970426e+04, best bound 3.081809970426e+04, gap 0.0000%
+  baseline obj (from gap=0.0 pool) = 30818.09970426091
+  EF AOS  method=gurobi_pool gap=0.01
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 50
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.01
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 50
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.01
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  50
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  50
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.01
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.01
+INFO | 
+INFO | Optimize a model with 3982 rows, 3569 columns and 13824 nonzeros (Min)
+INFO | 
+INFO | Optimize a model with 3982 rows, 3569 columns and 13824 nonzeros (Min)
+INFO | Model fingerprint: 0xdc07726c
+INFO | Model fingerprint: 0xdc07726c
+INFO | Model has 1176 linear objective coefficients and an objective constant of 12835.96
+INFO | Model has 1176 linear objective coefficients and an objective constant of 12835.96
+INFO | Variable types: 2672 continuous, 897 integer (897 binary)
+INFO | Variable types: 2672 continuous, 897 integer (897 binary)
+INFO | Coefficient statistics:
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 6e+04]
+INFO |   Matrix range     [1e+00, 6e+04]
+INFO |   Objective range  [1e+00, 4e+04]
+INFO |   Objective range  [1e+00, 4e+04]
+INFO |   Bounds range     [1e+00, 8e+02]
+INFO |   RHS range        [1e+00, 3e+03]
+INFO |   Bounds range     [1e+00, 8e+02]
+INFO |   RHS range        [1e+00, 3e+03]
+INFO | Found heuristic solution: objective 2.504523e+07
+INFO | Found heuristic solution: objective 2.504523e+07
+INFO | Presolve removed 2049 rows and 1928 columns
+INFO | Presolve time: 0.03s
+INFO | Presolved: 1933 rows, 1641 columns, 7162 nonzeros
+INFO | Presolve removed 2049 rows and 1928 columns
+INFO | Presolve time: 0.03s
+INFO | Presolved: 1933 rows, 1641 columns, 7162 nonzeros
+INFO | Variable types: 1101 continuous, 540 integer (540 binary)
+INFO | Variable types: 1101 continuous, 540 integer (540 binary)
+INFO | 
+INFO | Root relaxation: objective 3.061676e+04, 886 iterations, 0.01 seconds (0.02 work units)
+INFO | 
+INFO | Root relaxation: objective 3.061676e+04, 886 iterations, 0.01 seconds (0.02 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30616.7616    0    9 2.5045e+07 30616.7616   100%     -    0s
+INFO |      0     0 30616.7616    0    9 2.5045e+07 30616.7616   100%     -    0s
+INFO | H    0     0                    34492.752616 30616.7616  11.2%     -    0s
+INFO | H    0     0                    34492.752616 30616.7616  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0    9 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0    9 34492.7526 30619.1540  11.2%     -    0s
+INFO | H    0     0                    31881.959320 30619.1540  3.96%     -    0s
+INFO | H    0     0                    31881.959320 30619.1540  3.96%     -    0s
+INFO |      0     0 30619.2556    0   13 31881.9593 30619.2556  3.96%     -    0s
+INFO |      0     0 30619.2556    0   13 31881.9593 30619.2556  3.96%     -    0s
+INFO | H    0     0                    30905.140488 30623.3007  0.91%     -    0s
+INFO | H    0     0                    30905.140488 30623.3007  0.91%     -    0s
+INFO |      0     0 30625.5403    0   13 30905.1405 30625.5403  0.90%     -    0s
+INFO |      0     0 30625.5403    0   13 30905.1405 30625.5403  0.90%     -    0s
+INFO |      0     0 30627.5959    0   17 30905.1405 30627.5959  0.90%     -    0s
+INFO |      0     0 30627.5959    0   17 30905.1405 30627.5959  0.90%     -    0s
+INFO | H    0     0                    30834.618296 30627.5959  0.67%     -    0s
+INFO | H    0     0                    30834.618296 30627.5959  0.67%     -    0s
+INFO |      0     0 30650.7389    0   24 30834.6183 30650.7389  0.60%     -    0s
+INFO |      0     0 30650.7389    0   24 30834.6183 30650.7389  0.60%     -    0s
+INFO |      0     0 30650.7389    0    7 30834.6183 30650.7389  0.60%     -    0s
+INFO |      0     0 30650.7389    0    7 30834.6183 30650.7389  0.60%     -    0s
+INFO |      0     0 30696.5068    0   10 30834.6183 30696.5068  0.45%     -    0s
+INFO |      0     0 30696.5068    0   10 30834.6183 30696.5068  0.45%     -    0s
+INFO | H    0     0                    30818.099704 30697.6467  0.39%     -    0s
+INFO | H    0     0                    30818.099704 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   14 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   14 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   16 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30697.6467    0   16 30818.0997 30697.6467  0.39%     -    0s
+INFO |      0     0 30703.9052    0   12 30818.0997 30703.9052  0.37%     -    0s
+INFO |      0     0 30703.9052    0   12 30818.0997 30703.9052  0.37%     -    0s
+INFO |      0     0 30703.9052    0   12 30818.0997 30703.9052  0.37%     -    0s
+INFO |      0     0 30703.9052    0   12 30818.0997 30703.9052  0.37%     -    0s
+INFO |      0     0 30703.9052    0   10 30818.0997 30703.9052  0.37%     -    0s
+INFO |      0     0 30703.9052    0   10 30818.0997 30703.9052  0.37%     -    0s
+INFO |      0     0 30704.8969    0   12 30818.0997 30704.8969  0.37%     -    0s
+INFO |      0     0 30704.8969    0   12 30818.0997 30704.8969  0.37%     -    0s
+INFO |      0     0 30716.8041    0   14 30818.0997 30716.8041  0.33%     -    0s
+INFO |      0     0 30716.8041    0   14 30818.0997 30716.8041  0.33%     -    0s
+INFO |      0     0 30723.1793    0   18 30818.0997 30723.1793  0.31%     -    0s
+INFO |      0     0 30723.1793    0   18 30818.0997 30723.1793  0.31%     -    0s
+INFO |      0     0 30723.1838    0   18 30818.0997 30723.1838  0.31%     -    0s
+INFO |      0     0 30723.1838    0   18 30818.0997 30723.1838  0.31%     -    0s
+INFO |      0     0 30816.3492    0   16 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   16 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   18 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   18 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   18 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   18 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   14 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30816.3492    0   14 30818.0997 30816.3492  0.01%     -    0s
+INFO |      0     0 30818.0997    0   14 30818.0997 30818.0997  0.00%     -    0s
+INFO |      0     0 30818.0997    0   14 30818.0997 30818.0997  0.00%     -    0s
+INFO | 
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   22          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   22          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   22          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   22          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     2 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     2 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO | 
+INFO | Cutting planes:
+INFO |   Learned: 1
+INFO |   Cover: 1
+INFO |   Implied bound: 1
+INFO |   Learned: 1
+INFO |   MIR: 10
+INFO |   GUB cover: 1
+INFO |   Cover: 1
+INFO |   Implied bound: 1
+INFO |   MIR: 10
+INFO |   GUB cover: 1
+INFO | 
+INFO | Explored 982 nodes (4208 simplex iterations) in 0.28 seconds (0.17 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | Explored 982 nodes (4208 simplex iterations) in 0.28 seconds (0.17 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | 
+INFO | Solution count 50: 30818.1 30818.1 30818.1 ... 30989.4
+INFO | No other solutions better than 30989.4
+INFO | Solution count 50: 30818.1 30818.1 30818.1 ... 30989.4
+INFO | 
+INFO | No other solutions better than 30989.4
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 3.081809970426e+04, best bound 3.081809970426e+04, gap 0.0000%
+INFO | Best objective 3.081809970426e+04, best bound 3.081809970426e+04, gap 0.0000%
+  EF AOS  method=gurobi_pool gap=0.05
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 50
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.05
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Set parameter LogToConsole to value 1
+INFO | Set parameter LogFile to value ""
+INFO | Set parameter PoolSolutions to value 50
+INFO | Set parameter PoolSearchMode to value 2
+INFO | Set parameter PoolGap to value 0.05
+INFO | Gurobi Optimizer version 13.0.0 build v13.0.0rc1 (mac64[rosetta2] - Darwin 25.5.0 25F84)
+INFO | 
+INFO | CPU model: Apple M1 Max
+INFO | Thread count: 10 physical cores, 10 logical processors, using up to 10 threads
+INFO | 
+INFO | Non-default parameters:
+INFO | PoolSolutions  50
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.05
+INFO | Non-default parameters:
+INFO | PoolSolutions  50
+INFO | PoolSearchMode  2
+INFO | PoolGap  0.05
+INFO | 
+INFO | 
+INFO | Optimize a model with 3982 rows, 3569 columns and 13824 nonzeros (Min)
+INFO | Optimize a model with 3982 rows, 3569 columns and 13824 nonzeros (Min)
+INFO | Model fingerprint: 0xdc07726c
+INFO | Model has 1176 linear objective coefficients and an objective constant of 12835.96
+INFO | Model fingerprint: 0xdc07726c
+INFO | Model has 1176 linear objective coefficients and an objective constant of 12835.96
+INFO | Variable types: 2672 continuous, 897 integer (897 binary)
+INFO | Variable types: 2672 continuous, 897 integer (897 binary)
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 6e+04]
+INFO |   Objective range  [1e+00, 4e+04]
+INFO |   Bounds range     [1e+00, 8e+02]
+INFO |   RHS range        [1e+00, 3e+03]
+INFO | Coefficient statistics:
+INFO |   Matrix range     [1e+00, 6e+04]
+INFO |   Objective range  [1e+00, 4e+04]
+INFO |   Bounds range     [1e+00, 8e+02]
+INFO |   RHS range        [1e+00, 3e+03]
+INFO | Found heuristic solution: objective 2.504523e+07
+INFO | Found heuristic solution: objective 2.504523e+07
+INFO | Presolve removed 2049 rows and 1928 columns
+INFO | Presolve time: 0.03s
+INFO | Presolve removed 2049 rows and 1928 columns
+INFO | Presolve time: 0.03s
+INFO | Presolved: 1933 rows, 1641 columns, 7162 nonzeros
+INFO | Presolved: 1933 rows, 1641 columns, 7162 nonzeros
+INFO | Variable types: 1101 continuous, 540 integer (540 binary)
+INFO | Variable types: 1101 continuous, 540 integer (540 binary)
+INFO | 
+INFO | Root relaxation: objective 3.061676e+04, 886 iterations, 0.01 seconds (0.02 work units)
+INFO | 
+INFO | Root relaxation: objective 3.061676e+04, 886 iterations, 0.01 seconds (0.02 work units)
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |     Objective Bounds      |     Work
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30616.7616    0    9 2.5045e+07 30616.7616   100%     -    0s
+INFO |      0     0 30616.7616    0    9 2.5045e+07 30616.7616   100%     -    0s
+INFO | H    0     0                    34492.752616 30616.7616  11.2%     -    0s
+INFO | H    0     0                    34492.752616 30616.7616  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0    9 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0    9 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO |      0     0 30619.1540    0   13 34492.7526 30619.1540  11.2%     -    0s
+INFO | H    0     0                    31881.959320 30619.1540  3.96%     -    0s
+INFO | H    0     0                    31881.959320 30619.1540  3.96%     -    0s
+INFO |      0     0 30620.0121    0   13 31881.9593 30620.0121  3.96%     -    0s
+INFO |      0     0 30620.0121    0   13 31881.9593 30620.0121  3.96%     -    0s
+INFO | H    0     0                    30905.140488 30620.0121  0.92%     -    0s
+INFO | H    0     0                    30905.140488 30620.0121  0.92%     -    0s
+INFO | H    0     0                    30848.379704 30620.0121  0.74%     -    0s
+INFO | H    0     0                    30848.379704 30620.0121  0.74%     -    0s
+INFO | H    0     0                    30834.618296 30647.1944  0.61%     -    0s
+INFO | H    0     0                    30834.618296 30647.1944  0.61%     -    0s
+INFO |      0     0 30647.1944    0   24 30834.6183 30647.1944  0.61%     -    0s
+INFO |      0     0 30647.1944    0   24 30834.6183 30647.1944  0.61%     -    0s
+INFO |      0     0 30647.1944    0   24 30834.6183 30647.1944  0.61%     -    0s
+INFO |      0     0 30647.1944    0   24 30834.6183 30647.1944  0.61%     -    0s
+INFO | H    0     0                    30818.099704 30647.8597  0.55%     -    0s
+INFO | H    0     0                    30818.099704 30647.8597  0.55%     -    0s
+INFO |      0     0 30647.8597    0   24 30818.0997 30647.8597  0.55%     -    0s
+INFO |      0     0 30647.8597    0   24 30818.0997 30647.8597  0.55%     -    0s
+INFO |      0     0 30696.7051    0   24 30818.0997 30696.7051  0.39%     -    0s
+INFO |      0     0 30696.7051    0   24 30818.0997 30696.7051  0.39%     -    0s
+INFO |      0     0 30696.7900    0   28 30818.0997 30696.7900  0.39%     -    0s
+INFO |      0     0 30696.7900    0   28 30818.0997 30696.7900  0.39%     -    0s
+INFO |      0     0 30696.7900    0   32 30818.0997 30696.7900  0.39%     -    0s
+INFO |      0     0 30696.7900    0   32 30818.0997 30696.7900  0.39%     -    0s
+INFO |      0     0 30706.8384    0   28 30818.0997 30706.8384  0.36%     -    0s
+INFO |      0     0 30706.8384    0   28 30818.0997 30706.8384  0.36%     -    0s
+INFO |      0     0 30725.5345    0   28 30818.0997 30725.5345  0.30%     -    0s
+INFO |      0     0 30725.5345    0   28 30818.0997 30725.5345  0.30%     -    0s
+INFO |      0     0 30726.6946    0   36 30818.0997 30726.6946  0.30%     -    0s
+INFO |      0     0 30726.6946    0   36 30818.0997 30726.6946  0.30%     -    0s
+INFO |      0     0 30728.4784    0   36 30818.0997 30728.4784  0.29%     -    0s
+INFO |      0     0 30728.4784    0   36 30818.0997 30728.4784  0.29%     -    0s
+INFO |      0     0 30732.0373    0   40 30818.0997 30732.0373  0.28%     -    0s
+INFO |      0     0 30732.0373    0   40 30818.0997 30732.0373  0.28%     -    0s
+INFO |      0     0 30778.1988    0   24 30818.0997 30778.1988  0.13%     -    0s
+INFO |      0     0 30778.1988    0   24 30818.0997 30778.1988  0.13%     -    0s
+INFO |      0     0 30787.8391    0   32 30818.0997 30787.8391  0.10%     -    0s
+INFO |      0     0 30787.8391    0   32 30818.0997 30787.8391  0.10%     -    0s
+INFO |      0     0 30787.8391    0   40 30818.0997 30787.8391  0.10%     -    0s
+INFO |      0     0 30787.8391    0   40 30818.0997 30787.8391  0.10%     -    0s
+INFO |      0     0 30787.8391    0   28 30818.0997 30787.8391  0.10%     -    0s
+INFO |      0     0 30787.8391    0   28 30818.0997 30787.8391  0.10%     -    0s
+INFO |      0     0 30800.3464    0   28 30818.0997 30800.3464  0.06%     -    0s
+INFO |      0     0 30800.3464    0   28 30818.0997 30800.3464  0.06%     -    0s
+INFO |      0     0 30818.0997    0   32 30818.0997 30818.0997  0.00%     -    0s
+INFO |      0     0 30818.0997    0   32 30818.0997 30818.0997  0.00%     -    0s
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO | Optimal solution found at node 0 - now completing solution pool...
+INFO | 
+INFO | 
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30818.0997    0   28          - 30818.0997      -     -    0s
+INFO |     Nodes    |    Current Node    |      Pool Obj. Bounds     |     Work
+INFO |              |                    |   Worst                   |
+INFO |  Expl Unexpl |  Obj  Depth IntInf | Incumbent    BestBd   Gap | It/Node Time
+INFO | 
+INFO |      0     0 30818.0997    0   28          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   32          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   32          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   40          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   40          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   40          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   40          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   40          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   40          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   44          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   44          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   36          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   36          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   36          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   36          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   36          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   36          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    5          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0    5          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   19          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   19          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   20          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   20          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   18          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   13          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   11          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   11          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   16          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   10          - 30818.0997      -     -    0s
+INFO |      0     0 30818.0997    0   10          - 30818.0997      -     -    0s
+INFO |      0     2 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO |      0     2 30818.0997    0    8          - 30818.0997      -     -    0s
+INFO | 
+INFO | Cutting planes:
+INFO |   Gomory: 1
+INFO |   Cover: 1
+INFO |   MIR: 8
+INFO |   Flow cover: 1
+INFO |   Inf proof: 3
+INFO | 
+INFO | Cutting planes:
+INFO |   Gomory: 1
+INFO |   Cover: 1
+INFO |   MIR: 8
+INFO |   Flow cover: 1
+INFO |   Inf proof: 3
+INFO | 
+INFO | 
+INFO | Explored 2635 nodes (4602 simplex iterations) in 0.52 seconds (0.32 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | Explored 2635 nodes (4602 simplex iterations) in 0.52 seconds (0.32 work units)
+INFO | Thread count was 10 (of 10 available processors)
+INFO | 
+INFO | 
+INFO | Solution count 50: 30818.1 30818.1 30818.1 ... 30989.4
+INFO | No other solutions better than 30989.4
+INFO | Solution count 50: 30818.1 30818.1 30818.1 ... 30989.4
+INFO | No other solutions better than 30989.4
+INFO | 
+INFO | 
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Optimal solution found (tolerance 1.00e-04)
+INFO | Best objective 3.081809970426e+04, best bound 3.081809970426e+04, gap 0.0000%
+INFO | Best objective 3.081809970426e+04, best bound 3.081809970426e+04, gap 0.0000%
+
+Wrote 4 rows → results_ef_pglib/egret_aos_ef_only_egret:2020-01-27_T4.csv
+
+=== Summary ===
+  UnitOn           extensive  baseline     gap=0.0   status=optimal  obj=30818.09970426091 n_true=1  
+  UnitOn           extensive  gurobi_pool  gap=0.0   status=optimal  obj=30818.09970426091 n_true=4  
+  UnitOn           extensive  gurobi_pool  gap=0.01  status=optimal  obj=30818.09970426091 n_true=50  
+  UnitOn           extensive  gurobi_pool  gap=0.05  status=optimal  obj=30818.09970426091 n_true=50  
