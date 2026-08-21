@@ -1,0 +1,15 @@
+{
+    "experimental_name": "three_alpha_scenarios",
+    "case_study": "bus_123_benders",
+    "scenario": "scenario_A",
+    "alpha": 1.0,
+    "growth_rate": 1.0,
+    "num_representative_days": 1,
+    "power_flow_fidelity": "CP",
+    "relaxations": {
+        "relax_second_stage": true,
+        "unit_commitment": true
+    },
+    "number_of_commitment": 1,
+    "include_commitment": true
+}
