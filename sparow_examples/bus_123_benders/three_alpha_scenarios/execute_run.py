@@ -63,7 +63,7 @@ solve_start = time.perf_counter()
 res_munch = solver.solve_and_return_model(
     sp,
     eta_bounds_map,
-    #subproblem_transforms=[relax_second_stage],
+    subproblem_transforms=[relax_second_stage],
     master_transforms=None,
     on_iteration=_on_iteration,
     convergence_tol=CONVERGENCE_TOL,
@@ -81,5 +81,5 @@ print(f"Objective value: {obj_val}")
 print(f"Solve time (seconds): {solve_end - solve_start:.4f}")
 print(f"Total runtime (seconds): {total_end - script_start:.4f}")
 
-mod_object=res_munch.model.s['model','scenario_A']
+#mod_object=res_munch.model.s['model','scenario_A']
 #post_process(mod_object)
