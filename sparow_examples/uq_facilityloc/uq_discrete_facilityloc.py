@@ -5,8 +5,6 @@ import random
 import numpy as np
 from pathlib import Path
 
-from sparow.sp import stochastic_program
-
 from sparow.conf_intervals.scenario_population import FiniteScenarioPopulation
 from sparow.conf_intervals.scenario_sampler import ScenarioSampler
 from sparow.conf_intervals.sp_model_wrapper_for_uq import SPModelWrapperforUQ
