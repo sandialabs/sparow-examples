@@ -14,6 +14,6 @@ class ExperimentConfig:
     # PGLib-OPF case file used by the OPF example. Stored as an absolute string path.
     data_dir: str = str((_THIS_DIR / "../../../pglib-opf/pglib_opf_case30_ieee.m").resolve())
 
-    # Preferred LF model for UQ / ACV-MRP experiments.
+    # Preferred LF model for UQ / multifidelity experiments.
     # Supported values below: "dcopf", "copperplate"
     lf_model_type: str = "dcopf"
