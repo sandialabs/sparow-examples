@@ -5,8 +5,6 @@ import random
 import numpy as np
 from pathlib import Path
 
-from sparow.sp import stochastic_program
-
 from sparow.conf_intervals.scenario_population import FiniteScenarioPopulation
 from sparow.conf_intervals.scenario_sampler import ScenarioSampler
 from sparow.conf_intervals.sp_model_wrapper_for_uq import SPModelWrapperforUQ
@@ -41,14 +39,14 @@ app_data["f"] = [
     285000,
     320000,
     340000,
-]  # fixed costs for opening facilities
+]  # fixed costs for opening facilities (facility 4 and facility 5 are expensive)
 app_data["c"] = [
     [4200.0, 5200.0, 12500.0, 18000.0],  # facility 0 good for cust 0,1
     [4600.0, 4800.0, 11800.0, 17500.0],  # facility 1 also good for cust 0,1
     [12800.0, 12000.0, 4100.0, 5600.0],  # facility 2 good for cust 2,3
     [13500.0, 12600.0, 4500.0, 5100.0],  # facility 3 also good for cust 2,3
-    [7600.0, 7900.0, 7800.0, 8200.0],  # facility 4 compromise facility
-    [9000.0, 9400.0, 9100.0, 9600.0],  # facility 5 dominated-ish but feasible
+    [7600.0, 7900.0, 7800.0, 8200.0],  # facility 4 is expensive
+    [9000.0, 9400.0, 9100.0, 9600.0],  # facility 5 is expensive
 ]  # servicing costs
 app_data["k"] = [2500, 2500, 2500, 2500, 2500, 2500]  # facility capacity
 app_data["s"] = [2, 2, 2, 2, 2, 2]  # max number of customers each facility can service
@@ -308,7 +306,7 @@ def HF_builder(data, args):
 
 def get_sp_model_for_uq(
     model_name="HF",
-    use_integer=False,
+    use_integer=False,  # dummy compatibility argument; TODO: replace with more flexible kwargs handling
     seed=12345,
     with_replacement=True,
 ) -> StochasticProgramModelProtocol:
@@ -427,14 +425,13 @@ def get_model_ensemble_for_uq(
 
 
 # =================================================================
-# Write the scenario data to file for use in the CI tests
+# Write the scenario data to file
 # =================================================================
 
 
 def main():
     parser = argparse.ArgumentParser(
         description="Write the full facility location scenario population to a file "
-        "that sparow.ci.cli --scenario-file can read."
     )
     parser.add_argument(
         "--output", required=True, help="Output file path ending in .json or .npy"
