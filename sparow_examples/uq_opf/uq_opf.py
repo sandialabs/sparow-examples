@@ -11,7 +11,7 @@ from egret.parsers.matpower_parser import create_ModelData
 from sparow_examples.uq_opf.model_builders import (
     LF_builder_multitime_period,  # copperplate
     HF_builder_multitime_period,  # DCOPF
-    uHF_builder_multitime_period, # ACOPF
+    uHF_builder_multitime_period,  # ACOPF
 )
 from sparow_examples.uq_opf.config import ExperimentConfig
 from sparow_examples.uq_opf.scenarios import build_model_data_time
@@ -24,8 +24,9 @@ from sparow.conf_intervals.protocols import (
     StochasticProgramModelProtocol,
     ModelEnsembleProtocol,
     ScenarioPopulationProtocol,
-    ScenarioSamplerProtocol
+    ScenarioSamplerProtocol,
 )
+
 
 def _get_first_stage_variable_order(data_dir: str) -> List[str]:
     """
@@ -47,13 +48,17 @@ def _get_first_stage_variable_order(data_dir: str) -> List[str]:
     # Parse the base OPF case file and return generator names in a stable order.
     md = create_ModelData(data_dir)
     gen_dict = md.data["elements"]["generator"]
-    gen_names = list(gen_dict.keys()) # has ordered generator names as they appear in the parsed Egret ModelData.
+    gen_names = list(
+        gen_dict.keys()
+    )  # has ordered generator names as they appear in the parsed Egret ModelData.
 
     # Format returned by SPAROW
     return [f"time_periods[1].m.pg['{g}']" for g in gen_names]
 
 
-def _build_shared_scenario_population(cfg: ExperimentConfig) -> FiniteScenarioPopulation:
+def _build_shared_scenario_population(
+    cfg: ExperimentConfig,
+) -> FiniteScenarioPopulation:
     """
     Build the finite scenario population shared by HF and LF OPF models.
 
@@ -100,11 +105,12 @@ def _build_shared_scenario_population(cfg: ExperimentConfig) -> FiniteScenarioPo
 
     return scenario_population
 
+
 def _build_shared_sampler(
-        scenario_population: ScenarioPopulationProtocol,
-        seed: int,
-        with_replacement: bool,
-    ) -> ScenarioSamplerProtocol:
+    scenario_population: ScenarioPopulationProtocol,
+    seed: int,
+    with_replacement: bool,
+) -> ScenarioSamplerProtocol:
     """
     Build one shared sampler from the supplied scenario population.
 
@@ -127,6 +133,7 @@ def _build_shared_sampler(
         seed=seed,
         with_replacement=with_replacement,
     )
+
 
 def _select_low_fidelity_builder(lf_model_type: str):
     """
@@ -159,14 +166,14 @@ def _select_low_fidelity_builder(lf_model_type: str):
 
 
 def get_sp_model_for_uq(
-        model_name: str = "HF",
-        use_integer: bool = False, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
-        seed: int = 12345,
-        with_replacement: bool = True,
-        lf_model_type: str = "dcopf",
-        scenario_population: Optional[ScenarioPopulationProtocol] = None,
-        scenario_sampler: Optional[ScenarioSamplerProtocol] = None,
-    ) -> StochasticProgramModelProtocol:
+    model_name: str = "HF",
+    use_integer: bool = False,  # dummy compatibility argument; TODO: replace with more flexible kwargs handling
+    seed: int = 12345,
+    with_replacement: bool = True,
+    lf_model_type: str = "dcopf",
+    scenario_population: Optional[ScenarioPopulationProtocol] = None,
+    scenario_sampler: Optional[ScenarioSamplerProtocol] = None,
+) -> StochasticProgramModelProtocol:
     """
     Build one OPF stochastic-program wrapper compatible with the UQ framework.
 
@@ -240,12 +247,12 @@ def get_sp_model_for_uq(
 
 
 def get_model_ensemble_for_uq(
-        model_name: str = "HF",
-        use_integer: bool = False, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
-        seed: int = 12345,
-        with_replacement: bool = True,
-        lf_model_type: str = "dcopf",
-    ) -> ModelEnsembleProtocol:
+    model_name: str = "HF",
+    use_integer: bool = False,  # dummy compatibility argument; TODO: replace with more flexible kwargs handling
+    seed: int = 12345,
+    with_replacement: bool = True,
+    lf_model_type: str = "dcopf",
+) -> ModelEnsembleProtocol:
     """
     Build the two-model OPF ensemble used by ACV-MRP.
     """
@@ -261,7 +268,7 @@ def get_model_ensemble_for_uq(
 
     hf_model = get_sp_model_for_uq(
         model_name="HF",
-        use_integer=use_integer, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
+        use_integer=use_integer,  # dummy compatibility argument; TODO: replace with more flexible kwargs handling
         seed=seed,
         with_replacement=with_replacement,
         lf_model_type=lf_model_type,
@@ -271,7 +278,7 @@ def get_model_ensemble_for_uq(
 
     lf_model = get_sp_model_for_uq(
         model_name="LF",
-        use_integer=use_integer, # dummy compatibility argument; TODO: replace with more flexible kwargs handling
+        use_integer=use_integer,  # dummy compatibility argument; TODO: replace with more flexible kwargs handling
         seed=seed,
         with_replacement=with_replacement,
         lf_model_type=lf_model_type,
